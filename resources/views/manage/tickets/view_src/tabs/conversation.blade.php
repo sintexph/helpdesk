@@ -1,0 +1,1 @@
+<ticket-conversations :has_name="false" token="{{ $ticket->token }}" ticket_id="{{ $ticket->id }}"></ticket-conversations>

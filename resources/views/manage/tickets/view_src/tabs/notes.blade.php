@@ -1,0 +1,1 @@
+<ticket-notes ticket_id="{{ $ticket->id }}"></ticket-notes>

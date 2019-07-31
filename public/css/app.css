@@ -1,0 +1,190 @@
+@charset "UTF-8";
+
+.priority-1 {
+  color: #6699c9;
+}
+
+.priority-2 {
+  color: #098b30;
+}
+
+.priority-3 {
+  color: #fd0000;
+}
+
+.table tr.pending {
+  background-color: #f8f0d6a4;
+  color: #463a11;
+}
+
+.table tr.catered {
+  background-color: #d6ecf8a4;
+  color: #033652;
+}
+
+.table tr.solved {
+  background-color: #d6f8dca4;
+  color: #11461a;
+}
+
+.table tr.closed {
+  background-color: #aafaefa4;
+  color: #09574c;
+}
+
+.table tr.hold {
+  background-color: #e2e2e2a4;
+  color: #6b6b6ba4;
+}
+
+.table tr.cancelled {
+  background-color: #f8d6d6a4;
+  color: #461111;
+}
+
+.status {
+  background-color: #646464;
+  color: #ffffff;
+  width: 100%;
+  padding: 1px 15px 1px 15px;
+  border: 1px solid #8d8d8d;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 1px;
+}
+
+.status.processing {
+  background-color: #c1faf0;
+  color: #177060;
+  border-color: #a5d6cd;
+}
+
+.status.pending {
+  background-color: #f8d6d6a4;
+  color: #461111;
+  border-color: #e78787;
+}
+
+.status.catered {
+  background-color: #f8d6d6a4;
+  color: #461111;
+  border-color: #e78787;
+}
+
+.status.solved {
+  background-color: #f8d6d6a4;
+  color: #461111;
+  border-color: #e78787;
+}
+
+.status.closed {
+  background-color: #f8d6d6a4;
+  color: #461111;
+  border-color: #e78787;
+}
+
+.status.hold {
+  background-color: #f8d6d6a4;
+  color: #461111;
+  border-color: #e78787;
+}
+
+.status.cancelled {
+  background-color: #f8d6d6a4;
+  color: #461111;
+  border-color: #e78787;
+}
+
+.ticket-inbox {
+  padding: 5px;
+}
+
+.ticket-inbox .title {
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.caterer {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.caterer span.caterer-name {
+  display: block;
+  font-weight: 600;
+}
+
+.caterer span.caterer-position {
+  display: block;
+  color: #8a8a8a;
+}
+
+.caterer img {
+  display: block;
+  float: left;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
+  margin-top: 2px;
+}
+
+.rating {
+  float: left;
+}
+
+/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
+   follow these rules. Every browser that supports :checked also supports :not(), so
+   it doesn’t make the test unnecessarily selective */
+
+.rating:not(:checked) > input {
+  position: absolute;
+  top: -9999px;
+  clip: rect(0, 0, 0, 0);
+}
+
+.rating:not(:checked) > label {
+  float: right;
+  width: 1em;
+  padding: 0 0.1em;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 300%;
+  line-height: 1.2;
+  color: #ddd;
+  text-shadow: 1px 1px #bbb, 2px 2px #666, 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.5);
+}
+
+.rating:not(:checked) > label:before {
+  content: "\2605   ";
+}
+
+.rating > input:checked ~ label {
+  color: #f70;
+  text-shadow: 1px 1px #c60, 2px 2px #940, 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.5);
+}
+
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+  color: gold;
+  text-shadow: 1px 1px goldenrod, 2px 2px #B57340, 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.5);
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+  color: #ea0;
+  text-shadow: 1px 1px goldenrod, 2px 2px #B57340, 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.5);
+}
+
+.rating > label:active {
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+

@@ -1,0 +1,322 @@
+@import 'variables';
+
+.helpdesk-landing {
+    background-image: url('/img/landing.png');
+    position: relative;
+    background-color: #e4f7ff;
+    background-size: cover;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    min-height: 450px;
+}
+
+.text-processing {
+    color: $font_processing;
+}
+
+.text-pending {
+    color: $font_pending;
+}
+
+.text-catered {
+    color: $font_catered;
+}
+
+.text-escalated {
+    color: $font_escalated;
+}
+
+.text-solved {
+    color: $font_solved;
+}
+
+.text-closed {
+    color: $font_closed;
+}
+
+.text-hold {
+    color: $font_hold;
+}
+
+
+.text-cancelled {
+    color: $font_cancelled;
+}
+
+
+.text-applied-approval {
+    color: $font_applied_approval;
+}
+
+.text-approval-cancelled {
+    color: $font_approval_cancelled;
+}
+
+.text-approved {
+    color: $font_approved;
+}
+
+.priority-1 {
+    color: $priority_low;
+}
+
+.priority-2 {
+    color: $priority_normal;
+}
+
+.priority-3 {
+    color: $priority_high;
+}
+
+
+
+
+.table tr.pending {
+    background-color: $bg_pending;
+    color: $font_pending;
+}
+
+.table tr.catered {
+    background-color: $bg_catered;
+    color: $font_catered;
+}
+
+.table tr.solved {
+    background-color: $bg_solved;
+    color: $font_solved;
+}
+
+.table tr.closed {
+    background-color: $bg_closed;
+    color: $font_closed;
+}
+
+
+.table tr.hold {
+    background-color: $bg_hold;
+    color: $font_hold;
+}
+
+
+.table tr.cancelled {
+    background-color: $bg_cancelled;
+    color: $font_cancelled;
+}
+
+.table tr.escalated {
+    background-color: $bg_escalated;
+    color: $font_escalated;
+}
+
+
+
+
+
+.status {
+    background-color: #646464;
+    color: #ffffff;
+    width: 100%;
+    padding: 1px 15px 1px 15px;
+    border: 1px solid #8d8d8d;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 1px;
+}
+
+
+.status.applied-approval {
+    background-color: $bg_applied_approval;
+    color: $font_applied_approval;
+    border-color: $border_applied_approval;
+}
+
+.status.approval-cancelled {
+    background-color: $bg_approval_cancelled;
+    color: $font_approval_cancelled;
+    border-color: $border_approval_cancelled;
+}
+
+
+.status.escalated {
+    background-color: $bg_escalated;
+    color: $font_escalated;
+    border-color: $border_escalated;
+}
+
+.status.processing {
+    background-color: $bg_processing;
+    color: $font_processing;
+    border-color: $border_processing;
+}
+
+.status.pending {
+    background-color: $bg_pending;
+    color: $font_pending;
+    border-color: $border_pending;
+
+}
+
+.status.catered {
+    background-color: $bg_catered;
+    color: $font_catered;
+    border-color: $border_catered;
+}
+
+.status.solved {
+    background-color: $bg_solved;
+    color: $font_solved;
+    border-color: $border_solved;
+}
+
+.status.closed {
+    background-color: $bg_closed;
+    color: $font_closed;
+    border-color: $border_closed;
+}
+
+.status.hold {
+    background-color: $bg_hold;
+    color: $font_hold;
+    border-color: $border_hold;
+}
+
+
+.status.cancelled {
+    background-color: $bg_cancelled;
+    color: $font_cancelled;
+    border-color: $border_cancelled;
+}
+
+
+.ticket-inbox {
+    padding: 5px;
+}
+
+.ticket-inbox .title {
+    margin: 0px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.caterer {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.caterer span.caterer-name {
+    display: block;
+    font-weight: 600;
+
+}
+
+.caterer span.caterer-position {
+    display: block;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.caterer span.caterer-position a {
+    color: #8a8a8a;
+}
+
+
+.col-md-3 .caterer span.caterer-position {
+    font-size: 0.2em;
+}
+
+.caterer .circular--landscape,
+.caterer .circular--square,
+.caterer .circular--portrait {
+    display: block;
+    float: left;
+    margin-right: 10px;
+    margin-top: 2px;
+    margin-left: 5px;
+}
+
+.caterer .circular--landscape,
+.caterer .circular--portrait {
+    width: 35px;
+    height: 35px;
+}
+
+.caterer .circular--square img {
+    width: 35px;
+    height: 35px;
+}
+
+
+
+
+.rating {
+    float: left;
+
+
+}
+
+/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
+   follow these rules. Every browser that supports :checked also supports :not(), so
+   it doesn’t make the test unnecessarily selective */
+.rating:not(:checked)>input {
+    position: absolute;
+    top: -9999px;
+    clip: rect(0, 0, 0, 0);
+}
+
+.rating:not(:checked)>label {
+    float: right;
+    width: 1em;
+    padding: 0 .1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 300%;
+    line-height: 1.2;
+    color: #ddd;
+    text-shadow: 1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0, 0, 0, .5);
+}
+
+.rating:not(:checked)>label:before {
+    content: '★ ';
+}
+
+.rating>input:checked~label {
+    color: #f70;
+    text-shadow: 1px 1px #c60, 2px 2px #940, .1em .1em .2em rgba(0, 0, 0, .5);
+}
+
+.rating:not(:checked)>label:hover,
+.rating:not(:checked)>label:hover~label {
+    color: gold;
+    text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
+}
+
+.rating>input:checked+label:hover,
+.rating>input:checked+label:hover~label,
+.rating>input:checked~label:hover,
+.rating>input:checked~label:hover~label,
+.rating>label:hover~input:checked~label {
+    color: #ea0;
+    text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
+}
+
+.rating>label:active {
+    position: relative;
+    top: 2px;
+    left: 2px;
+}
+
+
+.ht-failed {
+    font-weight: 700;
+    color: #b82121;
+}
+
+.ht-passed {
+    font-weight: 700;
+    color: #26b821;
+}
