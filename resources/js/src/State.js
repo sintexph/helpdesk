@@ -1,32 +1,24 @@
-export default {
-    data() {
-        return {
-            STATE: {
+export class State {
+    static get PENDING(){ return 1; }
+    static get CATERED(){ return 2; }
+    static get PROCESSING(){ return 3; }
+    static get SOLVED(){ return 4; }
+    static get CLOSED(){ return 5; }
+    static get HOLD(){ return 6; }
+    static get CANCELLED(){ return 7; }
+    static get ESCALATED(){ return 8; }
+    static get APPLIED_APPROVAL(){ return 9; }
+    static get APPROVAL_CANCELLED(){ return 10; }
+    static get APPROVED(){ return 11; }
+    static get REJECTED(){ return 12; }
 
+    static get FOR_CANVASSING(){ return 13; }
+    static get CREATED_PURCHASE_REQUISITION(){ return 14; }
+    static get PROCESSING_PURCHASE_ORDER(){ return 15; }
+    static get DELIVERED(){ return 16; }
+    static get READY_FOR_RELEASE(){ return 17; }
 
-                PENDING: 1,
-                CATERED: 2,
-                PROCESSING: 3,
-                SOLVED: 4,
-                CLOSED: 5,
-                HOLD: 6,
-                CANCELLED: 7,
-                ESCALATED: 8,
-                APPLIED_APPROVAL: 9,
-                APPROVAL_CANCELLED: 10,
-                APPROVED: 11,
-                REJECTED: 12,
+    static get UN_HOLD(){ return 18; }
 
-                FOR_CANVASSING: 13,
-                CREATED_PURCHASE_REQUISITION: 14,
-                PROCESSING_PURCHASE_ORDER: 15,
-                DELIVERED: 16,
-                READY_FOR_RELEASE: 17,
-
-                UN_HOLD: 18,
-
-            }
-
-        }
-    }
+    static get COMPLETED(){ return 19; }
 }

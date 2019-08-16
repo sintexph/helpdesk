@@ -1,5 +1,5 @@
 <template>
-    <modal name="modal-add-reference" ref="modal">
+    <modal :prevent="true" name="modal-add-reference" ref="modal">
         <template slot="header">Add Reference Ticket</template>
         <template slot="body">
             <div class="form-group">

@@ -168,6 +168,13 @@
     border-color: $border_solved;
 }
 
+
+.status.completed {
+    background-color: $bg_solved;
+    color: $font_solved;
+    border-color: $border_solved;
+}
+
 .status.closed {
     background-color: $bg_closed;
     color: $font_closed;

@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class TicketState
+class State
 {
     const PENDING=1;
     const CATERED=2;
@@ -25,10 +25,12 @@ class TicketState
 
     const UN_HOLD=18;
 
+    const COMPLETED=19;
+
 
     public static function state($state_value) {
         
-        $stateClass = new \ReflectionClass ( 'TicketState' );
+        $stateClass = new \ReflectionClass ( 'State' );
         $constants = $stateClass->getConstants();
 
         $constName = null;

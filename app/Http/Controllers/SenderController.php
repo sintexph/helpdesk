@@ -9,8 +9,8 @@ use DB;
 use App\Helpers\TicketActionHelper;
 use App\Helpers\ApplicationHelper;
 use App\CustomRequest;
-use App\Helpers\TicketUrgency;
-use TicketState;
+use App\Helpers\Urgency;
+use State;
 
 
 class SenderController extends Controller
@@ -80,11 +80,11 @@ class SenderController extends Controller
             $tickets->where(function($ticket_q)use($filter_urgency){
                 
                 if($filter_urgency['LOW']==="true" || $filter_urgency['LOW']===true)
-                    $ticket_q->orWhere('urgency',TicketUrgency::LOW);
+                    $ticket_q->orWhere('urgency',Urgency::LOW);
                 if($filter_urgency['HIGH']==="true" || $filter_urgency['HIGH']===true)
-                    $ticket_q->orWhere('urgency',TicketUrgency::HIGH);
+                    $ticket_q->orWhere('urgency',Urgency::HIGH);
                 if($filter_urgency['NORMAL']==="true" || $filter_urgency['NORMAL']===true)
-                    $ticket_q->orWhere('urgency',TicketUrgency::NORMAL);
+                    $ticket_q->orWhere('urgency',Urgency::NORMAL);
 
             });
         }
@@ -94,25 +94,25 @@ class SenderController extends Controller
             $tickets->where(function($ticket_q)use($filter_state){
 
                 if($filter_state['PENDING']==="true" || $filter_state['PENDING']===true)
-                    $ticket_q->orWhere('state',TicketState::PENDING);
+                    $ticket_q->orWhere('state',State::PENDING);
 
                 if($filter_state['CATERED']==="true" || $filter_state['CATERED']===true)
-                    $ticket_q->orWhere('state',TicketState::CATERED);
+                    $ticket_q->orWhere('state',State::CATERED);
 
                 if($filter_state['PROCESSING']==="true" || $filter_state['PROCESSING']===true)
-                    $ticket_q->orWhere('state',TicketState::PROCESSING);
+                    $ticket_q->orWhere('state',State::PROCESSING);
 
                 if($filter_state['SOLVED']==="true" || $filter_state['SOLVED']===true)
-                    $ticket_q->orWhere('state',TicketState::SOLVED);
+                    $ticket_q->orWhere('state',State::SOLVED);
 
                 if($filter_state['HOLD']==="true" || $filter_state['HOLD']===true)
-                    $ticket_q->orWhere('state',TicketState::HOLD);
+                    $ticket_q->orWhere('state',State::HOLD);
 
                 if($filter_state['CLOSED']==="true" || $filter_state['CLOSED']===true)
-                    $ticket_q->orWhere('state',TicketState::CLOSED);
+                    $ticket_q->orWhere('state',State::CLOSED);
 
                 if($filter_state['CANCELLED']==="true" || $filter_state['CANCELLED']===true)
-                    $ticket_q->orWhere('state',TicketState::CANCELLED);
+                    $ticket_q->orWhere('state',State::CANCELLED);
 
             });
         } 
@@ -120,11 +120,11 @@ class SenderController extends Controller
         $tickets->with('caterer');
 
         $tickets->orderByRaw(
-            'CASE WHEN state='.TicketState::PENDING.' THEN 1 ELSE 0 END DESC'
+            'CASE WHEN state='.State::PENDING.' THEN 1 ELSE 0 END DESC'
         )->orderByRaw(
-            'CASE WHEN state='.TicketState::CANCELLED.' THEN 0 ELSE 1 END DESC'
+            'CASE WHEN state='.State::CANCELLED.' THEN 0 ELSE 1 END DESC'
         )->orderByRaw(
-            'CASE WHEN state='.TicketState::CLOSED.' THEN 0 ELSE 1 END DESC'
+            'CASE WHEN state='.State::CLOSED.' THEN 0 ELSE 1 END DESC'
         );
 
         
@@ -159,9 +159,9 @@ class SenderController extends Controller
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found!');
        
-        abort_if($ticket->state==TicketState::CLOSED,400,'Ticket was already closed.');
-        abort_if($ticket->state!=TicketState::SOLVED,400,'Ticket could not be closed until it was solved.');
-        abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket is cancelled and could not be closed.');
+        abort_if($ticket->state==State::CLOSED,400,'Ticket was already closed.');
+        abort_if($ticket->state!=State::SOLVED,400,'Ticket could not be closed until it was solved.');
+        abort_if($ticket->state==State::CANCELLED,400,'Ticket is cancelled and could not be closed.');
         try {
             DB::beginTransaction();
             TicketActionHelper::close($ticket,$request['rating'],$request['feedback']);
@@ -191,8 +191,8 @@ class SenderController extends Controller
         ]);
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found!');
-        abort_if($ticket->state==TicketState::CLOSED,400,'The ticket was already closed and could not be cancelled anymore!');
-        abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket was already cancelled!');
+        abort_if($ticket->state==State::CLOSED,400,'The ticket was already closed and could not be cancelled anymore!');
+        abort_if($ticket->state==State::CANCELLED,400,'Ticket was already cancelled!');
 
         try {
             
@@ -311,7 +311,7 @@ class SenderController extends Controller
                             $ticket_info->sender_factory,
                             $app_name,
                             ApplicationHelper::generate_field_format($application,$user,$app_name),
-                            TicketUrgency::NORMAL,
+                            Urgency::NORMAL,
                             null
                     )->control_number;
                 }
@@ -345,13 +345,13 @@ class SenderController extends Controller
     
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found!');
-        abort_if($ticket->state==TicketState::CLOSED,400,'The ticket was already closed and could not be opened anymore!');
-        abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket was already cancelled!');
+        abort_if($ticket->state==State::CLOSED,400,'The ticket was already closed and could not be opened anymore!');
+        abort_if($ticket->state==State::CANCELLED,400,'Ticket was already cancelled!');
         
         try {
 
             # Ticket must be solved first before it can be opened
-            if($ticket->state==TicketState::SOLVED)
+            if($ticket->state==State::SOLVED)
             {
                 DB::beginTransaction();
                 

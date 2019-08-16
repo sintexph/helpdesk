@@ -5,6 +5,7 @@ import "./src/custom_request/import";
 Vue.mixin(httpAlert);
 Vue.mixin(require('./mixins/application_converter').default);
 
+
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
@@ -12,6 +13,8 @@ import Conversations from './components/ticket/conversations.vue';
 import Close from './components/sender/close.vue';
 import Cancel from './components/sender/cancel.vue';
 import Open from './components/sender/open.vue';
+
+
 
 Vue.component('ticket-conversations', Conversations);
 Vue.component('close-ticket', Close);

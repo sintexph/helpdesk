@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Category;
 use App\Ticket;
 use DB;
+use Illuminate\Support\Facades\Input;
 
 class CategoryController extends Controller
 {
@@ -22,7 +23,12 @@ class CategoryController extends Controller
 
     public function list()
     {
+        $find=Input::get('find');
         $categories=Category::on();
+
+        if(!empty($find))
+            $categories->where('name','like','%'.$find.'%');
+
         return datatables($categories)->toJson();
     }
 

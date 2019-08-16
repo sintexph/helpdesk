@@ -7,10 +7,18 @@ Route::get('/','HomeController@index');
 Route::post('preview-generate','LinkPreviewController@get_preview')->name('preview.generate');
 
 Route::prefix('utility')->name('.utility')->group(function(){
+
     Route::prefix('suggestions')->name('.suggestions')->group(function(){
 
         Route::get('sender_name', 'UtilityController@suggestion_sender_name')->name('.sender_name');
         Route::get('sender_email', 'UtilityController@suggestion_sender_email')->name('.sender_email');
+        
+
+        Route::name('.canned')->group(function(){
+            Route::get('canned-solutions','UtilityController@canned_solutions')->name('.solutions');
+            
+        });
+
 
     });
 
@@ -23,15 +31,19 @@ Route::prefix('utility')->name('.utility')->group(function(){
     Route::post('applications','UtilityController@get_applications')->name('.application');
     Route::post('unclosed_tickets','UtilityController@unclosed_tickets')->name('.unclosed_tickets');
 
-    
-    
+    Route::post('setting','UtilityController@setting')->name('.setting');
+    Route::post('canned-solution/{id}','UtilityController@canned_solution')->name('.solution');
+    Route::post('projects','UtilityController@projects')->name('.projects');
+
+
 });
 
 
 Route::prefix('profile')->name('profile')->group(function(){
 
-    Route::get('',function(){ return redirect('/'); });
+    Route::get('/{username}','ProfileController@index');
     Route::patch('update', 'ProfileController@update')->name('.approve');
+
 });
 
 Route::prefix('approval')->name('approval')->group(function(){
@@ -127,7 +139,7 @@ Route::prefix('tickets')->name('tickets')->group(function(){
         Route::patch('hold/{id}', 'Manage\TicketActionController@hold')->name('.hold');
         Route::patch('un_hold/{id}', 'Manage\TicketActionController@un_hold')->name('.un_hold');
         Route::patch('cancel/{id}', 'Manage\TicketActionController@cancel')->name('.cancel');
-        Route::patch('process/{id}', 'Manage\TicketActionController@process')->name('.process');
+        Route::patch('processing/{id}', 'Manage\TicketActionController@processing')->name('.processing');
         Route::patch('open/{id}', 'Manage\TicketActionController@open')->name('.open');
         Route::patch('escalate/{id}', 'Manage\TicketActionController@escalate')->name('.escalate');
         Route::put('add_reference/{id}', 'Manage\TicketActionController@add_reference')->name('.add_reference');
@@ -201,7 +213,23 @@ Route::middleware('maintain')->group(function(){
             
         });
         
-        
+        Route::name('.canned')->group(function(){
+
+            Route::prefix('canned-solution')->name('.solution')->group(function(){
+                
+                Route::get('', 'Manage\Canned\CannedSolutionController@index');
+                Route::post('list', 'Manage\Canned\CannedSolutionController@list')->name('.list');
+                Route::put('save', 'Manage\Canned\CannedSolutionController@save')->name('.save');
+                Route::post('info/{id}', 'Manage\Canned\CannedSolutionController@info')->name('.info');
+                Route::patch('update/{id}', 'Manage\Canned\CannedSolutionController@update')->name('.update');
+                Route::delete('delete/{id}', 'Manage\Canned\CannedSolutionController@delete')->name('.delete');
+                
+            });
+
+        });
+
+
+
     });
 
     Route::prefix('accounts')->name('accounts')->group(function(){
@@ -217,18 +245,61 @@ Route::middleware('maintain')->group(function(){
 
 });
 
-
-
 /**
  * ------------- END -------------
  */
 
-
- 
-Route::prefix('report')->name('report')->group(function(){
+ Route::prefix('report')->name('report')->group(function(){
     
-    Route::get('','ReportController@index');
-    Route::post('list','ReportController@list')->name('.list'); 
+    Route::prefix('tickets')->name('.tickets')->group(function(){
+    
+        Route::get('','TicketReportController@index');
+        Route::post('list','ReportController@list')->name('.list'); 
+    
+    });
 
-  
+    Route::prefix('tasks')->name('.tasks')->group(function(){
+
+        Route::get('','TaskReportController@index');
+        Route::post('list','TaskReportController@list')->name('.list');
+        Route::get('download','TaskReportController@download')->name('.download'); 
+    
+    });
+
+    Route::prefix('projects')->name('.projects')->group(function(){
+        Route::get('','ProjectReportController@index');
+        Route::post('list','ProjectReportController@list')->name('.list'); 
+    });
+
+});
+
+
+Route::prefix('projects')->name('projects')->group(function(){
+    
+    Route::get('', 'ProjectController@index');
+    Route::post('list', 'ProjectController@list')->name('.list');
+    Route::get('download', 'ProjectController@download')->name('.download');
+    Route::put('save', 'ProjectController@save')->name('.save');
+    Route::get('view/{id}', 'ProjectController@view')->name('.view');
+    Route::post('info/{id}', 'ProjectController@info')->name('.info');
+    Route::patch('update/{id}', 'ProjectController@update')->name('.update');
+    Route::delete('delete/{id}', 'ProjectController@delete')->name('.delete');
+    Route::put('save-task/{id}', 'ProjectController@save_task')->name('.save_task');
+});
+
+Route::prefix('tasks')->name('tasks')->group(function(){
+    
+    Route::get('', 'TaskController@index');
+    Route::put('save', 'TaskController@save')->name('.save');
+    Route::post('list', 'TaskController@list')->name('.list');
+    Route::get('download', 'TaskController@download')->name('.download');
+
+    Route::post('kanban', 'TaskController@kanban')->name('.kanban');
+    Route::patch('update-state/{id}', 'TaskController@update_state')->name('.update_state');
+    Route::delete('delete/{id}', 'TaskController@delete')->name('.delete');
+    Route::patch('cancel/{id}', 'TaskController@cancel')->name('.cancel');
+    Route::post('info/{id}', 'TaskController@info')->name('.info');
+    Route::patch('update/{id}', 'TaskController@update')->name('.update');
+    Route::post('progress', 'TaskController@progress')->name('.progress');
+
 });

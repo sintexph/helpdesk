@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class TicketUrgency 
+class Urgency 
 {
     const LOW=1;
     const NORMAL=2;

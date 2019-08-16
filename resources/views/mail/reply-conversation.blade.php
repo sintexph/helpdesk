@@ -24,8 +24,6 @@
 
 
 @include('mail.template.ticket_details')
-<br>
-<p style="color:#fc8888;">Remember to access the link above to reply this email since if you will reply directly to this email, none of our support staff can seen your reply so make sure to use the system in replying.</p>
 @endslot
 
 @slot('url',config('app.url'))

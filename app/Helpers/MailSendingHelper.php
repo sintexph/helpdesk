@@ -21,13 +21,20 @@ use App\Mail\TicketCloseMailable;
 use App\Mail\ForApprovalMailable;
 use App\Mail\AddNoteMailable;
 use App\Mail\UpdatedProgressMailable;
+use App\Mail\SendEmailMailable;
 
 class MailSendingHelper 
 {
     private static function send($to,$mailable)
     {
-        \Mail::to($to)->queue($mailable);
+        \Mail::to($to)->send($mailable);
     }
+    
+    public static function send_email(Ticket $ticket,User $user,$content)
+    {
+        static::send($ticket->sender_email,new SendEmailMailable($ticket,$user,$content,'Message from '.$user->name));
+    }
+
 
     /**
      * SEND CONVERSATION TO USER

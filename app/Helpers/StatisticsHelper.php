@@ -5,7 +5,7 @@ use App\Upload;
 use File;
 use App\Ticket;
 use DB;
-use TicketState;
+use State;
 
 class StatisticsHelper 
 {
@@ -36,27 +36,27 @@ class StatisticsHelper
 
         # Count the tickets that has no rating
         $no_star=static::query_ticket($factory,$catered_by,$created_from,$created_to)
-            ->where('state',TicketState::CLOSED)
+            ->where('state',State::CLOSED)
             ->whereNull('user_rating')->count();
 
         $one_star=static::query_ticket($factory,$catered_by,$created_from,$created_to)
-            ->where('state',TicketState::CLOSED)
+            ->where('state',State::CLOSED)
             ->where('user_rating',1)->count();
 
         $two_star=static::query_ticket($factory,$catered_by,$created_from,$created_to)
-            ->where('state',TicketState::CLOSED)
+            ->where('state',State::CLOSED)
             ->where('user_rating',2)->count();
 
         $three_star=static::query_ticket($factory,$catered_by,$created_from,$created_to)
-            ->where('state',TicketState::CLOSED)
+            ->where('state',State::CLOSED)
             ->where('user_rating',3)->count();
 
         $four_star=static::query_ticket($factory,$catered_by,$created_from,$created_to)
-            ->where('state',TicketState::CLOSED)
+            ->where('state',State::CLOSED)
             ->where('user_rating',4)->count();
 
         $five_star=static::query_ticket($factory,$catered_by,$created_from,$created_to)
-            ->where('state',TicketState::CLOSED)
+            ->where('state',State::CLOSED)
             ->where('user_rating',5)->count();
         
         
@@ -74,7 +74,7 @@ class StatisticsHelper
     {
         $tickets=static::query_ticket($factory,$catered_by,$created_from,$created_to);
         $tickets->select(['Category',DB::raw("count(Category) as Number")])
-        ->where('state',TicketState::SOLVED)
+        ->where('state',State::SOLVED)
         ->groupBy('Category')
         ->OrderByRaw(DB::raw("count(Category) desc"))
         ->limit($number);

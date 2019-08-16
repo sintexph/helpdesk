@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Ticket;
 use DB;
 
-class ReportController extends Controller
+class ProjectReportController extends Controller
 {
     public function __construct()
     {
@@ -15,7 +15,7 @@ class ReportController extends Controller
 
     public function index()
     {
-        return view('report.index');
+        return view('report.tickets');
     }
 
     public function list(Request $request)

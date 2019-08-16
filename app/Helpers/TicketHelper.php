@@ -7,7 +7,7 @@ use App\Ticket;
 use App\User;
 use App\TicketAttachment;
 use App\Helpers\ContentHelper;
-use TicketState;
+use State;
 use App\Setting;
 
 class TicketHelper 
@@ -48,34 +48,36 @@ class TicketHelper
     }
 
 
+    /*
     public static function ticket_number_state(Ticket $ticket)
     {
         $state=0;
 
         if($ticket->cancelled_at!=null)
-            $state=TicketState::CANCELLED;
+            $state=State::CANCELLED;
         elseif($ticket->hold_at!=null && $ticket->un_hold_at==null)
-            $state=TicketState::HOLD;
+            $state=State::HOLD;
         elseif($ticket->closed_at!=null)
-            $state=TicketState::CLOSED;
+            $state=State::CLOSED;
         elseif($ticket->solved_at!=null)
-            $state=TicketState::SOLVED;
+            $state=State::SOLVED;
         elseif($ticket->processing_at!=null)
-            $state=TicketState::PROCESSING;            
+            $state=State::PROCESSING;            
         elseif($ticket->catered_at!=null)
-            $state=TicketState::CATERED;
+            $state=State::CATERED;
         elseif($ticket->catered_at==null)
-            $state=TicketState::PENDING;
+            $state=State::PENDING;
  
         return $state;
     }
+    */
 
 
     public static function auto_close_tickets()
     {
         $auto_close_setting=Setting::where('name','AUTO_CLOSE_TICKET')->first();
 
-        $tickets=Ticket::where('state',TicketState::SOLVED)->get()->filter(function($ticket)use($auto_close_setting){
+        $tickets=Ticket::where('state',State::SOLVED)->get()->filter(function($ticket)use($auto_close_setting){
             $cd=\Carbon\Carbon::now();
             $dc=new \Carbon\Carbon($ticket->created_at);
 

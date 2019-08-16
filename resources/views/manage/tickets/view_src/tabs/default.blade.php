@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-8">
-        <div class="status {{ strtolower($ticket->state_text) }}">{{ $ticket->state_text }}</div>
+        <div class="status {{ str_replace(' ','-',strtolower($ticket->state_text)) }}">{{ $ticket->state_text }}</div>
 
         @if($ticket->cancelled_at!=null)
         <div class="status {{ strtolower($ticket->state_text) }}">
@@ -43,17 +43,17 @@
                                         <dd>
                                             @switch($ticket->urgency)
                                             @case('1')
-                                            <a title="Low Priority"><i class="fa fa-circle priority-1"
+                                            <a title="Low Priority"><i class="fa fa-flag priority-1"
                                                     aria-hidden="true"></i>
                                                 Low</a>
                                             @break
                                             @case('2')
-                                            <a title="Normal Priority"><i class="fa fa-circle priority-2"
+                                            <a title="Normal Priority"><i class="fa fa-flag priority-2"
                                                     ria-hidden="true"></i>
                                                 Normal</a>
                                             @break
                                             @case('3')
-                                            <a title="High Priority"><i class="fa fa-exclamation priority-3"
+                                            <a title="High Priority"><i class="fa fa-flag priority-3"
                                                     aria-hidden="true"></i> High</a>
                                             @break
                                             @endswitch
@@ -140,6 +140,17 @@
             </div>
             @endif
 
+
+
+            @if($ticket->solved_at!=null)
+            <div class="box-header with-border">
+                <h3 class="box-title text-green">Solution</h3>
+            </div>
+            <div class="box-body">
+            {!! nl2br($ticket->solution) !!}
+            </div>
+            @endif
+
             <div class="box-header with-border">
                 <h3 class="box-title">Users Feedback</h3>
             </div>
@@ -191,11 +202,11 @@
                             </a>
                             <span class="mailbox-attachment-size">
                                 {{ $attachment->file_upload->file_size }}
-                                <a href="{{ $attachment->file_upload->url }}" class="btn btn-default btn-xs pull-right"><i
-                                        class="fa fa-cloud-download"></i></a>
+                                <a href="{{ $attachment->file_upload->url }}"
+                                    class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                             </span>
                         </div>
-                    </li> 
+                    </li>
                     @endforeach
                 </ul>
             </div>
@@ -241,7 +252,7 @@
 
 
 
-        @if($ticket->state!=TicketState::CLOSED)
+        @if($ticket->state!=State::CLOSED)
         <ticket-actions :can_update="{{ auth()->user()->can('update',$ticket)?'true':'false' }}"
             :ticket="{{ $ticket }}"></ticket-actions>
         @endif

@@ -1,6 +1,6 @@
 <template>
-    <modal name="edit-factory" ref="modal" >
-        <template slot="header">Create Factory</template>
+    <modal :prevent="true" name="edit-factory" ref="modal" >
+        <template slot="header">Update Factory</template>
         <template slot="body">
       <div class="form-group">
                 <label class="control-label">Factory</label>

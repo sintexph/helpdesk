@@ -1,5 +1,5 @@
 <template>
-    <modal name="create-application" ref="modal" :extended_width="true">
+    <modal :prevent="true" name="create-application" ref="modal" :extended_width="true">
         <template slot="header">Create Application</template>
         <template slot="body">
             <application-form v-model="application"></application-form>

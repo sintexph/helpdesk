@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Factory;
 use App\Ticket;
 use DB;
+use Illuminate\Support\Facades\Input;
 
 class FactoryController extends Controller
 {
@@ -22,7 +23,12 @@ class FactoryController extends Controller
 
     public function list()
     {
+        $find=Input::get('find');
         $factories=Factory::on();
+
+        if(!empty($find))
+            $factories->where('name','like','%'.$find.'%');
+
         return datatables($factories)->toJson();
     }
 

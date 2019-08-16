@@ -10,10 +10,12 @@ use DB;
 use App\TicketNote;
 use App\User;
 use App\TicketReference;
-use TicketState;
+use State;
+use App\Helpers\TicketActionCondition;
 
 class TicketActionController extends Controller
 {
+    use TicketActionCondition;
     
     public function __construct()
     {
@@ -23,11 +25,7 @@ class TicketActionController extends Controller
     /**
      * CATER TICKET
      * @param $data Holds the option for catering or cater and process
-     * @param $id The database id of the ticket
-     * Condition: Can cater only of the status of the ticket is pending
-     *            Cannot cater if catered
-     *            Cannot process if cancelled- Logic will be on general middleware
-     * 
+     * @param $idThe database id of the ticket
      * @return json response
      */
     public function cater(Request $data,$id)
@@ -38,7 +36,9 @@ class TicketActionController extends Controller
 
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found!');
-        abort_if($ticket->state==TicketState::CATERED,400,'Ticket was already catered!');
+
+        # Apply condition
+        $this->condition_cater($ticket);
 
         try {
 
@@ -47,6 +47,7 @@ class TicketActionController extends Controller
             TicketActionHelper::cater($ticket,auth()->user(),$data['processed']);
 
             DB::commit();
+            
             return response()->json(['message'=>'Ticket has been successfully catered!']);
 
         } catch (\Throwable $th) {
@@ -58,22 +59,18 @@ class TicketActionController extends Controller
 
     /**
      * PROCESS THE TICKET
-     * @param $id The database id of the ticket
-     * Condition: Can process if the ticket state is catered
-     *            Cannot process if processed
-     *            Cannot process if cancelled- Logic will be on general middleware
-     * 
+     * @param $idThe database id of the ticket
      * @return json response
      */
-    public function process($id)
+    public function processing($id)
     {
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found!');
-        # Check first if the ticket is already processing
-        abort_if($ticket->state==TicketState::PROCESSING,400,'Ticket was already processing!');
-        abort_if($ticket->state!=TicketState::CATERED,400,'Ticket must be catered first before processing!');
+
+        # Apply condition
+        $this->condition_process($ticket);
         
-        TicketActionHelper::process($ticket,auth()->user());
+        TicketActionHelper::processing($ticket,auth()->user());
 
 
         return response()->json(['message'=>'Ticket has been successfully updated to processing!']);
@@ -82,43 +79,52 @@ class TicketActionController extends Controller
     /**
      * SOLVE THE TICKET
      * @param $data 
-     * @param $id The database id of the ticket
-     * Condition: Can solve if the ticket is processing
-     *            Cannot solve if solve already
-     *            Cannot solve the ticket if put onhold
-     *            Cannot solve if cancelled- Logic will be on general middleware
-     * 
+     * @param $idThe database id of the ticket
      * @return json response
      */
     public function solve(Request $data,$id)
     {
-       $this->validate($data,[
+        $validation=[
           'category'=>'required',
           'solution'=>'required',
-       ]);
-       
-       $ticket=Ticket::find($id);
-       abort_if($ticket==null,404,'Ticket could not be found!');
+        ];
 
-       abort_if($ticket->state==TicketState::SOLVED,400,'Ticket was already solved!');
-       abort_if($ticket->state==TicketState::HOLD,400,'Ticket is still on hold!');
-       
-       
-       try {
-           DB::beginTransaction();
-           
-           TicketActionHelper::solve($ticket,auth()->user(),$data['category'],$data['solution']);
-
-           DB::commit();
-           
-           return response()->json(['message'=>'Ticket has been successfully solved!']);
-
-        }catch (\Throwable $e) {
-            
-            DB::rollBack();
-            abort(400,$e->getMessage());
-
+        if($data->message_to_sender==="true" || $data->message_to_sender===true)
+        {
+            $data->message_to_sender=true;
+            $validation['message']=[
+                'required',
+                function($attribute,$value,$fail)
+                {
+                    if(empty(str_replace(" ","",preg_replace('/[^A-Za-z0-9\-]/', '', strip_tags($value)))))
+                        $fail('The '.$attribute.' field is required.');
+                }
+            ];
         }
+
+        $this->validate($data,$validation);
+        
+        $ticket=Ticket::find($id);
+        abort_if($ticket==null,404,'Ticket could not be found!');
+
+        # Apply condition
+        $this->condition_solve($ticket);
+
+        try {
+            DB::beginTransaction();
+            
+            TicketActionHelper::solve($ticket,auth()->user(),$data->category,$data->solution,$data->message_to_sender,$data->message);
+
+            DB::commit();
+            
+            return response()->json(['message'=>'Ticket has been successfully solved!']);
+
+            }catch (\Throwable $e) {
+                
+                DB::rollBack();
+                abort(400,$e->getMessage());
+
+            }
 
        
     }
@@ -126,19 +132,15 @@ class TicketActionController extends Controller
 
     /**
      * HOLD THE TICKET
-     * @param $id The database id of the ticket
-     * Condition: Can hold the ticket if not solved yet
-     *            Can hold the ticket if is processing or catered
-     *            Cannot solve if cancelled- Logic will be on general middleware      
+     * @param $idThe database id of the ticket  
      */
     public function hold($id)
     {
        $ticket=Ticket::find($id);
        abort_if($ticket==null,404,'Ticket could not be found!');
 
-       abort_if($ticket->state==TicketState::HOLD,400,'Ticket was already put on hold');
-       abort_if($ticket->state!=TicketState::PROCESSING && $ticket->state!=TicketState::CATERED,400,'Cannot hold the ticket if it was not processing or catered');
-
+       # Apply condition
+       $this->condition_hold($ticket);
 
        try {
 
@@ -156,20 +158,17 @@ class TicketActionController extends Controller
 
     /**
      * UN-HOLD THE HOLD TICKET
-     * @param $id The database id of the ticket
-     * Condition: Can un hold the ticket it was hold
-     *            Cannot solve if cancelled- Logic will be on general middleware  
+     * @param $idThe database id of the ticket
      */
     public function un_hold($id)
     {
        $ticket=Ticket::find($id);
        abort_if($ticket==null,404,'Ticket could not be found!');
-       # Cannot un hold if not hold
-       abort_if($ticket->state!=TicketState::HOLD,400,'Hold the ticket first before un-holding!');
+
+       # Apply condition
+       $this->condition_un_hold($ticket);
        
-
        TicketActionHelper::un_hold($ticket,auth()->user());
-
 
        return response()->json(['message'=>'Ticket has been successfully un-hold!']);
     }
@@ -177,11 +176,7 @@ class TicketActionController extends Controller
     /**
      * CANCEL THE TICKET
      * @param $request Holds cancellation reason
-     * @param $id The database id of the ticket
-     * Condition: Can cancel if the ticket is not yet cancelled
-     *            Can cancel the ticket if not solved yet
-     *            Cannot solve if cancelled- Logic will be on general middleware    
-     * 
+     * @param $idThe database id of the ticket
      * @return json response
      */
     public function cancel(Request $request,$id)
@@ -192,13 +187,11 @@ class TicketActionController extends Controller
 
        $ticket=Ticket::find($id);
        abort_if($ticket==null,404,'Ticket could not be found!');
-       abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket was already cancelled!');
-       abort_if($ticket->state==TicketState::SOLVED,400,'Ticket was already solved and could not be cancelled anymore!');
 
+       # Apply condition
+       $this->condition_cancel($ticket);
 
        TicketActionHelper::cancel($ticket,auth()->user(),$request['cancellation_reason']);
-
-
 
        return response()->json(['message'=>'Ticket has been successfully cancelled!']);
     }
@@ -207,10 +200,7 @@ class TicketActionController extends Controller
     /**
      * OPEN THE TICKET AFTER UPDATED AS SOLVED BY THE SUPPORT STAFF
      * @param $request Holds the reason for opening
-     * @param $id The database id of the ticket
-     * Condition: Cannot open if the ticket is cancelled
-     *            Cannot open if the ticket is closed
-     *            Can open only if the ticket if it is solved
+     * @param $idThe database id of the ticket
      * @return json response
      */
     public function open(Request $request,$id)
@@ -220,93 +210,24 @@ class TicketActionController extends Controller
         ]);
     
         $ticket=Ticket::find($id);
-
         abort_if($ticket==null,404,'Ticket could not be found!');
-        abort_if($ticket->state==TicketState::CLOSED,400,'The ticket was already closed and could not be cancelled anymore!');
-        abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket was already cancelled!');
 
-        
+        # Apply condition
+        $this->condition_open($ticket);
 
-        # Ticket must be solved first before it can be opened
-        if($ticket->state==TicketState::SOLVED)
-        {
-            TicketActionHelper::open($ticket,$request['reason']);
-        }
-        else
-            abort(400,'Ticket must be solved first before it can be opened again!');
+        TicketActionHelper::open($ticket,$request['reason']);
+            
+            
 
         return response()->json(['message'=>'Ticket has been successfully re opened!']);
     }
 
-
-    /**
-     * ADD NOTE TO THE TICKET
-     * @param $request holds the notes to be saved
-     * @param $id The database id of the ticket
-     */
-    public function add_note(Request $request,$id)
-    {
-        $ticket=Ticket::find($id);
-        abort_if($ticket==null,404,'Ticket could not be found!');
-
-        $this->validate($request,[
-            'note'=>'required',
-        ]);
-
-
-       try {
-           
-            DB::beginTransaction();
-
-            # Anyone can escalate the ticket not limited to the caterer
-            TicketActionHelper::add_note($request['note'],$ticket,auth()->user());
-
-            DB::commit();
-
-           return response()->json(['message'=>'Note has been successfully added to the ticket!']);
-           
-       }catch (\Throwable $th) {
-           DB::rollBack();
-           abort(400,$th->getMessage());
-       }
-
-
-        
-    }
-
-    public function remove_note($id)
-    {
-        $note=TicketNote::find($id);
-        abort_if($note==null,404,'Note could not be found!');
-        $note->delete();
-
-        return response()->json(['message'=>'Note has been successfully removed!']);
-    }
-
-    public function update_note(Request $request,$id)
-    {
-        $note=TicketNote::find($id);
-        abort_if($note==null,404,'Note could not be found!');
-
-        $this->validate($request,[
-            'note'=>'required',
-        ]);
-
-        $note->content=$request['note'];
-        $note->save();
-
-        return response()->json(['message'=>'Note has been successfully updated!']);
-    }
-
-    
     /**
      * ESCALATE TO OTHER SUPPORT STAFF
-     * @param $request Holds the user id of the staff to be escalated
-     * @param $id The database id of the ticket
+     * @param $request HOLDS THE USER ID OF THE STAFF TO BE ESCALATED
+     * @param $idTHE DATABASE ID OF THE TICKET
      * 
-     * Condition: Could not be escalated if ticket is cancelled, solved, or closed
-     *            Could escalate if the ticket is catered
-     *            Could not escalate if the authenticated user is the caterer
+     * ANYONE CAN ESCALATE THE TICKET NOT LIMITED TO THE CATERER
      */
     public function escalate(Request $request,$id)
     {
@@ -316,70 +237,50 @@ class TicketActionController extends Controller
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found!');
 
-
-        if($ticket->state==TicketState::PENDING)
-            abort(400,'Ticket must be catered first before escalating!');
-        if($ticket->state==TicketState::SOLVED)
-            abort(400,'The ticket was already solved and could not be escalated anymore!');
-        elseif($ticket->state==TicketState::CLOSED)
-            abort(400,'The ticket was already closed and could not be escalated anymore!');
-        elseif($ticket->state==TicketState::CANCELLED)
-            abort(400,'The ticket was already cancelled and could not be escalated anymore!');
-
-            
+        # Get the user to be escalated to
         $escalate_to=User::find($request['user_id']);
-        abort_if($escalate_to==null,404,'Support staff selected could not be found on the system!');
-        abort_if($escalate_to->id==$ticket->catered_by,400,'You mus select different support staff!');
 
-       try {
-           
-            DB::beginTransaction();
+        # Apply condition
+        $this->condition_escalate($ticket,$escalate_to);
 
-            # Anyone can escalate the ticket not limited to the caterer
-            TicketActionHelper::escalate($ticket,auth()->user(),$escalate_to);
+        try {
+            
+                DB::beginTransaction();
 
-            DB::commit();
+                TicketActionHelper::escalate($ticket,auth()->user(),$escalate_to);
 
-           return response()->json(['message'=>'Ticket has been successfully escalated!']);
-           
-       }catch (\Throwable $th) {
-           DB::rollBack();
-           abort(400,$th->getMessage());
-       }
+                DB::commit();
+
+            return response()->json(['message'=>'Ticket has been successfully escalated!']);
+            
+        }catch (\Throwable $th) {
+            DB::rollBack();
+            abort(400,$th->getMessage());
+        }
     }
 
 
     /**
      * ADD REFERENCE TICKET TO THE TICKET
-     * @param $request Holds the ticket control number to be added as reference
-     * @param $id The database id of the ticket
-     * 
-     * Condition: Could not add reference if ticket is cancelled, solved, or closed and pending
-     * 
+     * @param $request HOLDS THE TICKET CONTROL NUMBER TO BE ADDED AS REFERENCE
+     * @param $id THE DATABASE ID OF THE TICKET
      */
     public function add_reference(Request $request,$id)
     {
+        
         $this->validate($request,[
             'control_number'=>'required',
         ]);
 
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found');
-        $reference_ticket=Ticket::where('control_number',$request['control_number'])->first();
-        abort_if($reference_ticket==null,404,'Reference ticket could not be found!');
 
-        
-        if($ticket->state==TicketState::PENDING)
-            abort(400,'Ticket must be catered first before adding reference!');
-        elseif($ticket->state==TicketState::SOLVED)
-            abort(400,'The ticket was already solved and could not add reference anymore!');
-        elseif($ticket->state==TicketState::CLOSED)
-            abort(400,'The ticket was already closed and could not add reference anymore!');
-        elseif($ticket->state==TicketState::CANCELLED)
-            abort(400,'The ticket was already cancelled and could not add reference anymore!');
+        # Get the reference ticket based on the control number
+        $reference=Ticket::where('control_number',$request['control_number'])->first();
+        abort_if($reference==null,404,'Reference ticket could not be found!');
 
-        $exists=TicketReference::where('ticket_reference_id',$reference_ticket->id)->exists();
-        abort_if($exists==true,400,'The ticket is already added as reference!');
+        # Apply condition
+        $this->condition_add_reference($ticket,$reference);
 
         TicketReference::create([
             'ticket_id'=>$ticket->id,
@@ -394,9 +295,9 @@ class TicketActionController extends Controller
     /**
      * APPLY APPROVAL FOR THE TICKET
      * @param $request Holds the ticket control number to be added as reference
-     * @param $id The database id of the ticket
+     * @param $idThe database id of the ticket
      * 
-     * Condition: Could not apply if already applied and ticket is cancelled, solved, or closed and pending
+
      */
     public function apply_approval(Request $request,$id)
     {
@@ -408,19 +309,8 @@ class TicketActionController extends Controller
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found'); 
 
-        if($ticket->state==TicketState::PENDING)
-            abort(400,'Ticket must be catered first before it can be applied for approval!');
-        elseif($ticket->state==TicketState::SOLVED)
-            abort(400,'The ticket was already solved and could not apply approval anymore!');
-        elseif($ticket->state==TicketState::CLOSED)
-            abort(400,'The ticket was already closed and could not apply approval anymore!');
-        elseif($ticket->state==TicketState::CANCELLED)
-            abort(400,'The ticket was already cancelled and could not apply approval anymore!');
-        
-        if($ticket->approver_name!==null)
-            abort(400,'The ticket was already applied for approval!');
-        elseif($ticket->approved_at!==null)
-            abort(400,'The ticket was already approved!');
+        # Apply condition
+        $this->condition_apply_approval($ticket);
 
         try {
 
@@ -441,28 +331,15 @@ class TicketActionController extends Controller
     /**
      * CANCEL APPROVAL FOR THE TICKET
      * @param $request Holds the ticket control number to be added as reference
-     * @param $id The database id of the ticket
-     * 
-     * Condition: Could not apply if already applied and ticket is cancelled, solved, or closed and pending
+     * @param $idThe database id of the ticket
      */
     public function cancel_approval(Request $request,$id)
     { 
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found'); 
 
-        if($ticket->state==TicketState::PENDING)
-            abort(400,'Ticket must be catered first!');
-        elseif($ticket->state==TicketState::SOLVED)
-            abort(400,'The ticket was already solved!');
-        elseif($ticket->state==TicketState::CLOSED)
-            abort(400,'The ticket was already closed!');
-        elseif($ticket->state==TicketState::CANCELLED)
-            abort(400,'The ticket was already cancelled!');
-        
-        if($ticket->approver_name===null)
-            abort(400,'Cancellation could not be executed since there has no approval applied!');
-        elseif($ticket->approved_at!==null)
-            abort(400,'The ticket was already approved and could not be cancelled anymore!');
+        # Apply condition
+        $this->condition_cancel_approval($ticket);
 
         try {
 
@@ -479,6 +356,42 @@ class TicketActionController extends Controller
         }
     }
     
+    /**
+     * SET A CUSTOM PROGRESS OF THE TICKET
+     * @param $request Holds the state
+     * @param $idThe database id of the ticket
+     */
+    public function custom_progress(Request $request,$id)
+    {
+        $this->validate($request,['state'=>'required']);
+
+        $ticket=Ticket::find($id);
+        abort_if($ticket==null,404,'Ticket could not be found'); 
+
+        # Apply condition
+        $this->condition_custom_progress($ticket);
+
+        $state='State::'.strtoupper($request['state']);
+        if(!defined($state))
+            abort(400,'Selected progress is invalid!');
+
+        # Get the state constant dynamically
+        $state=constant($state);
+        
+        try {
+
+            DB::beginTransaction();
+            
+            TicketActionHelper::custom_progress($ticket,auth()->user(),$state);
+
+            DB::commit();
+            
+            return response()->json(['message'=>'Ticket progress has been successfully saved!']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(400,$th->getMessage());
+        }
+    }
 
     /**
      * SAVE THE TICKET CREATED BY SUPPORT STAFF
@@ -532,43 +445,62 @@ class TicketActionController extends Controller
         }        
     }
 
-    public function custom_progress(Request $request,$id)
+    /**
+     * ADD NOTE TO THE TICKET
+     * @param $request holds the notes to be saved
+     * @param $idThe database id of the ticket
+     */
+    public function add_note(Request $request,$id)
     {
-        $this->validate($request,['state'=>'required']);
-
         $ticket=Ticket::find($id);
-        abort_if($ticket==null,404,'Ticket could not be found'); 
+        abort_if($ticket==null,404,'Ticket could not be found!');
 
-        if($ticket->state==TicketState::PENDING)
-            abort(400,'Ticket must be catered first!');
-        elseif($ticket->state==TicketState::SOLVED)
-            abort(400,'The ticket was already solved!');
-        elseif($ticket->state==TicketState::CLOSED)
-            abort(400,'The ticket was already closed!');
-        elseif($ticket->state==TicketState::CANCELLED)
-            abort(400,'The ticket was already cancelled!');
-         elseif($ticket->state!=TicketState::PROCESSING)
-            abort(400,'The ticket must be processing first before can set custom progress!');
+        $this->validate($request,[
+            'note'=>'required',
+        ]);
 
-        $state='TicketState::'.strtoupper($request['state']);
-        if(!defined($state))
-            abort(400,'Progress is invalid!');
 
-        # Get the state constant dynamically
-        $state=constant($state);
-        
-        try {
-
+       try {
+           
             DB::beginTransaction();
-            
-            TicketActionHelper::custom_progress($ticket,auth()->user(),$state);
+
+            # Anyone can escalate the ticket not limited to the caterer
+            TicketActionHelper::add_note($request['note'],$ticket,auth()->user());
 
             DB::commit();
-            
-            return response()->json(['message'=>'Ticket progress has been successfully saved!']);
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            abort(400,$th->getMessage());
-        }
+
+           return response()->json(['message'=>'Note has been successfully added to the ticket!']);
+           
+       }catch (\Throwable $th) {
+           DB::rollBack();
+           abort(400,$th->getMessage());
+       }
+
+
+        
+    }
+
+    public function remove_note($id)
+    {
+        $note=TicketNote::find($id);
+        abort_if($note==null,404,'Note could not be found!');
+        $note->delete();
+
+        return response()->json(['message'=>'Note has been successfully removed!']);
+    }
+
+    public function update_note(Request $request,$id)
+    {
+        $note=TicketNote::find($id);
+        abort_if($note==null,404,'Note could not be found!');
+
+        $this->validate($request,[
+            'note'=>'required',
+        ]);
+
+        $note->content=$request['note'];
+        $note->save();
+
+        return response()->json(['message'=>'Note has been successfully updated!']);
     }
 }

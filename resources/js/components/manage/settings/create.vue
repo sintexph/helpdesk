@@ -1,5 +1,5 @@
 <template>
-    <modal name="create-setting" ref="modal">
+    <modal :prevent="true" name="create-setting" ref="modal">
         <template slot="header">Create Setting</template>
         <template slot="body">
             <div class="form-group">

@@ -1,6 +1,6 @@
 <template>
-    <modal name="edit-application" ref="modal" :extended_width="true">
-        <template slot="header">Create Application</template>
+    <modal :prevent="true" name="edit-application" ref="modal" :extended_width="true">
+        <template slot="header">Update Application</template>
         <template slot="body">
             <application-form v-model="application"></application-form>
         </template>

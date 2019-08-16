@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Setting;
 use App\Ticket;
 use DB;
+use Illuminate\Support\Facades\Input;
 
 class SettingController extends Controller
 {
@@ -22,7 +23,11 @@ class SettingController extends Controller
 
     public function list()
     {
+        $find=Input::get('find');
         $settings=Setting::on();
+
+        if(!empty($find))
+            $settings->where('name','like','%'.$find.'%');
         return datatables($settings)->toJson();
     }
 

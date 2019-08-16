@@ -8,7 +8,7 @@
             <option value="">-- SELECT --</option>
             <option v-for="(value,key) in selection" :key="key" :value="value.id">{{ value.text }}</option>
         </select>
-        <select3 style="width:100%;" v-else v-model="field_data.value" :options="selection"></select3>
+        <select2 style="width:100%;" v-else v-model="field_data.value" :options="selection"></select2>
     </div>
 </template>
 <script>

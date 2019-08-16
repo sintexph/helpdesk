@@ -1,5 +1,5 @@
 <template>
-    <div v-if="ticket!==null && (ticket.state!== STATE.CANCELLED && ticket.state!==STATE.CLOSED) && (ticket.state===STATE.PENDING || can_update===true)"
+    <div v-if="ticket!==null && (ticket.state!== State.CANCELLED && ticket.state!==State.CLOSED) && (ticket.state===State.PENDING || can_update===true)"
         class="box box-solid">
         <div class="box-header with-border">
             <h3 class="box-title">Actions</h3>
@@ -7,7 +7,7 @@
         <div class="box-body no-padding">
             <ul class="nav nav-pills nav-stacked">
 
-                <li v-if="ticket.state===STATE.PENDING">
+                <li v-if="ticket.state===State.PENDING">
                     <a href="#" @click.prevent="cater_ticket">
                         <i aria-hidden="true" class="fa fa-download"></i>
                         <span>Cater Ticket</span>
@@ -16,74 +16,74 @@
                 
                 <template v-if="can_update===true">
                     
-                    <li v-if="ticket.state === STATE.PROCESSING">
+                    <li v-if="ticket.state === State.PROCESSING">
                         <a class="text-yellow" href="#" @click.prevent="custom_progress">
                             <i class="fa fa-cube" aria-hidden="true"></i>
                             <span>Custom Progress</span>
                         </a>
                     </li>
 
-                    <li v-if="ticket.state !== STATE.SOLVED && ticket.state !== STATE.PENDING">
+                    <li v-if="ticket.state !== State.SOLVED && ticket.state !== State.PENDING">
                         <a href="#" @click.prevent="escalate_ticket">
                             <i class="fa fa-forward" aria-hidden="true"></i>
                             <span>Escalate Ticket</span>
                         </a>
                     </li>
 
-                    <li v-if="ticket.state === STATE.CATERED">
+                    <li v-if="ticket.state === State.CATERED">
                         <a href="#" @click.prevent="process_ticket">
                             <i class="fa fa-spinner" aria-hidden="true"></i>
                             <span>Process Ticket</span>
                         </a>
                     </li>
-                    <li v-if="ticket.state === STATE.PROCESSING">
+                    <li v-if="ticket.state === State.PROCESSING">
                         <a href="#" @click.prevent="solve_ticket">
                             <i aria-hidden="true" class="fa fa-star"></i>
                             <span>Solve Ticket</span>
                         </a>
                     </li>
-                    <li v-if="ticket.state===STATE.CATERED || ticket.state===STATE.PROCESSING">
+                    <li v-if="ticket.state===State.CATERED || ticket.state===State.PROCESSING">
                         <a href="#" @click.prevent="hold_ticket">
                             <i aria-hidden="true" class="fa fa-file-text-o"></i>
                             <span>Hold Ticket</span>
                         </a>
                     </li>
-                    <li v-if="ticket.state===STATE.HOLD">
+                    <li v-if="ticket.state===State.HOLD">
                         <a href="#" @click.prevent="un_hold_ticket">
                             <i aria-hidden="true" class="fa fa-pencil"></i>
                             <span>Un Hold Ticket</span>
                         </a>
                     </li>
-                    <li v-if="ticket.state===STATE.SOLVED">
+                    <li v-if="ticket.state===State.SOLVED">
                         <a href="#" @click.prevent="open_ticket">
                             <i class="fa fa-folder-open" aria-hidden="true"></i>
                             <span>Open Ticket</span>
                         </a>
                     </li>
-                    <li v-if="ticket.state!==STATE.PENDING  && ticket.state!== STATE.SOLVED">
+                    <li v-if="ticket.state!==State.PENDING  && ticket.state!== State.SOLVED">
                         <a href="#" @click.prevent="add_reference_ticket">
                             <i class="fa fa-ticket" aria-hidden="true"></i>
                             <span>Add Reference Ticket</span>
                         </a>
                     </li>
-                    <li v-if="ticket.state!==STATE.PENDING  && ticket.state!== STATE.SOLVED">
+                    <li v-if="ticket.state!==State.PENDING  && ticket.state!== State.SOLVED && ticket.state !== State.APPLIED_APPROVAL">
                         <a href="#" @click.prevent="cancel_ticket">
                             <i aria-hidden="true" class="fa fa-undo"></i>
                             <span>Cancel Ticket</span>
                         </a>
                     </li>
-                    <template v-if="ticket.state !== STATE.PENDING">
+                    <template v-if="ticket.state !== State.PENDING && ticket.state!==State.SOLVED">
                         <li
-                            v-if="ticket.state!==STATE.SOLVED && ticket.approver_name===null && ticket.approver_email===null">
+                            v-if="ticket.approver_name===null && ticket.approver_email===null">
                             <a href="#" @click.prevent="apply_approval">
                                 <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-                                <span>INTIATE APPROVAL</span>
+                                <span>Initiate Approval</span>
                             </a>
                         </li>
                         <li v-else-if="ticket.approved_at===null">
                             <a class="text-red" href="#" @click.prevent="cancel_approval">
                                 <i class="fa fa-ban" aria-hidden="true"></i>
-                                <span>CANCEL APPROVAL</span>
+                                <span>Cancel Approval</span>
                             </a>
                         </li>
                     </template>
@@ -137,9 +137,9 @@
         },
         methods: {
             custom_progress() {
-                if (this.ticket.state !== this.STATE.SOLVED && this.ticket.state !== this.STATE.CLOSED && this.ticket
-                    .state !== this.STATE
-                    .CANCELLED && this.ticket.state !== this.STATE.PENDING) {
+                if (this.ticket.state !== State.SOLVED && this.ticket.state !== State.CLOSED && this.ticket
+                    .state !== State
+                    .CANCELLED && this.ticket.state !== State.PENDING) {
                     this.$refs.customProgress.show();
                 }
             },
@@ -171,25 +171,25 @@
                 this.$refs.applyApproval.show();
             },
             escalate_ticket() {
-                if (this.ticket.state !== this.STATE.SOLVED && this.ticket.state !== this.STATE.CLOSED && this.ticket
-                    .state !== this.STATE
-                    .CANCELLED && this.ticket.state !== this.STATE.PENDING) {
+                if (this.ticket.state !== State.SOLVED && this.ticket.state !== State.CLOSED && this.ticket
+                    .state !== State
+                    .CANCELLED && this.ticket.state !== State.PENDING) {
                     this.$refs.escalateAction.show();
                 }
             },
 
             add_reference_ticket() {
-                if (this.ticket.state !== this.STATE.PENDING) {
+                if (this.ticket.state !== State.PENDING) {
                     this.$refs.addReferenceAction.show();
                 }
             },
             cater_ticket() {
-                if (this.ticket.state === this.STATE.PENDING) {
+                if (this.ticket.state === State.PENDING) {
                     this.$refs.caterAction.show();
                 }
             },
             solve_ticket() {
-                if (this.ticket.state === this.STATE.PROCESSING) {
+                if (this.ticket.state === State.PROCESSING) {
                     this.$refs.solveAction.show();
                 }
             },
@@ -262,7 +262,7 @@
                     if (confirm('Do you want to process now the ticket?') === true) {
                         par.submitted = true;
                         par.show_wait("Please wait while the system is processing your request.....");
-                        axios.patch('/tickets/process/' + par.ticket.id).then(function (response) {
+                        axios.patch('/tickets/processing/' + par.ticket.id).then(function (response) {
                             par.hide_wait();
                             par.alert_success(response);
                             location.reload();

@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use App\Helpers\Target;
 use App\Ticket;
-use App\Helpers\TicketState;
+use App\Helpers\State;
 
 class TargetHelper 
 {
@@ -19,7 +19,7 @@ class TargetHelper
                     ->orWhereNull('ht_processing')
                     ->orWhereNull('ht_solved')
                     ->orWhereNull('ht_closed');
-        })->orWhere('state',TicketState::SOLVED)->get();
+        })->orWhere('state',State::SOLVED)->get();
 
         foreach ($tickets as $ticket) {
 

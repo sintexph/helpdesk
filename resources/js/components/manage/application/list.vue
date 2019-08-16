@@ -3,14 +3,22 @@
         <div class="box-header">
             <h3 class="box-title">Custom Application</h3>
             <div class="pull-right">
-                <button type="button" class="btn btn-xs btn-default" @click.prevent="$refs.createApplication.show">Add
-                    Application</button>
+
+                                <div class="has-feedback">
+                    <input type="text" v-model="filters.find" placeholder="Search..." @keydown.enter="$refs.datatable.reload()" class="form-control input-sm">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+
+            
             </div>
 
 
         </div>
         <div class="box-body">
-            <datatable ref="datatable" :buttons="false" url="/maintain/application/list" :columns="columns"></datatable>
+                <button type="button" class="btn btn-xs btn-default" @click.prevent="$refs.createApplication.show">Add
+                    Application</button>
+
+            <datatable ref="datatable" :parameters="filters"  :buttons="false" url="/maintain/application/list" :columns="columns"></datatable>
             <create-application @created="$refs.datatable.reload()" ref="createApplication"></create-application>
             <edit-application @updated="$refs.datatable.reload()" ref="editApplication"></edit-application>
             <rep-application @updated="$refs.datatable.reload()" ref="repApplication"></rep-application>
@@ -28,10 +36,11 @@
         },
         data() {
             return {
-                columns: [{
-                        label: 'id',
-                        data: 'id',
-                    },
+                  filters: {
+                    find: '',
+                },
+
+                columns: [ 
                     {
                         label: 'name',
                         data: 'name',

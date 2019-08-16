@@ -9,8 +9,8 @@ use DB;
 use App\Helpers\TicketActionHelper;
 use App\CustomRequest;
 use App\Helpers\ApplicationHelper;
-use App\Helpers\TicketUrgency;
-use TicketState;
+use App\Helpers\Urgency;
+use State;
 
 class CreateTicketController extends Controller
 {
@@ -59,9 +59,9 @@ class CreateTicketController extends Controller
         $ticket=Ticket::where('control_number',$control_number)->where('token',$token)->first();
         abort_if($ticket==null,404,'Ticket could not be found!');
        
-        abort_if($ticket->state==TicketState::CLOSED,400,'Ticket was already closed.');
-        abort_if($ticket->state!=TicketState::SOLVED,400,'Ticket could not be closed until it was solved.');
-        abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket is cancelled and could not be closed.');
+        abort_if($ticket->state==State::CLOSED,400,'Ticket was already closed.');
+        abort_if($ticket->state!=State::SOLVED,400,'Ticket could not be closed until it was solved.');
+        abort_if($ticket->state==State::CANCELLED,400,'Ticket is cancelled and could not be closed.');
 
         try {
 
@@ -98,8 +98,8 @@ class CreateTicketController extends Controller
         $ticket=Ticket::where('control_number',$control_number)->where('token',$token)->first();
 
         abort_if($ticket==null,404,'Ticket could not be found!');
-        abort_if($ticket->state==TicketState::CLOSED,400,'The ticket was already closed and could not be cancelled anymore!');
-        abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket was already cancelled!');
+        abort_if($ticket->state==State::CLOSED,400,'The ticket was already closed and could not be cancelled anymore!');
+        abort_if($ticket->state==State::CANCELLED,400,'Ticket was already cancelled!');
 
         try {
 
@@ -136,13 +136,13 @@ class CreateTicketController extends Controller
     
         $ticket=Ticket::where('control_number',$control_number)->where('token',$token)->first();
         abort_if($ticket==null,404,'Ticket could not be found!');
-        abort_if($ticket->state==TicketState::CLOSED,400,'The ticket was already closed and could not be cancelled anymore!');
-        abort_if($ticket->state==TicketState::CANCELLED,400,'Ticket was already cancelled!');
+        abort_if($ticket->state==State::CLOSED,400,'The ticket was already closed and could not be cancelled anymore!');
+        abort_if($ticket->state==State::CANCELLED,400,'Ticket was already cancelled!');
         
         try {
 
             # Ticket must be solved first before it can be opened
-            if($ticket->state==TicketState::SOLVED)
+            if($ticket->state==State::SOLVED)
             {
                 DB::beginTransaction();
                 
@@ -205,7 +205,7 @@ class CreateTicketController extends Controller
                             $ticket_info->sender_factory,
                             $app_name,
                             ApplicationHelper::generate_field_format($application,$app_name),
-                            TicketUrgency::NORMAL,
+                            Urgency::NORMAL,
                             null
                     )->control_number;
                 }

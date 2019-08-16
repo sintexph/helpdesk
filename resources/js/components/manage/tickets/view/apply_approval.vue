@@ -1,5 +1,5 @@
 <template>
-    <modal name="modal-initiate-approval" ref="modal">
+    <modal :prevent="true" name="modal-initiate-approval" ref="modal">
         <template slot="header">Initiate Approval</template>
         <template slot="body">
             <div class="form-group">

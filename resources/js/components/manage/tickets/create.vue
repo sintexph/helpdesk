@@ -1,5 +1,5 @@
 <template>
-    <modal name="modal-create-ticket" :extended_width="true" ref="modal">
+    <modal :prevent="true" name="modal-create-ticket" :extended_width="true" ref="modal">
         <template slot="header">Create Ticket</template>
         <template slot="body">
             <form ref="submitForm" @submit.prevent="submit">
@@ -8,7 +8,6 @@
                     <input-autocomplete @selected="user_selected" anchor="name" url="/utility/find_user">
                     </input-autocomplete>
                     <validation :errors="validation_errors" field="sender_id_number"></validation>
-
                 </div>
                 <ticket-form :validation="validation_errors" v-model="ticket"></ticket-form>
 

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="form-group">
-            <label>Set Name</label>
+            <label class="control-label">Set Name</label>
             <input type="text" v-model="field_data.label" class="form-control">
         </div>
         <div class="btn-group">

@@ -1,5 +1,5 @@
 <template>
-    <modal name="edit-application" ref="modal" :extended_width="true">
+    <modal :prevent="true" name="edit-application" ref="modal" :extended_width="true">
         <template slot="header">Representation Format</template>
         <template slot="body">
             <div class="row">

@@ -98,13 +98,13 @@
                             var urgency = '';
                             switch (row.urgency) {
                                 case 1:
-                                    urgency = '<i class="fa fa-circle priority-1" title="Low"></i>';
+                                    urgency = '<i class="fa fa-flag priority-1" title="Low"></i>';
                                     break;
                                 case 2:
-                                    urgency = '<i class="fa fa-circle priority-2"  title="Normal"></i>';
+                                    urgency = '<i class="fa fa-flag priority-2"  title="Normal"></i>';
                                     break;
                                 case 3:
-                                    urgency = '<i class="fa fa-circle priority-3"  title="High"></i>';
+                                    urgency = '<i class="fa fa-flag priority-3"  title="High"></i>';
                                     break;
                             }
 

@@ -31,7 +31,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         FileUpload::observe(UploadObserver::class);
-        Ticket::observe(TicketObserver::class);
         User::observe(UserObserver::class);   
     }
 }

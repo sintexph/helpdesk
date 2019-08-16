@@ -3,14 +3,22 @@
         <div class="box-header">
             <h3 class="box-title">Settings</h3>
             <div class="pull-right">
-                <button type="button" class="btn btn-xs btn-default" @click.prevent="$refs.createSetting.show">Add
-                    Setting</button>
+
+                <div class="has-feedback">
+                    <input type="text" v-model="filters.find" placeholder="Search..." @keydown.enter="$refs.datatable.reload()" class="form-control input-sm">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+
+               
             </div>
 
 
         </div>
         <div class="box-body">
-            <datatable ref="datatable" :buttons="false" url="/maintain/setting/list" :columns="columns"></datatable>
+             <button type="button" class="btn btn-xs btn-default" @click.prevent="$refs.createSetting.show">Add
+                    Setting</button>
+
+            <datatable ref="datatable" :parameters="filters"  :buttons="false" url="/maintain/setting/list" :columns="columns"></datatable>
             <create-setting @created="$refs.datatable.reload()" ref="createSetting"></create-setting>
             <edit-setting @updated="$refs.datatable.reload()" ref="editSetting"></edit-setting>
         </div>
@@ -27,10 +35,11 @@
         },
         data() {
             return {
-                columns: [{
-                        label: 'Id',
-                        data: 'id',
-                    },
+                 filters: {
+                    find: '',
+                },
+
+                columns: [ 
                     {
                         label: 'Name',
                         data: 'name',

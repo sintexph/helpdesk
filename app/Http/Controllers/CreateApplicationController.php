@@ -9,7 +9,7 @@ use DB;
 use App\Helpers\TicketActionHelper;
 use App\CustomRequest;
 use App\Helpers\ApplicationHelper;
-use App\Helpers\TicketUrgency;
+use App\Helpers\Urgency;
 
 class CreateApplicationController extends Controller
 {
@@ -63,7 +63,7 @@ class CreateApplicationController extends Controller
                             $ticket_info->sender_factory,
                             $app_name,
                             ApplicationHelper::generate_field_format($application,$app_name),
-                            TicketUrgency::NORMAL,
+                            Urgency::NORMAL,
                             null
                     )->control_number;
                 }

@@ -3,12 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class ProfileController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+    }
+    
+    public function index($username)
+    {
+        $user=User::where('username',$username)->first();
+        abort_if($user==null,404);
+        
+
+        return view('profile.index',['user'=>$user]);
     }
 
     public function update(Request $request)

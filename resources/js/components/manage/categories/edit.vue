@@ -1,6 +1,6 @@
 <template>
-    <modal name="edit-category" ref="modal" >
-        <template slot="header">Create Category</template>
+    <modal :prevent="true" name="edit-category" ref="modal" >
+        <template slot="header">Update Category</template>
         <template slot="body">
       <div class="form-group">
                 <label class="control-label">Category</label>

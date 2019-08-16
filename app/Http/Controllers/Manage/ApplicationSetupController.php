@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\CustomRequest;
 use App\Helpers\ApplicationHelper;
+use Illuminate\Support\Facades\Input;
 
 class ApplicationSetupController extends Controller
 {
@@ -21,7 +22,12 @@ class ApplicationSetupController extends Controller
 
     public function list()
     {
+        $find=Input::get('find');
         $applications=CustomRequest::on();
+
+        if(!empty($find))
+            $applications->where('name','like','%'.$find.'%');
+
         
         return datatables($applications)->rawColumns(['fields'])->toJson();
     }

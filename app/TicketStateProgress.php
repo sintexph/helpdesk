@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use TicketState;
+use State;
 
 class TicketStateProgress extends Model
 {
@@ -15,7 +15,7 @@ class TicketStateProgress extends Model
     
     public function getStateAttribute($value)
     {
-        return TicketState::state($value);
+        return State::state($value);
     }
     
     public function getContentAttribute($value)

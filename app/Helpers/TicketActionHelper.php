@@ -9,29 +9,24 @@ use App\Helpers\TicketProgressHelper;
 use App\Helpers\UploadHelper;
 use App\TicketAttachment;
 use App\TicketNote;
+use State;
 
 class TicketActionHelper 
 {
     public static function cater(Ticket $ticket,User $user,$processing)
     {
+        $ticket->state=State::CATERED;
         $ticket->catered_by=auth()->user()->id;
         $ticket->catered_at=\Carbon\Carbon::now();
         $ticket->save();
-
-
-        if($processing===true)
-            static::process($ticket,$user,false);
-            
+        # Send email
+        MailSender::cater_ticket($ticket);
         # Save ticket progress history
         TicketProgressHelper::catered($ticket,$user->name);
 
-        # Send email
-        MailSender::cater_ticket($ticket);
-
-        # Send email if processing
         if($processing===true)
-            MailSender::process_ticket($ticket);
-
+            static::processing($ticket,$user,true);
+       
 
         return $ticket;
 
@@ -46,6 +41,7 @@ class TicketActionHelper
      */
     public static function close(Ticket $ticket,$rating,$feedback,$auto_close=false)
     {
+        $ticket->state=State::CLOSED;
         $ticket->closed_at=\Carbon\Carbon::now();
         
         # Check if there is a rating then record
@@ -70,6 +66,7 @@ class TicketActionHelper
     }
     public static function open(Ticket $ticket,$reason)
     {
+        $ticket->state=State::PROCESSING;
         $ticket->solved_at=null;
         $ticket->category=null;
         $ticket->solution=null;
@@ -89,6 +86,7 @@ class TicketActionHelper
      */
     public static function cancel(Ticket $ticket,User $user,$reason)
     {
+        $ticket->state=State::CANCELLED;
         $ticket->cancelled_at=\Carbon\Carbon::now();
         $ticket->cancelled_by=$user->name;
         $ticket->cancellation_reason=$reason;
@@ -109,8 +107,9 @@ class TicketActionHelper
      * @param $category Category of the ticket
      * @param $solution Action taken
      */
-    public static function solve(Ticket $ticket,User $user,$category,$solution)
+    public static function solve(Ticket $ticket,User $user,$category,$solution,$message_to_sender=false,$message=null)
     {
+        $ticket->state=State::SOLVED;
         $ticket->solved_at=\Carbon\Carbon::now();
         $ticket->category=$category;
         $ticket->solution=$solution;
@@ -118,6 +117,9 @@ class TicketActionHelper
 
         # Send email
         MailSendingHelper::solve_ticket($ticket);
+
+        if($message_to_sender==true)
+            MailSendingHelper::send_email($ticket,$user,$message);
 
         # Save ticket progress history
         TicketProgressHelper::solved($ticket,$user->name);
@@ -127,6 +129,7 @@ class TicketActionHelper
 
     public static function hold(Ticket $ticket,User $user)
     {
+        $ticket->state=State::HOLD;
         $ticket->hold_at=\Carbon\Carbon::now();
         $ticket->un_hold_at=null;
         $ticket->save();
@@ -141,6 +144,7 @@ class TicketActionHelper
     }
     public static function un_hold(Ticket $ticket,User $user)
     {
+        $ticket->state=State::PROCESSING;
         $ticket->un_hold_at=\Carbon\Carbon::now();
         $ticket->save();
 
@@ -149,8 +153,9 @@ class TicketActionHelper
 
         return $ticket;
     }
-    public static function process(Ticket $ticket,User $user,$send_email=true)
+    public static function processing(Ticket $ticket,User $user,$send_email=true)
     {
+        $ticket->state=State::PROCESSING;
         $ticket->processing_at=\Carbon\Carbon::now();
         $ticket->save();
 
@@ -167,6 +172,7 @@ class TicketActionHelper
     {
         $ticket->approver_name=$name;
         $ticket->approver_email=$email;
+        $ticket->state=State::APPLIED_APPROVAL;
         $ticket->save();
 
         # Send Approval
@@ -179,6 +185,7 @@ class TicketActionHelper
     }
     public static function cancel_approval(Ticket $ticket,User $user)
     {
+        $ticket->state=State::PROCESSING;
         $ticket->approver_name=null;
         $ticket->approver_email=null;
         $ticket->save();
@@ -197,8 +204,6 @@ class TicketActionHelper
         # Save ticket progress history
         TicketProgressHelper::custom_progress($ticket,$user->name,$state);
 
-        
-
         # Send email
         MailSender::custom_progress($ticket);
 
@@ -207,6 +212,7 @@ class TicketActionHelper
 
     public static function reject_approval(Ticket $ticket)
     {
+        $ticket->state=State::PROCESSING;
         $ticket->approver_name=null;
         $ticket->approver_email=null;
         $ticket->save();
@@ -218,6 +224,7 @@ class TicketActionHelper
     }
     public static function approved(Ticket $ticket)
     {
+        $ticket->state=State::PROCESSING;
         $ticket->approved_at=\Carbon\Carbon::now();
         $ticket->save();
     
@@ -229,6 +236,7 @@ class TicketActionHelper
 
     public static function escalate(Ticket $ticket,User $escalate_from,User $escalate_to)
     {
+        
         $ticket->catered_by=$escalate_to->id; 
         $ticket->escalated=true;
         $ticket->save();
@@ -313,7 +321,7 @@ class TicketActionHelper
 
 
         # Send email to all Support Staff
-        foreach (User::where('role','<>',UserRole::SENDER)->get() as $user) {
+        foreach (User::where('role','<>',UserRole::SENDER)->where('factory',$ticket->sender_factory)->get() as $user) {
             # Send email
             MailSendingHelper::new_ticket($ticket,$user);
         }
@@ -343,7 +351,7 @@ class TicketActionHelper
 
         # Send a notification to the caterer of the ticket
         # Do not send notification if the adder of the note is the caterer
-        if($user->state!=TicketState::PENDING && $user->id!=$ticket->catered_by)
+        if($user->state!=State::PENDING && $user->id!=$ticket->catered_by)
         {
             MailSendingHelper::add_note($ticket_note,$user); 
         }

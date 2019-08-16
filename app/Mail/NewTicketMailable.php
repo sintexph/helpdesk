@@ -32,7 +32,7 @@ class NewTicketMailable extends Mailable
     {
         $this->ticket=$ticket;
         $this->receiver=$user->name;
-        $this->subject='Ticket '.$ticket->control_number.' | '.$ticket->title;
+        $this->subject='New ticket under '.$ticket->sender_factory.' - #'.$ticket->control_number;
     }
 
     /**
@@ -42,6 +42,6 @@ class NewTicketMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.new-request')->subject($this->subject);
+        return $this->view('mail.new-request');
     }
 }

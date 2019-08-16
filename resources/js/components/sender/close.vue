@@ -1,5 +1,5 @@
 <template>
-    <modal name="modal-close" ref="modal">
+    <modal :prevent="true" name="modal-close" ref="modal">
         <template slot="header">Close Ticket</template>
         <template slot="body">
             <div class="form-group">

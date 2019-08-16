@@ -3,14 +3,17 @@
         <div class="box-header">
             <h3 class="box-title">Categories</h3>
             <div class="pull-right">
-                <button type="button" class="btn btn-xs btn-default" @click.prevent="$refs.createCategory.show">Add
-                    Category</button>
+                <div class="has-feedback">
+                    <input type="text" v-model="filters.find" placeholder="Search..." @keydown.enter="$refs.datatable.reload()" class="form-control input-sm">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
             </div>
-
-
         </div>
         <div class="box-body">
-            <datatable ref="datatable" :buttons="false" url="/maintain/category/list" :columns="columns"></datatable>
+            <button type="button" class="btn btn-xs btn-default" @click.prevent="$refs.createCategory.show">Add
+                Category</button>
+            <datatable ref="datatable" :parameters="filters" :buttons="false" url="/maintain/category/list"
+                :columns="columns"></datatable>
             <create-category @created="$refs.datatable.reload()" ref="createCategory"></create-category>
             <edit-category @updated="$refs.datatable.reload()" ref="editCategory"></edit-category>
         </div>
@@ -27,19 +30,20 @@
         },
         data() {
             return {
-                columns: [{
-                        label: 'id',
-                        data: 'id',
-                    },
+                filters: {
+                    find: '',
+                },
+                columns: [
+                    
                     {
                         label: 'name',
                         data: 'name',
                     },
-                      {
+                    {
                         label: 'Created By',
                         data: 'created_by',
                     },
-                       {
+                    {
                         label: 'Created At',
                         data: 'created_at',
                     },
@@ -49,7 +53,7 @@
                         label: 'Updated By',
                         data: 'updated_by',
                     },
-                       {
+                    {
                         label: 'Updated At',
                         data: 'updated_at',
                     },

@@ -3,7 +3,7 @@
 namespace App\Helpers;
 use App\Ticket;
 use App\TicketStateProgress;
-use TicketState;
+use State;
 
 class TicketProgressHelper 
 {
@@ -14,7 +14,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::SOLVED
+            'state'=>State::SOLVED
         ]);
     }
     public static function created(Ticket $ticket,$user_name)
@@ -24,7 +24,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::PENDING
+            'state'=>State::PENDING
         ]);
     }
 
@@ -35,7 +35,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::CATERED
+            'state'=>State::CATERED
         ]);
     }
     public static function processing(Ticket $ticket,$user_name)
@@ -45,7 +45,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::PROCESSING
+            'state'=>State::PROCESSING
         ]);
     }
     public static function hold(Ticket $ticket,$user_name)
@@ -55,7 +55,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::HOLD
+            'state'=>State::HOLD
         ]);
     }
 
@@ -66,7 +66,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::UN_HOLD
+            'state'=>State::UN_HOLD
         ]);
     }
 
@@ -80,7 +80,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::CLOSED
+            'state'=>State::CLOSED
         ]);
     }
     public static function opened(Ticket $ticket,$user_name,$reason)
@@ -90,7 +90,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::PROCESSING
+            'state'=>State::PROCESSING
         ]);
     }
     public static function cancelled(Ticket $ticket,$user_name)
@@ -100,13 +100,13 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::CANCELLED
+            'state'=>State::CANCELLED
         ]);
     }
 
     public static function custom_progress(Ticket $ticket,$user_name,$state)
     {
-        $content=strtolower(ucwords($user_name)).' has updated the ticket to '.TicketState::state($state);
+        $content=strtolower(ucwords($user_name)).' has updated the ticket to '.State::state($state);
         
         TicketStateProgress::create([
             'content'=>$content,
@@ -124,7 +124,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::ESCALATED
+            'state'=>State::ESCALATED
         ]);
     }
 
@@ -135,7 +135,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::APPLIED_APPROVAL
+            'state'=>State::APPLIED_APPROVAL
         ]);
     }
 
@@ -146,7 +146,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::APPROVED
+            'state'=>State::APPROVED
         ]);
     }
 
@@ -157,7 +157,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::APPROVAL_CANCELLED
+            'state'=>State::APPROVAL_CANCELLED
         ]);
     }
     public static function reject_approval(Ticket $ticket,$user_name)
@@ -167,7 +167,7 @@ class TicketProgressHelper
         TicketStateProgress::create([
             'content'=>$content,
             'ticket_id'=>$ticket->id,
-            'state'=>TicketState::REJECTED
+            'state'=>State::REJECTED
         ]);
     }
 }

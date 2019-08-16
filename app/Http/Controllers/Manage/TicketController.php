@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Input;
 use App\TicketConversation;
 use DB;
 use App\TicketNote;
-use TicketState;
+use State;
 
 class TicketController extends Controller
 {
@@ -67,8 +67,8 @@ class TicketController extends Controller
         }
         else
         {
-            $tickets->where('state','<>',TicketState::CANCELLED); # Must not be cancelled
-            $tickets->where('state','<>',TicketState::CLOSED); # Must not be closed
+            $tickets->where('state','<>',State::CANCELLED); # Must not be cancelled
+            $tickets->where('state','<>',State::CLOSED); # Must not be closed
         }
 
         if(!empty($filter_find))
@@ -87,7 +87,7 @@ class TicketController extends Controller
         if(!$user->can('manage-ticket'))
             $tickets->where(function($query)use($user){
                 $query->orWhere('catered_by','=',$user->id);
-                $query->orWhere('state','=',TicketState::PENDING);
+                $query->orWhere('state','=',State::PENDING);
             });
 
 

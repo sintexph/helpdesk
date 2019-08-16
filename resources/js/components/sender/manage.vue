@@ -125,7 +125,7 @@
                     CATERED: true,
                     PROCESSING: true,
                     SOLVED: true,
-                    CLOSED: false,
+                    CLOSED: true,
                     HOLD: false,
                     CANCELLED: false,
                 },

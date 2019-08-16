@@ -29,7 +29,7 @@ class CreateTicketsTable extends Migration
             $table->longText('content');
             $table->integer('urgency')->comment('1=low,2=normal,3=high');
 
-            $table->integer('state')->default(1)->comment('1=Pending, 2=catered,3=PROCESSING 4=solved 5=closed 6=hold 7=cancelled');
+            $table->integer('state')->default(1);
 
             $table->integer('catered_by')->nullable();
             $table->timestamp('catered_at')->nullable();

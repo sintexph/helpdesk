@@ -19,7 +19,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-8">
-                            <label>
+                            <label class="control-label">
                                 <input class="form-check-input" type="checkbox" v-model="remember">
                                 Remember Me
                             </label>

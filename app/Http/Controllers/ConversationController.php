@@ -11,7 +11,7 @@ use DB;
 use App\User;
 use App\Helpers\UploadHelper;
 use App\Helpers\MailSendingHelper as MailSender;
-use App\Helpers\TicketState;
+use App\Helpers\State;
 
 class ConversationController extends Controller
 {
@@ -79,7 +79,7 @@ class ConversationController extends Controller
             });
 
             # Add the caterer id as receiver
-            if($ticket->state!=TicketState::PENDING)
+            if($ticket->state!=State::PENDING)
                 $user_ids[]=$ticket->catered_by;
 
             # Get all the users based on the $user_ids

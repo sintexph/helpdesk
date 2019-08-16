@@ -1,5 +1,5 @@
 <template>
-    <modal name="modal-custom-progress" ref="modal">
+    <modal :prevent="true" name="modal-custom-progress" ref="modal">
         <template slot="header">Custom Progress</template>
         <template slot="body">
             <div class="form-group">

@@ -230,8 +230,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         
         
-        'TicketState' => \App\Helpers\TicketState::class,
+        'State' => \App\Helpers\State::class,
         'UserRole' => \App\Helpers\UserRole::class,
+        'Urgency' => \App\Helpers\Urgency::class,
 
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,

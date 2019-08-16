@@ -1,7 +1,7 @@
 <template>
     <a href="#" class="text-red" @click.prevent="cancel_ticket">
         <i aria-hidden="true" class="fa fa-folder-open"></i>
-        <span>CANCEL TICKET</span>
+        <span>Cancel Ticket</span>
     </a>
 </template>
 <script>

@@ -1,12 +1,12 @@
 <template>
-    <modal :name="'create-account'+_uid" ref="modal">
+    <modal :prevent="true" :name="'create-account'+_uid" ref="modal">
         <template slot="header">Create Account</template>
         <template slot="body">
             <account-form v-model="account"></account-form>
         </template>
         <template slot="footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-default" @click.prevent="save">Save</button>
+            <button type="button" class="btn btn-primary" @click.prevent="save">Save</button>
         </template>
     </modal>
 </template>

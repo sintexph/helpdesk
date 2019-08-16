@@ -1,7 +1,7 @@
 @sintexlayoutside
 
 @slot('page_title')
-    @yield('title','Sportscity Helpdesk Philippines')
+@yield('title','Sportscity Helpdesk Philippines')
 @endslot
 
 @slot('skin',config('app.skin'))
@@ -20,7 +20,6 @@
                 <i class="fa fa-ticket" aria-hidden="true"></i> <span>Tickets</span>
             </a>
         </li>
-
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <img src="{{ asset('img/brand-icon.png') }}" class="nav-logo">

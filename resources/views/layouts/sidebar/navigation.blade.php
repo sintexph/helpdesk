@@ -1,5 +1,3 @@
-
-
 <li class="@yield('menu-3')">
     <a href="{{ route('dashboard') }}">
         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
@@ -13,7 +11,7 @@
 </li>
 
 
- 
+
 
 @if(auth()->user()->can('admin'))
 <li class="@yield('menu-2') treeview">
@@ -30,21 +28,52 @@
                 Factories</a></li>
         <li class="@yield('menu-2-3')"><a href="{{ route('maintain.category') }}"><i class="fa fa-circle-o"></i>
                 Categories</a></li>
-    <li class="@yield('menu-2-4')"><a href="{{ route('maintain.setting') }}"><i class="fa fa-circle-o"></i>
+        <li class="@yield('menu-2-4')"><a href="{{ route('maintain.setting') }}"><i class="fa fa-circle-o"></i>
                 Settings</a></li>
-    </ul>
-</li> 
 
+        <li class="@yield('menu-2-5')"><a href="{{ route('maintain.canned.solution') }}"><i class="fa fa-circle-o"></i>
+                Canned Solutions</a></li>
+    </ul>
+</li>
 
 <li class="@yield('menu-4')">
     <a href="{{ route('accounts') }}">
         <i class="fa fa-user" aria-hidden="true"></i> <span>Accounts</span>
     </a>
 </li>
-<li class="@yield('menu-5')">
-    <a href="{{ route('report') }}">
-        <i class="fa fa-file" aria-hidden="true"></i> <span>Report</span>
+
+
+@endif
+
+
+<li class="@yield('menu-7')">
+    <a href="{{ route('tasks') }}">
+        <i class="fa fa-tasks" aria-hidden="true"></i> <span>Tasks</span>
     </a>
 </li>
 
+
+<li class="@yield('menu-6')">
+    <a href="{{ route('projects') }}">
+        <i class="fa fa-sitemap" aria-hidden="true"></i> <span>Projects</span>
+    </a>
+</li>
+@if(auth()->user()->can('admin'))
+
+<li class="@yield('menu-5') treeview">
+    <a href="#">
+        <i class="fa fa-file" aria-hidden="true"></i> <span>Report</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="@yield('menu-5-1')"><a href="{{ route('report.tickets') }}"><i class="fa fa-circle-o"></i>
+                Tickets</a></li>
+        <li class="@yield('menu-5-2')"><a href="{{ route('report.tasks') }}"><i class="fa fa-circle-o"></i>
+                Tasks</a></li>
+        <li class="@yield('menu-5-3')"><a href="{{ route('report.projects') }}"><i class="fa fa-circle-o"></i>
+                Projects</a></li>
+    </ul>
+</li>
 @endif

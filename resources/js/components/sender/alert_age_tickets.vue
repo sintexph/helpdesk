@@ -1,5 +1,5 @@
 <template>
-    <modal name="age-tickets" ref="modal" :extended_width="true">
+    <modal :prevent="true" name="age-tickets" ref="modal" :extended_width="true">
         <template slot="header">Un closed tickets</template>
         <template slot="body">
             <p class="alert-custom alert-custom-danger"><strong>Reminder!</strong> You have completed tickets that needs

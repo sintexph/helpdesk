@@ -22,6 +22,9 @@ mix.js('resources/js/manage-tickets.js', 'public/js')
     .js('resources/js/profile.js', 'public/js')
     .js('resources/js/account.js', 'public/js')
     .js('resources/js/settings.js', 'public/js')
-    .js('resources/js/report.js', 'public/js')
+    .js('resources/js/ticket-report.js', 'public/js')
+    .js('resources/js/task-report.js', 'public/js')
+    .js('resources/js/projects.js', 'public/js')
+    .js('resources/js/canned-solutions.js', 'public/js')
+    .js('resources/js/tasks.js', 'public/js')
     .sass('resources/sass/ticket.scss', 'public/css');
-

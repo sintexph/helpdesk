@@ -1,6 +1,6 @@
 <template>
-    <modal name="edit-setting" ref="modal">
-        <template slot="header">Create Setting</template>
+    <modal :prevent="true" name="edit-setting" ref="modal">
+        <template slot="header">Update Setting</template>
         <template slot="body">
             <div class="form-group">
                 <label class="control-label">Setting</label>

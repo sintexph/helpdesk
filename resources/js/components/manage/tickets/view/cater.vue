@@ -1,5 +1,5 @@
 <template>
-    <modal name="modal-cater" ref="modal">
+    <modal :prevent="true" name="modal-cater" ref="modal">
         <template slot="header">Cater Ticket</template>
         <template slot="body">
             Do you want to cater and at the same time process the ticket?

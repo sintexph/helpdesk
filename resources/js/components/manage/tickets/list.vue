@@ -16,17 +16,19 @@
                             </span>
                         </div>
                     </div>
+ 
+                    
                     <div class="form-group">
                         <label class="control-label">State</label>
                         <select class="form-control input-sm" v-model="filters.state" @change="filter_list">
                             <option value="">-- Filter State --</option>
-                            <option :value="STATE.PENDING">Pending</option>
-                            <option :value="STATE.CATERED">Catered</option>
-                            <option :value="STATE.PROCESSING">Processing</option>
-                            <option :value="STATE.SOLVED">Solved</option>
-                            <option :value="STATE.CLOSED">Closed</option>
-                            <option :value="STATE.HOLD">Hold</option>
-                            <option :value="STATE.CANCELLED">Cancelled</option>
+                            <option :value="State.PENDING">Pending</option>
+                            <option :value="State.CATERED">Catered</option>
+                            <option :value="State.PROCESSING">Processing</option>
+                            <option :value="State.SOLVED">Solved</option>
+                            <option :value="State.CLOSED">Closed</option>
+                            <option :value="State.HOLD">Hold</option>
+                            <option :value="State.CANCELLED">Cancelled</option>
                             <option :value="-1">Show All</option>
                         </select>
                     </div>
@@ -42,8 +44,8 @@
                     <button type="button" title="Create Ticket" class="btn btn-default"
                         @click.prevent="$refs.createTicket.show"><i class="fa fa-ticket"
                             aria-hidden="true"></i></button>
-                    <button type="button" title="Reload list" @click.prevent="filter_list" class="btn btn-default"><i class="fa fa-refresh"
-                            aria-hidden="true"></i></button> 
+                    <button type="button" title="Reload list" @click.prevent="filter_list" class="btn btn-default"><i
+                            class="fa fa-refresh" aria-hidden="true"></i></button>
                 </div>
                 <datatable :parameters="filters" @reloaded="load_images" ref="datatables" :createdRow="createdRow"
                     :buttons="false" :columns="columns" url="/tickets/list"></datatable>
@@ -59,7 +61,8 @@
         computed: {
             gen_rat() {
                 return this.generate_rating(1);
-            }
+            },
+           
         },
         components: {
             'create-ticket': createTicket,
@@ -89,13 +92,13 @@
                             var urgency = '';
                             switch (row.urgency) {
                                 case 1:
-                                    urgency = '<i class="fa fa-circle priority-1" title="Low"></i>';
+                                    urgency = '<i class="fa fa-flag priority-1" title="Low"></i>';
                                     break;
                                 case 2:
-                                    urgency = '<i class="fa fa-circle priority-2"  title="Normal"></i>';
+                                    urgency = '<i class="fa fa-flag priority-2"  title="Normal"></i>';
                                     break;
                                 case 3:
-                                    urgency = '<i class="fa fa-circle priority-3"  title="High"></i>';
+                                    urgency = '<i class="fa fa-flag priority-3"  title="High"></i>';
                                     break;
                             }
                             return urgency + `&nbsp;&nbsp;` + data;
@@ -198,7 +201,7 @@
                 var display = `<a href="/tickets/view/` + row.id + `" target="_blank"><strong>` + data +
                     `</strong></a><br>`;
 
-                if (row.state === this.STATE.PENDING)
+                if (row.state === State.PENDING)
                     display += row.sender_factory;
                 else
                     display += this.generate_rating(row.user_rating);
@@ -209,6 +212,7 @@
         },
         mounted() {
             let par = this;
+
             par.systems.forEach(function (system) {
                 par.system_data.push({
                     id: system.code,

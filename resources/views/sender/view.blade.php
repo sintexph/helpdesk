@@ -8,6 +8,13 @@
     href="http://cdn.sportscity.com.ph/AdminLTE-2.4.5/bower_components/select2/dist/css/select2.min.css">
 <link rel="stylesheet" href="http://cdn.sportscity.com.ph/bs-tag-input/src/bootstrap-tagsinput.css">
 <script src='http://cdn.sportscity.com.ph/tinymce/tinymce.min.js'></script>
+
+<script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+  }
+</script>
+
 @stop
 
 @section('content')
@@ -16,7 +23,7 @@
 
     <div class="row">
         <div class="col-sm-8">
-            <div class="status {{ strtolower($ticket->state_text) }}">{{ $ticket->state_text }}</div>
+            <div class="status {{ str_replace(' ','-',strtolower($ticket->state_text)) }}">{{ $ticket->state_text }}</div>
 
             @if($ticket->cancelled_at!=null)
             <div class="status {{ strtolower($ticket->state_text) }}">
@@ -55,15 +62,15 @@
                                 <dd>
                                     @switch($ticket->urgency)
                                     @case('1')
-                                    <a title="Low Priority"><i class="fa fa-circle priority-1" aria-hidden="true"></i>
+                                    <a title="Low Priority"><i class="fa fa-flag priority-1" aria-hidden="true"></i>
                                         Low</a>
                                     @break
                                     @case('2')
-                                    <a title="Normal Priority"><i class="fa fa-circle priority-2" ria-hidden="true"></i>
+                                    <a title="Normal Priority"><i class="fa fa-flag priority-2" ria-hidden="true"></i>
                                         Normal</a>
                                     @break
                                     @case('3')
-                                    <a title="High Priority"><i class="fa fa-exclamation priority-3"
+                                    <a title="High Priority"><i class="fa fa-flag priority-3"
                                             aria-hidden="true"></i>
                                         High</a>
                                     @break
@@ -72,26 +79,19 @@
                             </dl>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="box-header">
                     <h3 class="box-title">Ticket Content</h3>
-
                      <div class="pull-right">
-                    <a href="{{ route('content.download',$ticket->control_number) }}" title="Download this ticket"
-                        class="btn btn-xs btn-default">
-                        <i aria-hidden="true" class="fa fa-download"></i> Download
-                    </a>
+                        <a href="{{ route('content.download',$ticket->control_number) }}" title="Download this ticket"
+                            class="btn btn-xs btn-default">
+                            <i aria-hidden="true" class="fa fa-download"></i> Download
+                        </a>
                 </div>
                 
                 </div>
                 <div class="box-body">
-
-
-                    <iframe src="{{ route('content.view',[ $ticket->control_number,$ticket->token]) }}" width="100%"
-                        height="600"></iframe>
-
+                    <iframe frameborder="0" scrolling="no" onload="resizeIframe(this)" src="{{ route('content.view',[ $ticket->control_number,$ticket->token]) }}" width="100%"></iframe>
                 </div>
 
             </div>
@@ -100,15 +100,15 @@
             </ticket-conversations>
         </div>
         <div class="col-sm-4">
-            @if($ticket->state!=TicketState::CLOSED && $ticket->state!=TicketState::PENDING &&
-            $ticket->state!=TicketState::CANCELLED)
+            @if($ticket->state!=State::CLOSED && $ticket->state!=State::PENDING &&
+            $ticket->state!=State::CANCELLED)
             <div class="box box-solid">
                 <div class=" box-header with-border">
                     <h3 class="box-title">Actions</h3>
                 </div>
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        @if($ticket->state==TicketState::SOLVED)
+                        @if($ticket->state==State::SOLVED)
                         <li>
                             <open-ticket ticket_id="{{ $ticket->id }}">
                             </open-ticket>
@@ -116,18 +116,18 @@
                         <li>
                             <a href="#" @click.prevent="$refs.closeTicket.show()">
                                 <i class="fa fa-ticket" aria-hidden="true"></i>
-                                <span>CLOSE TICKET</span>
+                                <span>Close Ticket</span>
                             </a>
                         </li>
                         @endif
-                        @if($ticket->state!=TicketState::SOLVED)
+                        @if($ticket->state!=State::SOLVED)
                         <li>
                             <cancel-ticket ticket_id="{{ $ticket->id }}">
                             </cancel-ticket>
                         </li>
                         @endif
                     </ul>
-                    @if($ticket->state==TicketState::SOLVED)
+                    @if($ticket->state==State::SOLVED)
                     <close-ticket ticket_id="{{ $ticket->id }}" ref="closeTicket">
                     </close-ticket>
                     @endif

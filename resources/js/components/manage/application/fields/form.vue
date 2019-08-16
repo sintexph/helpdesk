@@ -21,7 +21,7 @@
                 Date Only
             </button>
         </div>
-        <modal :extended_width="true" @hidden="reset" name="add-item" ref="addItem">
+        <modal :prevent="true" :extended_width="true" @hidden="reset" name="add-item" ref="addItem">
             <template slot="header">
                 Add {{ field.type }}
             </template>

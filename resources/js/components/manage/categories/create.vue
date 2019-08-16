@@ -1,5 +1,5 @@
 <template>
-    <modal name="create-category" ref="modal"  >
+    <modal :prevent="true" name="create-category" ref="modal"  >
         <template slot="header">Create Category</template>
         <template slot="body">
             <div class="form-group">

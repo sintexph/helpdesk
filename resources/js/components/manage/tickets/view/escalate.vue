@@ -1,5 +1,5 @@
 <template>
-    <modal name="modal-escalate" ref="modal">
+    <modal :prevent="true" name="modal-escalate" ref="modal">
         <template slot="header">Escalate Ticket</template>
         <template slot="body">
             <div class="form-group">

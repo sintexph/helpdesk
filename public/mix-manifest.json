@@ -2,6 +2,7 @@
     "/js/account.js": "/js/account.js",
     "/js/application.js": "/js/application.js",
     "/js/auth.js": "/js/auth.js",
+    "/js/canned-solutions.js": "/js/canned-solutions.js",
     "/js/categories.js": "/js/categories.js",
     "/js/conversation.js": "/js/conversation.js",
     "/js/dashboard.js": "/js/dashboard.js",
@@ -10,6 +11,9 @@
     "/js/manage-tickets.js": "/js/manage-tickets.js",
     "/css/ticket.css": "/css/ticket.css",
     "/js/profile.js": "/js/profile.js",
-    "/js/report.js": "/js/report.js",
-    "/js/settings.js": "/js/settings.js"
+    "/js/projects.js": "/js/projects.js",
+    "/js/settings.js": "/js/settings.js",
+    "/js/task-report.js": "/js/task-report.js",
+    "/js/tasks.js": "/js/tasks.js",
+    "/js/ticket-report.js": "/js/ticket-report.js"
 }

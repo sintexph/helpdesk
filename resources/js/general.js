@@ -1,7 +1,4 @@
-import StateMixin from  "./src/State";
-Vue.mixin(StateMixin);
-import TicketUrgencyMixin from "./src/TicketUrgency";
-Vue.mixin(TicketUrgencyMixin);
+ 
 
 import RatingMixin from "./src/Rating";
 Vue.mixin(RatingMixin);
@@ -10,11 +7,31 @@ import {
     Ticket
 }
 from "./src/Ticket";
-
-
 window.Ticket = Ticket;
  
+import {
+    State
+}
+from "./src/State";
+window.State = State;
 
+ import {
+     Urgency
+ }
+ from "./src/Urgency";
+ window.Urgency = Urgency;
+
+
+ Vue.mixin({
+
+     computed: {
+         State() {
+             return window.State;
+         }
+     }
+ });
+
+ 
 import TicketRating from './components/ticket/rating.vue';
 Vue.component('ticket-rating', TicketRating);
 

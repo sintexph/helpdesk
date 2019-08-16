@@ -12,7 +12,8 @@ class LinkPreviewController extends Controller
         $linkPreview = new LinkPreview($request['url']);
         $link = $linkPreview->getParsed()["general"];
         
-        $image=empty($link->getImage())?$link->getPictures()[0]:$link->getImage();
+        
+        $image=$this->get_picture($link);
         $url=$link->getRealUrl();
         $title=$link->getTitle() ;
         $description=$link->getDescription();
@@ -24,5 +25,22 @@ class LinkPreviewController extends Controller
             'title'=>$title,
             'description'=>$description,
         ]);
+    }
+
+    function get_picture($link)
+    {
+        $pictures=$link->getPictures();
+
+        if(count($pictures)==0)
+            return empty($link->getImage())?null:$link->getImage();
+        else
+        {
+            if(isset($pictures[0]))
+                return $pictures[0];
+            else
+            {
+                return $pictures[rand(1,count($pictures)-1)];
+            }
+        }
     }
 }

@@ -46,7 +46,7 @@
         </form>
 
         <div class="clearfix"></div>
-        <modal name="modal-continue" ref="modalContinue">
+        <modal :prevent="true" name="modal-continue" ref="modalContinue">
             <template slot="header">Provide More Details</template>
             <template slot="body">
                 <p><strong>We apologize</strong> but it seems we cannot find you from our databases. Instead, you can

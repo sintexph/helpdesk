@@ -1,5 +1,5 @@
 <template>
-    <modal name="create-factory" ref="modal"  >
+    <modal :prevent="true" name="create-factory" ref="modal"  >
         <template slot="header">Create Factory</template>
         <template slot="body">
             <div class="form-group">

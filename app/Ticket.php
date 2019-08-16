@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\TicketHelper;
-use App\Helpers\TicketUrgency;
-use TicketState;
+use App\Helpers\Urgency;
+use State;
 
 class Ticket extends Model
 {
@@ -112,7 +112,7 @@ class Ticket extends Model
 
     public function getUrgencyTextAttribute()
     {
-        return TicketUrgency::urgency($this->urgency);
+        return Urgency::urgency($this->urgency);
     }
 
 
@@ -123,7 +123,7 @@ class Ticket extends Model
     
     public function getStateTextAttribute()
     {
-        return TicketState::state($this->state);
+        return State::state($this->state);
     }
     
     public function getPlainTextContentAttribute()

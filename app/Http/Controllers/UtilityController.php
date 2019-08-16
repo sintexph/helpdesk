@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\User;
 use App\Factory;
-use TicketState;
+use State;
 use DB;
 use App\Setting;
+use App\CannedSolution;
+use App\Project;
 
 class UtilityController extends Controller
 {
@@ -67,7 +69,7 @@ class UtilityController extends Controller
     { 
         $aged_setting=Setting::where('name','AGED_TICKETS')->first();
         $tickets=auth()->user()->tickets()->select(['control_number','id','title','created_at','state'])
-        ->where('state','=',TicketState::SOLVED)->get();
+        ->where('state','=',State::SOLVED)->get();
 
         $tickets=$tickets->filter(function($ticket)use($aged_setting){ 
 
@@ -86,4 +88,47 @@ class UtilityController extends Controller
         return json_encode($tickets);
     }
 
+    public function setting(Request $request)
+    {
+        $this->validate($request,['name'=>'required']);
+        $setting=Setting::where('name',$request->name)->first();
+        return response()->json($setting->value);
+    }
+
+
+    public function canned_solutions(Request $request)
+    {
+        $q=$request['q'];
+        $canned_solutions=CannedSolution::select([
+            'id',
+            'name as text',
+        ])
+        ->where(function($condition)use($q){
+            $condition->orWhere('name','like','%'.$q.'%');
+        })->limit(10)->get()->makeHidden('content_html');
+        
+        return json_encode($canned_solutions);
+    }
+    public function canned_solution($id)
+    {
+        $canned_solutions=CannedSolution::find($id);
+        return json_encode($canned_solutions);
+    }
+
+    /**
+     * PROJECTS CREATED AND FOLLOWED BY THE AUTHENTICATED USER
+     * 
+     */
+    public function projects()
+    {
+        $user=auth()->user();
+        $projects=Project::whereNotIn('state',[State::CANCELLED,State::CLOSED])
+        ->select(['id','name'])
+        ->where(function($query)use($user){
+            $query->orWhere('created_by',$user->id)
+            ->orWhereJsonContains('followers',$user->id);
+        });
+ 
+        return json_encode($projects->get());
+    }
 }
