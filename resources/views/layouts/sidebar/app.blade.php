@@ -15,6 +15,12 @@
 
 <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
+      <li>
+            <a href="{{ route('projects') }}">
+                <i class="fa fa-list" aria-hidden="true"></i> <span>Projects</span>
+            </a>
+        </li>
+
         <li>
             <a href="{{ route('user') }}">
                 <i class="fa fa-ticket" aria-hidden="true"></i> <span>Tickets</span>

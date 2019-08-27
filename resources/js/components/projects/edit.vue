@@ -49,6 +49,7 @@
 
                     vm.project.tags = response.data.tags;
                     vm.project.state = response.data.state;
+                    vm.project.is_public = response.data.is_public;
 
                     vm.hide_wait();
 
@@ -67,10 +68,11 @@
                     followers: vm.project.followers,
                     tags: vm.project.tags,
                     state: vm.project.state,
+                    is_public :vm.project.is_public,
                 }).then(response => {
                     vm.alert_success(response);
 
-                    if (!vm.project_id) { 
+                    if (!vm.project_id) {
                         vm.id = null;
                         vm.project = new Project;
                         vm.$refs.modal.dismiss();

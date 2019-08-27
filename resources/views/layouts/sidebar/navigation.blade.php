@@ -42,23 +42,7 @@
     </a>
 </li>
 
-
-@endif
-
-
-<li class="@yield('menu-7')">
-    <a href="{{ route('tasks') }}">
-        <i class="fa fa-tasks" aria-hidden="true"></i> <span>Tasks</span>
-    </a>
-</li>
-
-
-<li class="@yield('menu-6')">
-    <a href="{{ route('projects') }}">
-        <i class="fa fa-sitemap" aria-hidden="true"></i> <span>Projects</span>
-    </a>
-</li>
-@if(auth()->user()->can('admin'))
+ 
 
 <li class="@yield('menu-5') treeview">
     <a href="#">

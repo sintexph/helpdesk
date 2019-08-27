@@ -33,16 +33,24 @@
 
         <div class="box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Projects</h3>
+                <h3 class="box-title"><i class="fa fa-clipboard" aria-hidden="true"></i> Projects</h3>
+
+                <div class="box-tools pull-right">
+
+                    <button type="button" class="btn btn-box-tool" title="Add New Project"
+                        @click.prevent="$refs.createProject.show">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Create
+                    </button>
+                    <a :href="'/projects/download?find='+filters.find+'&state='+filters.state" class="btn btn-box-tool"
+                        title="Downlad project list">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download
+                    </a>
+
+                </div>
+
             </div>
             <div class="box-body">
-                <button type="button" class="btn btn-xs btn-default" title="Add New Project"
-                    @click.prevent="$refs.createProject.show">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-                 <a :href="'/projects/download?find='+filters.find+'&state='+filters.state" class="btn btn-xs btn-default" title="Downlad project list">
-                    <i class="fa fa-download" aria-hidden="true"></i>
-                </a>
+
 
                 <datatable ref="datatable" :parameters="filters" :buttons="false" url="/projects/list"
                     :columns="columns">
@@ -68,7 +76,8 @@
                     find: '',
                     state: '',
                 },
-                columns: [{
+                columns: [
+                    {
                         label: 'Project',
                         data: 'name',
                         className: 'fit',
@@ -77,8 +86,6 @@
                                 `">` + data + `</a></strong>`;
                         }
                     },
-
-
                     {
                         label: 'Description',
                         data: 'description',
@@ -89,22 +96,14 @@
                         label: 'Start Date',
                         data: 'start_date',
                     },
-
-
-
-
                     {
                         label: 'Due Date',
                         data: 'due_date',
                     },
-
-
-
                     {
                         label: 'Created At',
                         data: 'created_at',
                     },
-
                     {
                         label: 'Status',
                         data: 'state',
@@ -113,7 +112,6 @@
                                 row.state_text + `</div>`;
                         }
                     },
-
                     {
                         label: 'Action',
                         data: 'id',
@@ -140,7 +138,7 @@
                 this.$refs.editProject.show(id);
             },
 
-           
+
         },
         mounted() {
             var vm = this;

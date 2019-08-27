@@ -26,6 +26,8 @@ class CreateProjectsTable extends Migration
             $table->json('followers');
             $table->json('tags');
 
+            $table->boolean('is_public')->comment('Set flag for public viewing');
+
             $table->integer('state')->default(1);
 
             $table->timestamps();

@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-solid">
+                
                 <div class="box-body form-inline">
 
                     <div class="form-group">
@@ -35,14 +36,33 @@
                         </select>
                     </div>
 
+                    <div class="pull-right" style="width:250px;">
+                        <task-progress :project_id="project_id"></task-progress>
+                    </div>
+
+
                 </div>
             </div>
 
             <div class="box box-solid">
-                <div class="box-body">
-                    <a :href="download_link" class="btn btn-xs btn-default" title="Downlad task list">
-                        <i class="fa fa-download" aria-hidden="true"></i>
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-th-list" aria-hidden="true"></i> Task List</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" @click.prevent="$refs.addTask.show()"><i
+                                class="fa fa-plus"></i> Add Task
+                        </button> 
+
+                         <a :href="download_link" class="btn btn-box-tool" title="Downlad task list">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download
                     </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="box-body">
+                   
                     <datatable :buttons="false" ref="datatable" :parameters="filters" :columns="columns"
                         url="/tasks/list">
                     </datatable>
@@ -53,6 +73,7 @@
         <div class="col-xs-12">
             <edit-task ref="editTask"></edit-task>
             <view-task ref="viewTask"></view-task>
+            <add-task :project_id="project_id" ref="addTask"></add-task>
         </div>
 
     </div>

@@ -35,7 +35,7 @@
                     <label class="control-label">Assigned To</label>
                     <div class="input-group input-group-sm">
                         <input-autocomplete className="input-sm" @selected="user_selected" anchor="name"
-                            url="/utility/find_user">
+                            url="/utility/find-user">
                         </input-autocomplete>
 
                     </div>

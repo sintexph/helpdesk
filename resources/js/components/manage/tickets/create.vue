@@ -5,7 +5,7 @@
             <form ref="submitForm" @submit.prevent="submit">
                 <div class="form-group">
                     <label class="control-label">Sender</label>
-                    <input-autocomplete @selected="user_selected" anchor="name" url="/utility/find_user">
+                    <input-autocomplete @selected="user_selected" anchor="name" url="/utility/find-user">
                     </input-autocomplete>
                     <validation :errors="validation_errors" field="sender_id_number"></validation>
                 </div>

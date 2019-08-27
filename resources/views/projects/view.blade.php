@@ -1,6 +1,6 @@
-@extends('layouts.sidebar.app')
+@extends('layouts.project.app')
 
-@section('menu-6','active')
+@section('menu-1','active')
 
 @section('top_script')
 <link rel="stylesheet" href="http://cdn.sportscity.com.ph/datatables/datatables.min.css">
@@ -12,17 +12,19 @@
 
 <div id="projects">
     <div class="box box-solid">
-        <div class="box-header">
+        <div class="box-header with-border">
             <h3 class="box-title">{{ $project->name }} </h3>
-            <div class="pull-right">
-                <a title="Edit" href="#" @click.prevent="$refs.editProject.show()" class="text-yellow btn btn-xs"><i
-                        aria-hidden="true" class="fa fa-pencil"></i> Edit Project</a>
+            <div class="box-tools pull-right">
+                <a title="Edit" href="#" @click.prevent="$refs.editProject.show()" class="btn btn-box-tool"><i
+                        aria-hidden="true" class="fa fa-pencil text-yellow"></i> Edit Project</a>
 
-                <a title="Delete" href="#" @click.prevent="delete_project('{{ $project->id }}')" class="text-red btn btn-xs">
-                    <i class="fa fa-trash" aria-hidden="true"></i> Delete Project</a>
+                <a title="Delete" href="#" @click.prevent="delete_project('{{ $project->id }}')"
+                    class="btn btn-box-tool">
+                    <i class="fa fa-trash text-red" aria-hidden="true"></i> Delete Project</a>
 
             </div>
         </div>
+
         <div class="box-body">
             <div class="table-responsive">
                 <table class="table no-border table-hover table-striped">
@@ -75,36 +77,30 @@
                     </tbody>
                 </table>
             </div>
-            <task-progress ref="taskProgress" project_id="{{ $project->id }}"></task-progress>
-
-
-
+        </div>
+        <div class="box-header">
+            @if($project->is_public==false)
+            <h3 class="box-title"><i class="fa fa-lock" aria-hidden="true"></i> Private</h3>
+            @else
+            <h3 class="box-title text-blue"><i class="fa fa-globe" aria-hidden="true"></i> Public&nbsp;&nbsp;&nbsp;<a href="#"><i class="fa fa-link" aria-hidden="true"></i> View public link</a></h3>
+            @endif
+        </div>
+        <div class="box-footer">
+            <div class="btn-group">
+                <a href="?view=kanban"
+                    class="btn btn-default {{ app('request')->input('view')=='kanban' || !app('request')->input('view') ?'active':'' }}">Kanban</a>
+                <a href="?view=table"
+                    class="btn btn-default {{ app('request')->input('view')=='table'?'active':'' }}">Task List</a>
+            </div>
         </div>
     </div>
-
-    <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs">
-            <li class="{{ app('request')->input('view')=='kanban' || !app('request')->input('view') ?'active':'' }}"><a
-                    href="?view=kanban">Kanban</a>
-            </li>
-            <li class="{{ app('request')->input('view')=='table'?'active':'' }}"><a href="?view=table">Task List</a>
-            </li>
-            <li class="pull-right">
-                <a href="#" @click.prevent="$refs.addTask.show()" class="text-muted">
-                    <i class="fa fa-plus" aria-hidden="true"></i> Add Task
-                </a>
-            </li>
-        </ul>
-
-    </div>
-
 
     @if(app('request')->input('view')=='kanban' || !app('request')->input('view'))
     <kanban-tasks ref="kanbanTask" project_id="{{ $project->id }}"></kanban-tasks>
     @elseif(app('request')->input('view')=='table')
     <task-list ref="taskList" project_id="{{ $project->id }}"></task-list>
     @endif
-    <add-task project_id="{{ $project->id }}" ref="addTask"></add-task>
+
     <edit-project project_id="{{ $project->id }}" ref="editProject"></edit-project>
 
 </div>

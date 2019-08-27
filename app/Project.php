@@ -16,18 +16,21 @@ class Project extends Model
         'due_date', 
         'followers', 
         'tags', 
-        'state', 
+        'state',
+        'is_public',
     ];
 
     protected $casts=[
         'followers'=>'array',
         'tags'=>'array',
+        'is_public'=>'boolean',
     ];
 
 
     protected $appends=[
         'state_text',
     ];
+
     public function getStateTextAttribute()
     {
         return State::state($this->state);

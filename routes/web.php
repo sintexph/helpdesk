@@ -10,8 +10,8 @@ Route::prefix('utility')->name('.utility')->group(function(){
 
     Route::prefix('suggestions')->name('.suggestions')->group(function(){
 
-        Route::get('sender_name', 'UtilityController@suggestion_sender_name')->name('.sender_name');
-        Route::get('sender_email', 'UtilityController@suggestion_sender_email')->name('.sender_email');
+        //Route::get('sender_name', 'UtilityController@suggestion_sender_name')->name('.sender_name');
+        //Route::get('sender_email', 'UtilityController@suggestion_sender_email')->name('.sender_email');
         
 
         Route::name('.canned')->group(function(){
@@ -23,18 +23,18 @@ Route::prefix('utility')->name('.utility')->group(function(){
     });
 
 
-    Route::get('find_user','UtilityController@find_user')->name('.find_user'); 
+    Route::get('find-user','UtilityController@find_user')->name('.find_user'); 
     Route::post('factories','UtilityController@factories')->name('.factories');
     Route::post('categories','UtilityController@categories')->name('.categories');
-    Route::post('get_users','UtilityController@get_users')->name('.get_users');
-    Route::post('get_auth_user','UtilityController@get_auth_user')->name('.get_auth_user');
+    Route::post('get-users','UtilityController@get_users')->name('.get_users');
+    Route::post('get-auth-user','UtilityController@get_auth_user')->name('.get_auth_user');
     Route::post('applications','UtilityController@get_applications')->name('.application');
     Route::post('unclosed_tickets','UtilityController@unclosed_tickets')->name('.unclosed_tickets');
 
     Route::post('setting','UtilityController@setting')->name('.setting');
     Route::post('canned-solution/{id}','UtilityController@canned_solution')->name('.solution');
     Route::post('projects','UtilityController@projects')->name('.projects');
-
+    Route::post('current-date','UtilityController@current_date')->name('.current_date');
 
 });
 

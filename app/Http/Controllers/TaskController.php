@@ -108,49 +108,62 @@ class TaskController extends Controller
         $project=Project::find($request->project_id); 
         $assigned_to=User::find($request->assigned_to);
   
-        $task=TaskHelper::update(
-            $task,
-            $request->name,
-            $request->description,
-            $assigned_to,
-            $request->start_date,
-            $request->due_date,
-            $request->label,
-            $request->state,
-            $request->priority,
-            $request->remarks,
-            $project
-        );
- 
-        if(!empty($request->attachments_input))
-        {
-            # Upload the attachments
-            foreach($request->attachments_input as $upload)
+        try {
+    
+            DB::beginTransaction();
+            $task=TaskHelper::update(
+                $task,
+                $request->name,
+                $request->description,
+                $assigned_to,
+                $request->start_date,
+                $request->due_date,
+                $request->label,
+                $request->state,
+                $request->priority,
+                $request->remarks,
+                $project
+            );
+    
+            if(!empty($request->attachments_input))
             {
-                $file_upload=UploadHelper::upload_file($upload,auth()->user()->name);
-                TaskAttachment::create([
-                    'file_upload_id'=>$file_upload->id,
-                    'task_id'=>$task->id,
-                ]);
+                # Upload the attachments
+                foreach($request->attachments_input as $upload)
+                {
+                    $file_upload=UploadHelper::upload_file($upload,auth()->user()->name);
+                    TaskAttachment::create([
+                        'file_upload_id'=>$file_upload->id,
+                        'task_id'=>$task->id,
+                    ]);
+                }
             }
-        }
- 
+    
 
-        # Check if there are to be deleted with the uploaded attachments
-        $to_be_deleted_attachments=explode(",",$request->to_be_deleted_attachments);
-        if(!empty($to_be_deleted_attachments))
-        {
-            
-            foreach($to_be_deleted_attachments as $attachment_id)
+            # Check if there are to be deleted with the uploaded attachments
+            $to_be_deleted_attachments=explode(",",$request->to_be_deleted_attachments);
+            if(!empty($to_be_deleted_attachments))
             {
-                $attachment=TaskAttachment::find($attachment_id);
-                if(!empty($attachment))
-                    $attachment->delete();
+                
+                foreach($to_be_deleted_attachments as $attachment_id)
+                {
+                    $attachment=TaskAttachment::find($attachment_id);
+                    if(!empty($attachment))
+                        $attachment->delete();
+                }
             }
+
+            \App\Helpers\ProjectHelper::auto_state($task->project);
+
+            DB::commit();
+
+
+            return response()->json(['message'=>'Task has been successfully updated!']);
+
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(400,$th->getMessage());
         }
-
-
-        return response()->json(['message'=>'Task has been successfully updated!']);
     }
 
     public function kanban(Request $request)
@@ -265,15 +278,16 @@ class TaskController extends Controller
         fputcsv($output,[
             'NAME', 
             'DESCRIPTION', 
-            'PROJECT_ID', 
-            'ASSIGNED_TO', 
-            'START_DATE', 
-            'DUE_DATE', 
+            'PROJECT ID', 
+            'ASSIGNED TO', 
+            'START DATE', 
+            'DUE DATE', 
             'LABEL', 
             'STATE', 
             'PRIORITY',
-            'CREATED_BY', 
-            'CREATED_AT',
+            'REMARKS',
+            'CREATED BY', 
+            'CREATED AT',
         ]);
 
         foreach($tasks as $task)
@@ -288,6 +302,7 @@ class TaskController extends Controller
                 $task->label, 
                 $task->state_text, 
                 $task->priority_text,
+                $task->remarks==null?'':$task->remarks,
                 $task->creator->name, 
                 $task->created_at, 
             ]);
@@ -298,9 +313,26 @@ class TaskController extends Controller
     public function update_state(Request $request,$id)
     {
         $task=Task::find($id);
-        $task->state=$request->state;
-        $task->save();
-        return response()->json([]);
+
+        try {
+    
+            DB::beginTransaction();
+             
+            $task->state=$request->state;
+            $task->save();
+
+            \App\Helpers\ProjectHelper::auto_state($task->project);
+
+            DB::commit();
+
+
+            return response()->json([]);
+
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(400,$th->getMessage());
+        }
     }
 
     public function delete($id)

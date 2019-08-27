@@ -138,7 +138,7 @@
             },
             fetch: function () {
                 var par = this;
-                axios.post('/utility/get_auth_user').then(function (response) {
+                axios.post('/utility/get-auth-user').then(function (response) {
                     par.account.email = response.data.email;
                     par.account.name = response.data.name;
                     par.account.id_number = response.data.id_number;

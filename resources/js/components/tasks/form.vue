@@ -26,14 +26,15 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="control-label">Start Date</label>
+                    
+                    <label class="control-label">Start Date <small><a href="#" @click.prevent="current_date(start_current_date)">Current Date</a></small></label>
                     <date-mask type="text" v-model="task.start_date"></date-mask>
                 </div>
 
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="control-label">Due Date</label>
+                    <label class="control-label">Due Date <small><a href="#" @click.prevent="current_date(due_current_date)">Current Date</a></small></label>
                     <date-mask type="text" v-model="task.due_date"></date-mask>
                 </div>
             </div>
@@ -149,8 +150,19 @@
             }
         },
         methods: {
+            start_current_date(response) {
+                this.task.start_date = response.data;
+                this.hide_wait();
+            },
+             due_current_date(response) {
+                this.task.due_date = response.data;
+                this.hide_wait();
+            },
+            current_date(handler) {
+                this.show_wait("Please wait while getting the date....");
+                axios.post('/utility/current-date').then(handler);
+            },
             remove_attachment(index) {
-
                 this.task.attachments[index].remove = true;
                 this.task.to_be_deleted_attachments.push(this.task.attachments[index].id);
                 this.$forceUpdate();
@@ -190,7 +202,7 @@
             },
             load_user() {
                 var vm = this;
-                axios.post('/utility/get_users').then(response => {
+                axios.post('/utility/get-users').then(response => {
                     vm.users.push({
                         id: '',
                         text: '-- CHOOSE --',

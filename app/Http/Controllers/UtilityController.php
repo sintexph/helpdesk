@@ -131,4 +131,9 @@ class UtilityController extends Controller
  
         return json_encode($projects->get());
     }
+
+    public function current_date()
+    {
+        return json_encode(\Carbon\Carbon::now()->format("Y-m-d"));
+    }
 }

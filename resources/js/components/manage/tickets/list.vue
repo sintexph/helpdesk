@@ -16,8 +16,8 @@
                             </span>
                         </div>
                     </div>
- 
-                    
+
+
                     <div class="form-group">
                         <label class="control-label">State</label>
                         <select class="form-control input-sm" v-model="filters.state" @change="filter_list">
@@ -37,16 +37,23 @@
         </div>
         <div class="box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Ticket List</h3>
+                <h3 class="box-title "><i class="fa fa-th-list" aria-hidden="true"></i> Ticket List</h3>
+                <div class="box-tools pull-right">
+
+                    <button type="button" title="Reload list" @click.prevent="filter_list" class="btn btn-box-tool">
+                        <i class="fa fa-refresh" aria-hidden="true"></i> Reload</button>
+ 
+                    <button type="button" title="Create Ticket" class="btn btn-box-tool"
+                        @click.prevent="$refs.createTicket.show">
+                        <i class="fa fa-ticket" aria-hidden="true"></i>
+                        Create
+                    </button>
+
+                </div>
+
             </div>
             <div class="box-body">
-                <div class="btn-group btn-group-xs">
-                    <button type="button" title="Create Ticket" class="btn btn-default"
-                        @click.prevent="$refs.createTicket.show"><i class="fa fa-ticket"
-                            aria-hidden="true"></i></button>
-                    <button type="button" title="Reload list" @click.prevent="filter_list" class="btn btn-default"><i
-                            class="fa fa-refresh" aria-hidden="true"></i></button>
-                </div>
+
                 <datatable :parameters="filters" @reloaded="load_images" ref="datatables" :createdRow="createdRow"
                     :buttons="false" :columns="columns" url="/tickets/list"></datatable>
                 <create-ticket ref="createTicket" @submitted="$refs.datatables.reload()"></create-ticket>
@@ -62,7 +69,7 @@
             gen_rat() {
                 return this.generate_rating(1);
             },
-           
+
         },
         components: {
             'create-ticket': createTicket,

@@ -8,7 +8,12 @@
                 <small v-else class="text-gray">--- none ---</small>
             </h3>
         </div>
-        <div class="box-body task-desc-ell" :title="task.description" v-html="task.description_html"></div>
+        <div class="box-body task-desc-ell">
+            <div :title="task.description" v-html="task.description_html"></div>
+            <small class="text-yellow"><i class="fa fa-calendar-minus-o" aria-hidden="true"></i> {{ task.start_date }}</small>
+            <span>&nbsp;&nbsp;</span>
+            <small class="text-green"><i class="fa fa-calendar" aria-hidden="true"></i> {{ task.due_date }}</small>
+        </div>
         <div class="box-footer">
             <i v-if="task.priority===1" class="fa fa-flag priority-1" title="Low"></i>
             <i v-else-if="task.priority===2" class="fa fa-flag priority-2" title="Normal"></i>

@@ -105,6 +105,7 @@ class ProjectController extends Controller
             'followers'=>'nullable',
             'tags'=>'nullable',
             'state'=>'required',
+            'is_public'=>'required',
         
         ]);
 
@@ -121,6 +122,7 @@ class ProjectController extends Controller
             'followers'=>$request->followers, 
             'tags'=>$request->tags, 
             'state'=>$request->state, 
+            'is_public'=>$request->is_public, 
             'created_by'=>auth()->user()->id,
         ]);
 
@@ -153,6 +155,7 @@ class ProjectController extends Controller
             'followers'=>'nullable',
             'tags'=>'nullable',
             'state'=>'required',
+            'is_public'=>'required',
         
         ]);
 
@@ -175,6 +178,7 @@ class ProjectController extends Controller
             $project->followers=$request->followers; 
             $project->tags=$request->tags; 
             $project->state=$request->state;
+            $project->is_public=$request->is_public;
  
             $project->save();
 

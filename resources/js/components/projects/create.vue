@@ -37,6 +37,7 @@
                     followers: vm.project.followers,
                     tags: vm.project.tags,
                     state: vm.project.state,
+                    is_public: vm.project.is_public,
                 }).then(
                     response => {
                         vm.alert_success(response);

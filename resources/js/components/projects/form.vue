@@ -40,7 +40,8 @@
 
         <div class="form-group">
             <label class="control-label">Status</label>
-            <select2 style="width:100%" :options="select2_task_states" v-model="project.state" :required="true"></select2>
+            <select2 style="width:100%" :options="select2_task_states" v-model="project.state" :required="true">
+            </select2>
         </div>
 
         <div class="row">
@@ -58,11 +59,25 @@
                 </div>
             </div>
         </div>
+
+
+
+        <label>
+            <bootstrap-toggle v-model="project.is_public" :options="is_public_options" :disabled="false" />
+        </label>
+
+
     </div>
 </template>
 
+
 <script>
+    import BootstrapToggle from 'vue-bootstrap-toggle'
+
     export default {
+        components: {
+            BootstrapToggle
+        },
         props: {
             value: {
                 required: true,
@@ -78,6 +93,12 @@
                 followers: [],
                 states: [],
                 tags: '',
+                is_public_options: {
+                    size: 'small',
+                    on: `<i class="fa fa-globe" aria-hidden="true"></i> Public`,
+                    off: '<i class="fa fa-lock" aria-hidden="true"></i> Private',
+                    width: 100,
+                }
             }
         },
         watch: {
@@ -94,14 +115,14 @@
                 deep: true,
                 handler(value) {
                     this.project = value;
-                    this.tags=this.project.tags.join(",");
+                    this.tags = this.project.tags.join(",");
                 }
             }
         },
         methods: {
             load_user() {
                 var vm = this;
-                axios.post('/utility/get_users').then(response => {
+                axios.post('/utility/get-users').then(response => {
                     vm.users.push({
                         id: '',
                         text: '-- CHOOSE --',
@@ -131,7 +152,7 @@
 
             this.load_user();
 
- 
+
 
 
 

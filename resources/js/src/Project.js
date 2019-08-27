@@ -8,10 +8,18 @@ export class Project {
         this._state = '';
         this._tags = [];
         this._followers = [];
-
+        this._is_public = false;
     }
 
 
+
+    get is_public() {
+        return this._is_public;
+    }
+
+    set is_public(is_public) {
+        this._is_public = is_public;
+    }
 
     get followers() {
         return this._followers;

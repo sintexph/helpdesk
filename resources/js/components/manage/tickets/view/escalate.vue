@@ -31,7 +31,7 @@
         methods: {
             get_users() {
                 let vm = this;
-                axios.post('/utility/get_users').then(response => {
+                axios.post('/utility/get-users').then(response => {
                     vm.users = response.data;
                 });
             },

@@ -2,6 +2,14 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-th-large" aria-hidden="true"></i> Kanban Task</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" @click.prevent="$refs.addTask.show()"><i
+                                class="fa fa-plus"></i> Add Task
+                        </button>
+                    </div>
+                </div>
                 <div class="box-body form-inline">
                     <div class="form-group">
                         <label class="control-label">Find</label>
@@ -23,13 +31,29 @@
                             </option>
                         </select>
                     </div>
+
+
+                    <div class="pull-right" style="width:250px;">
+                        <task-progress :project_id="project_id"></task-progress>
+                    </div>
+
+
+
                 </div>
+
+
+
+
+
+
             </div>
         </div>
+
         <div class="col-xs-3">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title text-yellow">Pending</h3>
+                    <span class="label label-warning pull-right">{{ datasource.pending_tasks.length }}</span>
                     <i v-if="reloading.pending_tasks===true"
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
 
@@ -38,8 +62,9 @@
 
                     <draggable style="min-height:250px;" @add="update_pending" v-model="datasource.pending_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
-                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)" v-for="(value,key) in datasource.pending_tasks"
-                            :key="key" v-model="datasource.pending_tasks[key]">
+                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
+                            v-for="(value,key) in datasource.pending_tasks" :key="key"
+                            v-model="datasource.pending_tasks[key]">
                         </task-drag>
                     </draggable>
                 </div>
@@ -49,6 +74,7 @@
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title text-blue">Processing</h3>
+                    <span class="label label-primary pull-right">{{ datasource.processing_tasks.length }}</span>
                     <i v-if="reloading.processing_tasks===true"
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
 
@@ -57,8 +83,9 @@
 
                     <draggable style="min-height:250px;" @add="update_processing" v-model="datasource.processing_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
-                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)" v-for="(value,key) in datasource.processing_tasks"
-                            :key="key" v-model="datasource.processing_tasks[key]">
+                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
+                            v-for="(value,key) in datasource.processing_tasks" :key="key"
+                            v-model="datasource.processing_tasks[key]">
                         </task-drag>
                     </draggable>
                 </div>
@@ -68,6 +95,7 @@
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title text-green">Completed</h3>
+                    <span class="label label-success pull-right">{{ datasource.completed_tasks.length }}</span>
                     <i v-if="reloading.completed_tasks===true"
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
                 </div>
@@ -75,8 +103,9 @@
 
                     <draggable style="min-height:250px;" @add="update_completed" v-model="datasource.completed_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
-                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)" v-for="(value,key) in datasource.completed_tasks"
-                            :key="key" v-model="datasource.completed_tasks[key]">
+                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
+                            v-for="(value,key) in datasource.completed_tasks" :key="key"
+                            v-model="datasource.completed_tasks[key]">
                         </task-drag>
                     </draggable>
                 </div>
@@ -87,6 +116,7 @@
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Hold</h3>
+                    <span class="label label-default pull-right">{{ datasource.hold_tasks.length }}</span>
                     <i v-if="reloading.hold_tasks===true"
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
                 </div>
@@ -95,7 +125,8 @@
 
                     <draggable style="min-height:250px;" @add="update_hold" v-model="datasource.hold_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
-                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)" v-for="(value,key) in datasource.hold_tasks" :key="key"
+                        <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
+                            v-for="(value,key) in datasource.hold_tasks" :key="key"
                             v-model="datasource.hold_tasks[key]"></task-drag>
                     </draggable>
                 </div>
@@ -105,8 +136,8 @@
         <div class="col-xs-12">
             <edit-drag ref="editTask" @updated="load_tasks"></edit-drag>
             <view-task ref="viewTask"></view-task>
+            <add-task :project_id="project_id" ref="addTask"></add-task>
         </div>
-
     </div>
 </template>
 <script>

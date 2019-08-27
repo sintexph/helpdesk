@@ -94,7 +94,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         $factories=Factory::all();
-        $supports=User::where('role','<>',UserRole::SENDER)->get();
+        $supports=User::where('role','<>',UserRole::SENDER)->where('active',true)->get();
         return view('auth.login',['factories'=>$factories,'supports'=>$supports]);
     }
     
