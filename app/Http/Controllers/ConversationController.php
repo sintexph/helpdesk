@@ -83,7 +83,13 @@ class ConversationController extends Controller
                 $user_ids[]=$ticket->catered_by;
 
             # Get all the users based on the $user_ids
-            $users=User::whereIn('id',$user_ids)->get();
+            $users=User::where(function($condition)use($ticket,$user_ids){
+
+                $condition->orWhere('email',$ticket->sender_email) # Get the sender of the ticket
+                ->orWhereIn('id',$user_ids);
+
+            })->get();
+
             foreach ($users as $user) {
                 # Send email
                 MailSender::conversation($conversation,$user);

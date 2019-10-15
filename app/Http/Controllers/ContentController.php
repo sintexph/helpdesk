@@ -24,6 +24,8 @@ class ContentController extends Controller
         $template=view('layouts.content',['ticket'=>$ticket,'download'=>true]);
         $pdf = \PDF::loadHTML($template)->setPaper('letter')->setOrientation('portrait');
         $pdf->setOption('dpi',300); 
+
+        # Set the margins of the pdf
         $pdf->setOption('margin-top',20);
         $pdf->setOption('margin-right',20);
         $pdf->setOption('margin-bottom',20);
@@ -31,7 +33,4 @@ class ContentController extends Controller
         
         return $pdf->download('ticket.no.'.$ticket->control_number.'.pdf'); 
     }
-
- 
-
 }
