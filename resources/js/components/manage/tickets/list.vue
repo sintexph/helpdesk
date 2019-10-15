@@ -15,6 +15,8 @@
                                 </button>
                             </span>
                         </div>
+
+
                     </div>
 
 
@@ -33,6 +35,17 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-inline" v-if="role != ROLE.SENDER && role != ROLE.SUPPORT">
+                    <div class="form-group">
+                        <label><input type="checkbox" @change="filter_list" v-model="filters.catered"> Catered Tickets</label>
+                    </div>
+                </div>
+                <div class="form-group" v-show="filters.catered===false">
+                    <label class="control-label">Support</label>
+                    <select2 @changed="filter_list" :multiple="true" placeholder="Search..." style="width:100%;" v-model="filters.supports"
+                        url="/utility/suggestions/supports">
+                    </select2>
+                </div>
             </div>
         </div>
         <div class="box box-solid">
@@ -42,7 +55,7 @@
 
                     <button type="button" title="Reload list" @click.prevent="filter_list" class="btn btn-box-tool">
                         <i class="fa fa-refresh" aria-hidden="true"></i> Reload</button>
- 
+
                     <button type="button" title="Create Ticket" class="btn btn-box-tool"
                         @click.prevent="$refs.createTicket.show">
                         <i class="fa fa-ticket" aria-hidden="true"></i>
@@ -56,6 +69,7 @@
 
                 <datatable :parameters="filters" @reloaded="load_images" ref="datatables" :createdRow="createdRow"
                     :buttons="false" :columns="columns" url="/tickets/list"></datatable>
+
                 <create-ticket ref="createTicket" @submitted="$refs.datatables.reload()"></create-ticket>
             </div>
         </div>
@@ -75,18 +89,15 @@
             'create-ticket': createTicket,
         },
         props: {
-            systems: {
-                type: [Object, Array],
-                default: function () {
-                    return [];
-                }
-            },
+            role: [String, Number]
         },
         data: function () {
             return {
                 filters: {
                     find: '',
                     state: '',
+                    catered: false,
+                    supports:[],
                 },
                 find: '',
                 columns: [{
@@ -118,12 +129,12 @@
                         className: "fit",
                         sortable: false,
                         render: function (data, meta, row) {
-                            var display = `<strong>` + data + `</strong><br>`;
+                            var display = `<strong title="Sender's Name">` + data + `</strong><br>`;
 
-                            display +=
-                                `<div class="detail"><a href="#">` +
-                                row
+                            display += `<div title="Sender's Email" class="detail"><a href="#">` + row
                                 .sender_email + `</a></div>`;
+                            display += `<div title="Computer's Ip Address" class="detail">` + row
+                                .sender_internet_protocol_address + `</div>`;
 
 
                             return display;
@@ -133,7 +144,6 @@
                         label: 'Title',
                         name: 'title',
                         data: 'title',
-                        className: "fit",
                         sortable: false,
                         render: this.render_title,
                     },
@@ -152,10 +162,10 @@
                                                     <img src="` + row.caterer.photo + `" alt="User Image">
                                                 </div>
 
-                                    <span class="caterer-name">` +
+                                    <span title="Catered By" class="caterer-name">` +
                                     row.caterer.name +
                                     `</span>
-                                    <span class="caterer-position">` +
+                                    <span title="Caterer's Email" class="caterer-position">` +
                                     row.caterer.email +
                                     `</span>
                                     </div>
@@ -173,7 +183,7 @@
                         sortable: false,
                         render: function (data, meta, row) {
                             var state = row.state_text;
-                            return `<div class="status ` +
+                            return `<div title="Ticket Status" class="status ` +
                                 state.toLowerCase() + `">` + state + `</div>`;
                         }
                     },
@@ -189,7 +199,6 @@
                         }
                     },
                 ],
-                system_data: [],
             }
         },
         methods: {
@@ -214,18 +223,19 @@
                     display += this.generate_rating(row.user_rating);
 
                 display += ` </div>`;
+
+                display += `<div title="Created At" class="detail">` + row.created_date + `</div>`;
+
                 return display;
             }
         },
         mounted() {
             let par = this;
 
-            par.systems.forEach(function (system) {
-                par.system_data.push({
-                    id: system.code,
-                    text: system.name
-                });
-            });
+            // Set the filter
+            if (par.role != par.ROLE.SENDER && par.role != par.ROLE.SUPPORT) {
+                par.filters.catered = true;
+            }
 
             $(document).idle({
                 onIdle: function () {

@@ -23,16 +23,19 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {  
+   
         # Redirect the user based on the role
         $user=auth()->user();
         switch ($user->role) {
             case UserRole::SENDER:
-                return redirect()->route('user');
+                return redirect()->route('user',['auth']);
+           
                 break;
             default:
-                return redirect()->route('tickets');
+             return redirect()->route('tickets', ['auth']);
+ 
                 break;
         }
     }

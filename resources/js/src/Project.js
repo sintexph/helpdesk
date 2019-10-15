@@ -9,7 +9,45 @@ export class Project {
         this._tags = [];
         this._followers = [];
         this._is_public = false;
+
+
+
+        this._attachments = [];
+        this._attachments_input = null;
+        this._to_be_deleted_attachments = [];
+
     }
+
+
+
+    get to_be_deleted_attachments() {
+        return this._to_be_deleted_attachments;
+    }
+
+    set to_be_deleted_attachments(to_be_deleted_attachments) {
+        this._to_be_deleted_attachments = to_be_deleted_attachments;
+    }
+
+
+    get attachments_input() {
+        return this._attachments_input;
+    }
+
+    set attachments_input(attachments_input) {
+        this._attachments_input = attachments_input;
+    }
+
+
+
+    get attachments() {
+        return this._attachments;
+    }
+
+    set attachments(attachments) {
+        this._attachments = attachments;
+    }
+
+
 
 
 

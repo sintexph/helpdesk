@@ -54,12 +54,12 @@ export class Ticket {
         this._sender_internet_protocol_address = sender_internet_protocol_address;
     }
 
-    get carbon_copies() {
-        return this._carbon_copies;
+    get sender_carbon_copies() {
+        return this._sender_carbon_copies;
     }
 
-    set carbon_copies(carbon_copies) {
-        this._carbon_copies = carbon_copies;
+    set sender_carbon_copies(sender_carbon_copies) {
+        this._sender_carbon_copies = sender_carbon_copies;
     }
 
     get sender_phone() {

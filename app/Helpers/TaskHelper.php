@@ -6,11 +6,13 @@ use App\Task;
 use App\User;
 use App\Project;
 use DB;
+use App\Helpers\ProjectHelper;
+use App\Helpers\ProjectHistoryHelper;
 
 class TaskHelper 
 {
     /**
-     * SAVE 
+     * SAVE
      */
     public static function save(
         $name,
@@ -25,9 +27,7 @@ class TaskHelper
         Project $project=null
     )
     {
-
         $task=new Task;
-         
         $task->name=$name;
         $task->description=$description;
 
@@ -49,10 +49,12 @@ class TaskHelper
         
         $task->created_by=auth()->user()->id;
         $task->save();
+
+        # Save history
+        ProjectHistoryHelper::task_create($task,auth()->user());
     
 
         return $task;
-
     }
 
     public static function update(
@@ -69,8 +71,6 @@ class TaskHelper
         Project $project=null
     )
     {
-
-
         $task->name=$name;
         $task->description=$description;
 
@@ -89,6 +89,10 @@ class TaskHelper
 
         if($project!=null)
             $task->project_id=$project->id;
+        else
+            $task->project_id=null;
+
+        ProjectHistoryHelper::task_update($task,auth()->user());
 
         $task->save();
 
@@ -121,5 +125,24 @@ class TaskHelper
             'incomplete'=>$incomplete_task->count(),
             'total'=>$tasks->count(),
         ];
+    }
+
+    public static function completion_rate(Project $project=null)
+    {
+        $completed_task=Task::on();
+        $tasks=Task::on();
+
+        if($project!=null)
+        {
+            $completed_task->where('project_id',$project->id);
+            $tasks->where('project_id',$project->id);
+        }
+ 
+
+        
+        $completed_task->where('state',State::COMPLETED); 
+        $tasks->where('state','<>',State::CANCELLED);
+
+        return $tasks->count()==0?0:round(($completed_task->count()/$tasks->count())*100,0);
     }
 }

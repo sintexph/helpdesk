@@ -19,6 +19,7 @@
         data() {
             return {
                 project: new Project,
+                submitted: false,
             }
         },
         methods: {
@@ -28,25 +29,58 @@
 
             create() {
                 var vm = this;
-                axios.put('/projects/save', {
-                    name: vm.project.name,
-                    description: vm.project.description,
-                    requested_by: vm.project.requested_by,
-                    start_date: vm.project.start_date,
-                    due_date: vm.project.due_date,
-                    followers: vm.project.followers,
-                    tags: vm.project.tags,
-                    state: vm.project.state,
-                    is_public: vm.project.is_public,
-                }).then(
-                    response => {
+
+                if (vm.submitted === false) {
+                    vm.submitted = true;
+                    vm.show_wait("Please wait while the system is saving the project....");
+
+
+                    let form = new FormData();
+
+                    if (vm.project.attachments_input !== null) {
+                        for (var i = 0; i < vm.project.attachments_input.length; i++) {
+                            let file = vm.project.attachments_input[i];
+                            form.append('attachments_input[' + i + ']', file);
+                        }
+                    }
+
+                    form.append('name', vm.project.name);
+                    form.append('description', vm.project.description);
+                    form.append('requested_by', vm.project.requested_by);
+                    form.append('start_date', vm.project.start_date);
+                    form.append('due_date', vm.project.due_date==null?'':vm.project.due_date);
+                    form.append('followers', vm.project.followers);
+                    form.append('tags', vm.project.tags);
+                    form.append('state', vm.project.state);
+                    form.append('is_public', vm.project.is_public == true ? "1" : "0");
+
+
+                    form.append('_method', 'PUT');
+                    axios.post('/projects/save', form, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(function (response) {
+
                         vm.alert_success(response);
                         vm.$refs.modal.dismiss();
                         vm.name = '';
                         vm.$emit('created');
-                    }).catch(error => {
-                    vm.alert_failed(error);
-                });
+                        vm.hide_wait();
+
+                    }).catch(function (error) {
+                        vm.alert_failed(error);
+                        vm.submitted = false;
+                        vm.hide_wait();
+                    });
+
+
+
+
+
+
+                }
+
 
             }
         }

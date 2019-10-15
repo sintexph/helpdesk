@@ -34,6 +34,8 @@ class AccountController extends Controller
     public function list(Request $request)
     {
         $find=$request['find'];
+        $role=$request['role'];
+        $active=$request['active'];
 
         $accounts=User::on();
 
@@ -47,6 +49,12 @@ class AccountController extends Controller
                 ->orWhere('username','like','%'.$find.'%');
             });
         }
+
+        if(!empty($active))
+            $accounts->where('active',$active);
+            
+        if(!empty($role))
+            $accounts->where('role',$role);
 
         return datatables($accounts)->rawColumns([
             'active',
@@ -70,21 +78,21 @@ class AccountController extends Controller
 
         ]);
 
-        User::create([
-            'name'=>strtoupper($request['name']),
-            'email'=>$request['email'],
-            'password'=>bcrypt($request['password']),
-            'position'=>$request['position'],
-            'username'=>$request['username'],
-            'created_by'=>auth()->user()->name,
-            
-            'id_number'=>$request['id_number'],
-            'factory'=>$request['factory'],
-            'contact'=>$request['contact'],
-            'role'=>$request['role'],
+        $user=new User;
+        $user->name=strtoupper($request['name']);
+        $user->email=$request['email'];
+        $user->password=bcrypt($request['password']);
+        $user->position=$request['position'];
+        $user->username=$request['username'];
+        $user->created_by=auth()->user()->name;
+                    
+        $user->id_number=$request['id_number'];
+        $user->factory=$request['factory'];
+        $user->contact=$request['contact'];
+        $user->role=$request['role'];
 
-            'active'=>$request['active'],
-        ]);
+        $user->active=$request['active']; 
+        $user->save();
 
         return response()->json(['message'=>'Account has been successfully created!']);
     }

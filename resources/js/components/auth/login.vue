@@ -1,7 +1,7 @@
 <template>
     <div class="box box-solid">
-        <template v-if="display==='login'">
-            <div class="box-header">
+    
+        <div class="box-header">
                 <h3 class="box-title">Login Account</h3>
             </div>
             <div class="login-box-body">
@@ -28,38 +28,19 @@
                             <button type="submit" class="btn btn-primary btn-sm btn-block">Sign In</button>
                         </div>
                     </div>
-                    <a href="#" @click.prevent="display='reset'">I forgot my password</a><br>
-                    <a href="#" @click.prevent="display='register'" class="text-center">Register a new membership</a>
+                    <a href="#" @click.prevent="$router.push('/reset')">I forgot my password</a><br>
+                    <a href="#" @click.prevent="$router.push('/register')" class="text-center">Register a new membership</a>
                 </form>
             </div>
-        </template>
-        <template v-else-if="display==='register'">
-            <div class="box-header">
-                <h3 class="box-title">Register Account</h3>
-            </div>
-            <div class="login-box-body">
-                <register-form :factories="factories"></register-form>
-                <a href="#" @click.prevent="display='login'" class="text-center">Login to helpdesk</a>
-            </div>
-        </template>
 
-        <template v-else-if="display==='reset'">
-            <div class="box-header">
-                <h3 class="box-title">Reset Password</h3>
-            </div>
-            <div class="login-box-body">
-                <reset-form></reset-form>
-                <a href="#" @click.prevent="display='login'" class="text-center">Login to helpdesk</a>
-            </div>
-        </template>
     </div>
 </template>
 <script>
     export default {
-        props: ['factories'],
+        
         data() {
             return {
-                display: 'login',
+               
                 username: '',
                 password: '',
                 remember: '',

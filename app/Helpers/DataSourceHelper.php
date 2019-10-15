@@ -32,8 +32,11 @@ class DataSourceHelper
     {
         if($id_number!=null)
         {
-            $result=static::request('/api/employee/find?q='.$id_number)->getBody()->getContents();
-            return \json_decode($result);
+            $result=static::request('/api/employee/find?q='.$id_number.'&ac=true')->getBody()->getContents();
+            if(empty($result))
+                return null;
+            else
+                return \json_decode($result);
         }
         return null;
 

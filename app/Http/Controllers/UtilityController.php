@@ -7,10 +7,12 @@ use App\Category;
 use App\User;
 use App\Factory;
 use State;
-use DB;
 use App\Setting;
 use App\CannedSolution;
 use App\Project;
+use App\Task;
+use App\Helpers\UserRole;
+use App\ProjectHistory;
 
 class UtilityController extends Controller
 {
@@ -45,12 +47,15 @@ class UtilityController extends Controller
         return json_encode(User::all());
     }
 
+ 
     public function find_user(Request $request)
     {
         $q=$request['q'];
         $users=User::where(function($condition)use($q){
             $condition->orWhere('name','like','%'.$q.'%');
-        })->limit(10)->get();
+        })
+        ->where('active',true)
+        ->limit(10)->get();
         
         return json_encode($users);
     }
@@ -95,7 +100,32 @@ class UtilityController extends Controller
         return response()->json($setting->value);
     }
 
+    /**
+     * LIST OF ALL SUPPORT STAFF ON THE SYSTEM
+     * SELECT2 DATA SOURCE
+     */
+    public function supports(Request $request)
+    {
+        $q=$request['q'];
 
+        $users=User::select([
+            'id',
+            'name as text',
+        ])->where(function($condition)use($q){
+            $condition->orWhere('name','like','%'.$q.'%');
+        })
+        ->where('active',true)
+        ->where('role','<>',UserRole::SENDER)->limit(10)->get()
+        ->makeHidden('photo')
+        ->makeHidden('role_text');
+
+        return json_encode(['results'=>$users]);
+    }
+
+    /**
+     * CANNED SOLUTIONS
+     * SELECT 2 DATA SOURCE
+     */
     public function canned_solutions(Request $request)
     {
         $q=$request['q'];
@@ -107,8 +137,9 @@ class UtilityController extends Controller
             $condition->orWhere('name','like','%'.$q.'%');
         })->limit(10)->get()->makeHidden('content_html');
         
-        return json_encode($canned_solutions);
+        return json_encode(['results'=>$canned_solutions]);
     }
+    
     public function canned_solution($id)
     {
         $canned_solutions=CannedSolution::find($id);
@@ -132,8 +163,51 @@ class UtilityController extends Controller
         return json_encode($projects->get());
     }
 
+
+    /**
+     * TASKS CREATED AND ASSIGNED TO AUTHENTICATED USER
+     */
+    public function calendar_tasks()
+    {
+        $tasks=Task::on();
+        $tasks->where(function($query){
+            $query->orWhere('created_by',auth()->user()->id)
+            ->orWhere('assigned_to',auth()->user()->id);
+        })->whereNotNull('start_date');
+        
+        return json_encode($tasks->get());
+    }
+
+    public function calendar_projects()
+    {
+        $user=auth()->user();
+        $projects=Project::whereNotIn('state',[State::CANCELLED,State::CLOSED])
+        ->select([
+            'name', 
+            'description',
+            'start_date', 
+            'due_date',
+            'state',
+        ])
+        ->where(function($query)use($user){
+            $query->orWhere('created_by',$user->id)
+            ->orWhereJsonContains('followers',$user->id);
+        })->whereNotNull('start_date');
+        
+        return json_encode($projects->get());
+    }
     public function current_date()
     {
         return json_encode(\Carbon\Carbon::now()->format("Y-m-d"));
+    }
+
+    public function project_histories($id)
+    {
+        $project=Project::find($id);
+        abort_if($project==null,404,'Project could not be found!');
+
+        $histories=ProjectHistory::where('project_id',$project->id)->orderBy('created_at','desc')->get();
+
+        return json_encode($histories);
     }
 }

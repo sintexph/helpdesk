@@ -77,7 +77,6 @@ class RegisterController extends Controller
             $user->id_number=$id_number;
             $user->factory=$factory;
             $user->position=$position;
-            $user->contact=null;
             $user->name=$name;
             $user->email=$email;
             $user->password=\Hash::make($password);

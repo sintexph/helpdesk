@@ -77,9 +77,16 @@ class Ticket extends Model
         'plain_text_content',
         'urgency_text',
         'time_ago',
+        'created_date'
     ];
     
     
+    public function getCreatedDateAttribute()
+    {
+        $date=new \Carbon\Carbon($this->created_at);
+        return $date->format('M d, Y'); 
+    }
+
     public function getTimeAgoAttribute()
     {
         $date=new \Carbon\Carbon($this->created_at);

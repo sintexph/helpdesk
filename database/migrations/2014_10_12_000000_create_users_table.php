@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('id_number')->unique();
             $table->string('factory');
             $table->string('position');
-            $table->string('contact')->nullable();
+            $table->string('contact')->default('000000');
 
             $table->integer('role')->unsigned()->default(1)->comment('1=sender,2=support,3=moderator,4=administrator'); 
 

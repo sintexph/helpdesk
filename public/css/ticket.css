@@ -302,3 +302,90 @@
   color: #26b821;
 }
 
+/*
+--------------------- CALENDAR ---------------------
+*/
+
+.vuecal__event {
+  cursor: pointer;
+  min-height: 70px;
+  margin-bottom: 2px;
+}
+
+.vuecal__event-title {
+  margin: 4px 0 8px;
+}
+
+.vuecal__event-time {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.vuecal__event-content {
+  font-style: italic;
+  padding: 10px;
+}
+
+.applied-approval.vuecal__event {
+  background-color: #b7d2e4;
+  border-bottom: 1px solid #37b4ca;
+}
+
+.approval-cancelled.vuecal__event {
+  background-color: #f3d8cb;
+  border-bottom: 1px solid #855037;
+}
+
+.escalated.vuecal__event {
+  background-color: #fac6e6;
+  border-bottom: 1px solid #d6a5b8;
+}
+
+.processing.vuecal__event {
+  background-color: #c1faf0;
+  border-bottom: 1px solid #a5d6cd;
+}
+
+.pending.vuecal__event {
+  background-color: #f8f0d6a4;
+  border-bottom: 1px solid #f5dd8d;
+}
+
+.catered.vuecal__event {
+  background-color: #d6ecf8a4;
+  border-bottom: 1px solid #84cffa;
+}
+
+.solved.vuecal__event {
+  background-color: #d6f8dca4;
+  border-bottom: 1px solid #76e48a;
+}
+
+.completed.vuecal__event {
+  background-color: #d6f8dca4;
+  border-bottom: 1px solid #76e48a;
+}
+
+.closed.vuecal__event {
+  background-color: #acacaca4;
+  border-bottom: 1px solid #7c7c7ca4;
+}
+
+.hold.vuecal__event {
+  background-color: #e2e2e2a4;
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.cancelled.vuecal__event {
+  background-color: #f8d6d6a4;
+}
+
+.task-list {
+  min-height: 450px;
+  max-height: 450px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+

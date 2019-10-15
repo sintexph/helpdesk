@@ -18,8 +18,7 @@
 
 
 <script>
- 
-    export default { 
+    export default {
         data: function () {
             return {
                 ticket: new Ticket,
@@ -62,9 +61,11 @@
                         vm.hide_wait();
                         vm.show_wait_success(data.message);
 
+                        vm.ticket = new Ticket;
+
 
                         setTimeout(function () {
-                              vm.hide_wait();
+                            vm.hide_wait();
                             vm.$router.push('/');
                         }, 3000);
 

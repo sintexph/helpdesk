@@ -4,13 +4,8 @@
         <template slot="body">
             <div class="form-group">
                 <label class="control-label">Escalate to Support Staff</label>
-                <select class="form-control" v-model="user_id">
-                    <option value="">-- SELECT --</option>
-                    <option v-for="(value,key) in users" :value="value.id" :key="key">{{ value.name }}</option>
-                </select>
+                <select2 placeholder="Search..." style="width:100%;" v-model="user_id" url="/utility/suggestions/supports"></select2>
             </div>
-
-
         </template>
         <template slot="footer">
             <button type="button" class="btn btn-danger btn-sm" @click.prevent="escalate">Escalate Ticket</button>
@@ -23,18 +18,12 @@
         props: ['ticket_id'],
         data() {
             return {
-                users: [],
                 user_id: '',
                 submitted: false,
             }
         },
         methods: {
-            get_users() {
-                let vm = this;
-                axios.post('/utility/get-users').then(response => {
-                    vm.users = response.data;
-                });
-            },
+
             show() {
                 this.$refs.modal.show();
             },
@@ -57,11 +46,7 @@
                 }
 
             }
-        },
-        mounted() {
-            this.get_users();
         }
-
     }
 
 </script>

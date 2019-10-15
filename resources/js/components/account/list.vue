@@ -14,6 +14,33 @@
                         </span>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="control-label">Role</label>
+                    <select class="form-control input-sm" @change="$refs.datatables.reload()" v-model="filters.role"
+                        required>
+                        <option value="">-- SELECT ROLE --</option>
+
+                        <option :value="ROLE.SENDER">SENDER</option>
+                        <option :value="ROLE.SUPPORT">SUPPORT</option>
+                        <option :value="ROLE.MODERATOR">MODERATOR</option>
+                        <option :value="ROLE.ADMINISTRATOR">ADMINISTRATOR</option>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Active</label>
+                    <select class="form-control input-sm" @change="$refs.datatables.reload()" v-model="filters.active"
+                        required>
+                        <option value="">-- SELECT ACTIVE --</option>
+
+                        <option :value="0">NO</option>
+                        <option :value="1">YES</option>
+
+                    </select>
+                </div>
+
             </div>
         </div>
         <div class="box box-solid">
@@ -22,7 +49,8 @@
             </div>
             <div class="box-body">
                 <button class="btn btn-xs btn-default" @click.prevent="$refs.createAccount.show">Create Account</button>
-                <datatable :buttons="false" ref="datatables" :parameters="filters" :columns="columns" url="/accounts/list"></datatable>
+                <datatable :buttons="false" :fixedRightColumns="1" ref="datatables" :parameters="filters"
+                    :columns="columns" url="/accounts/list"></datatable>
                 <create-account ref="createAccount" @created="$refs.datatables.reload()"></create-account>
                 <edit-account ref="editAccount" @updated="$refs.datatables.reload()"></edit-account>
             </div>
@@ -33,33 +61,13 @@
     export default {
         data: function () {
             return {
-                filters:{
-                    find:'',
+                filters: {
+                    find: '',
+                    role: '',
+                    active:'',
                 },
                 submitted: false,
                 columns: [
-
-                    {
-                        label: '#',
-                        name: 'id',
-                        data: 'id',
-                    },
-
-  {
-                        label: 'A',
-                        name: 'id',
-                        data: 'id',
-                        export: false,
-                        render: function (data, meta, row) {
-                            var delbtn = `<a href="#" data-id="` + data +
-                                `" class="btn-delete text-red" ><i class="fa fa-trash" aria-hidden="true"></i></a>`;
-                            var editbtn = `<a href="#" data-id="` + data +
-                                `" class="btn-edit text-yellow" ><i class="fa fa-pencil" aria-hidden="true"></i></a>`;
-
-                            return editbtn + '&nbsp;&nbsp;' + delbtn;
-                        }
-                    },
-
                     {
                         label: 'Name',
                         name: 'name',
@@ -85,6 +93,15 @@
                         name: 'position',
                         data: 'position',
                     },
+                    {
+                        label: 'Role',
+                        name: 'role_text',
+                        data: 'role_text',
+                        sortable: false,
+                    },
+
+
+
 
 
                     {
@@ -109,9 +126,9 @@
                         className: 'nowrap',
                         render: function (data) {
                             if (data === true)
-                                return 'YES';
+                                return '<span class="label label-success">Active</span>';
                             else
-                                return '---';
+                                return '<span class="label label-default">Not Active</span>';
                         }
 
                     },
@@ -119,26 +136,26 @@
                         label: 'Created By',
                         name: 'created_by',
                         data: 'created_by',
-                          className: 'nowrap',
+                        className: 'nowrap',
                     },
                     {
                         label: 'Created At',
                         name: 'created_at',
                         data: 'created_at',
-                          className: 'nowrap',
+                        className: 'nowrap',
                     },
                     {
                         label: 'Updated By',
                         name: 'updated_by',
                         data: 'updated_by',
-                          className: 'nowrap',
+                        className: 'nowrap',
                     },
 
                     {
                         label: 'Updated At',
                         name: 'updated_at',
                         data: 'updated_at',
-                          className: 'nowrap',
+                        className: 'nowrap',
                     },
 
 
@@ -146,7 +163,7 @@
                         label: 'Actions',
                         name: 'id',
                         data: 'id',
-                          className: 'nowrap',
+                        className: 'nowrap',
                         export: false,
                         render: function (data, meta, row) {
                             var delbtn = `<a href="#" data-id="` + data +

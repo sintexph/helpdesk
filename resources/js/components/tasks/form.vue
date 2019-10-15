@@ -26,16 +26,18 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                    
-                    <label class="control-label">Start Date <small><a href="#" @click.prevent="current_date(start_current_date)">Current Date</a></small></label>
-                    <date-mask type="text" v-model="task.start_date"></date-mask>
+
+                    <label class="control-label">Start Date <small><a href="#"
+                                @click.prevent="current_date(start_current_date)">Current Date</a></small></label>
+                    <date-picker type="text" v-model="task.start_date"></date-picker>
                 </div>
 
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="control-label">Due Date <small><a href="#" @click.prevent="current_date(due_current_date)">Current Date</a></small></label>
-                    <date-mask type="text" v-model="task.due_date"></date-mask>
+                    <label class="control-label">Due Date <small><a href="#"
+                                @click.prevent="current_date(due_current_date)">Current Date</a></small></label>
+                    <date-picker type="text" v-model="task.due_date"></date-picker>
                 </div>
             </div>
         </div>
@@ -68,46 +70,53 @@
             <label class="control-label">Remarks</label>
             <textarea v-model="task.remarks" class="form-control" rows="5" required></textarea>
         </div>
-        <div class="form-group">
-            <label class="control-label">Upload</label>
-            <input-file :multiple="true" v-model="task.attachments_input"></input-file>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Attachments</label>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>File</th>
-                            <th>Size</th>
-                            <th>Uploaded By</th>
-                            <th>Uploaded At</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template v-for="(value,key) in task.attachments">
-                            <tr v-if="value.remove!==true" :key="key">
-                                <td>
-                                    <a :href="value.file_upload.url">{{ value.file_upload.file_name }}</a>
-                                </td>
-                                <td>{{ value.file_upload.file_size }}</td>
-                                <td>{{ value.file_upload.uploaded_by }}</td>
-                                <td>{{ value.file_upload.created_at }}</td>
-                                <td class="fit">
-                                    <a :href="value.file_upload.url"><i class="fa fa-download"
-                                            aria-hidden="true"></i></a>
-                                    <span>&nbsp;&nbsp;&nbsp;</span>
-                                    <a href="#" class="text-red" @click.prevent="remove_attachment(key)">
-                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
+
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="form-group">
+                    <label class="control-label">Upload</label>
+                    <input-file :multiple="true" v-model="task.attachments_input"></input-file>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Attachments</label>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>File</th>
+                                    <th>Size</th>
+                                    <th>Uploaded By</th>
+                                    <th>Uploaded At</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template v-for="(value,key) in task.attachments">
+                                    <tr v-if="value.remove!==true" :key="key">
+                                        <td>
+                                            <a :href="value.file_upload.url">{{ value.file_upload.file_name }}</a>
+                                        </td>
+                                        <td>{{ value.file_upload.file_size }}</td>
+                                        <td>{{ value.file_upload.uploaded_by }}</td>
+                                        <td>{{ value.file_upload.created_at }}</td>
+                                        <td class="fit">
+                                            <a :href="value.file_upload.url"><i class="fa fa-download"
+                                                    aria-hidden="true"></i></a>
+                                            <span>&nbsp;&nbsp;&nbsp;</span>
+                                            <a href="#" class="text-red" @click.prevent="remove_attachment(key)">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
         </div>
+
     </div>
 </template>
 
@@ -154,7 +163,7 @@
                 this.task.start_date = response.data;
                 this.hide_wait();
             },
-             due_current_date(response) {
+            due_current_date(response) {
                 this.task.due_date = response.data;
                 this.hide_wait();
             },
@@ -169,9 +178,17 @@
             },
             load_projects() {
                 var vm = this;
+
+                vm.projects.push({
+                    id: '',
+                    text: '-- NONE --',
+                });
+
+
                 axios.post('/utility/projects').then(response => {
                     var data = response.data;
                     data.forEach(element => {
+
                         vm.projects.push({
                             id: element.id,
                             text: element.name,

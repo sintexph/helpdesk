@@ -57,6 +57,7 @@
 
 
 
+
                     form.append('_method', 'PUT');
 
                     axios.post('/tasks/save', form, {

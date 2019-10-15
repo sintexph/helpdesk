@@ -58,6 +58,16 @@
                                             @break
                                             @endswitch
                                         </dd>
+                                        <dt>Carbon Copies</dt>
+                                        <dd>
+                                            @if(!empty($ticket->sender_carbon_copies))
+                                                @foreach($ticket->sender_carbon_copies as $cc)
+                                                <div class="label label-primary">{{ $cc }}</div>
+                                                @endforeach
+                                            @endif
+                                        </dd>
+
+
                                     </dl>
                                 </td>
                             </tr>
@@ -147,7 +157,7 @@
                 <h3 class="box-title text-green">Solution</h3>
             </div>
             <div class="box-body">
-            {!! nl2br($ticket->solution) !!}
+                {!! nl2br($ticket->solution) !!}
             </div>
             @endif
 

@@ -29,6 +29,11 @@ class ProjectHelper
             return State::PENDING;
     }
 
+    public static function generate_start_date(Project $project)
+    {
+        
+    }
+
     
     public static function auto_state(Project $project)
     {

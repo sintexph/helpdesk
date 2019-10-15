@@ -11,6 +11,7 @@ use State;
 use App\TaskAttachment;
 use App\Helpers\UploadHelper;
 use DB;
+use App\Helpers\ProjectHistoryHelper;
 
 class TaskController extends Controller
 {
@@ -152,7 +153,8 @@ class TaskController extends Controller
                 }
             }
 
-            \App\Helpers\ProjectHelper::auto_state($task->project);
+            if($task->project!=null)
+                \App\Helpers\ProjectHelper::auto_state($task->project);
 
             DB::commit();
 
@@ -193,6 +195,13 @@ class TaskController extends Controller
             $query->select(['id','name']);
         }]);
 
+        $tasks->where(function($query){
+            $query->orWhere('created_by',auth()->user()->id)
+            ->orWhere('assigned_to',auth()->user()->id);
+        }); 
+
+        $tasks->orderBy('updated_at','desc');
+
         return json_encode($tasks->get());
     }
 
@@ -218,6 +227,11 @@ class TaskController extends Controller
                 ->orWhere('description','like','%'.$filter_find.'%');
             });
             
+        $tasks->where(function($query){
+            $query->orWhere('created_by',auth()->user()->id)
+            ->orWhere('assigned_to',auth()->user()->id);
+        }); 
+
         $tasks->orderBy('state','asc');
 
         $tasks->with([
@@ -254,6 +268,11 @@ class TaskController extends Controller
                 ->orWhere('description','like','%'.$filter_find.'%');
             });
             
+        $tasks->where(function($query){
+            $query->orWhere('created_by',auth()->user()->id)
+            ->orWhere('assigned_to',auth()->user()->id);
+        }); 
+        
         $tasks->orderBy('state','asc');
 
         $tasks->with([
@@ -321,7 +340,11 @@ class TaskController extends Controller
             $task->state=$request->state;
             $task->save();
 
-            \App\Helpers\ProjectHelper::auto_state($task->project);
+
+            ProjectHistoryHelper::task_change_state($task,auth()->user(),$request->state);
+
+            if($task->project!=null)
+                \App\Helpers\ProjectHelper::auto_state($task->project);
 
             DB::commit();
 
@@ -339,6 +362,9 @@ class TaskController extends Controller
     {
         $task=Task::find($id);
         \abort_if($task==null,404,'Task could not be found!');
+
+        ProjectHistoryHelper::task_delete($task,auth()->user());
+
         $task->delete();
 
         return response()->json(['message'=>'Task has been successfully deleted!']);
@@ -353,6 +379,8 @@ class TaskController extends Controller
         $task->state=State::CANCELLED;
         $task->save();
 
+        ProjectHistoryHelper::task_cancel($task,auth()->user());
+
         return response()->json(['message'=>'Task has been successfully cancelled!']);
     }
 
@@ -365,7 +393,8 @@ class TaskController extends Controller
             $query->select(['*'])->with('file_upload');
         }])
         ->find($id);
-        \abort_if($task==null,404,'Task could not be found!');
+
+        abort_if($task==null,404,'Task could not be found!');
 
         return json_encode($task);  
     }

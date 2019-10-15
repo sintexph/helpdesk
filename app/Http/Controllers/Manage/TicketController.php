@@ -31,7 +31,9 @@ class TicketController extends Controller
 
         $filter_state=Input::get('state');
         $filter_find=Input::get('find');
-
+        $filter_catered=Input::get('catered');
+        $filter_supports=Input::get('supports');
+    
         $tickets=Ticket::on();
         $tickets->select([
             'id',
@@ -84,19 +86,27 @@ class TicketController extends Controller
         }
 
         # If not administrator then limit the list per account and pending tickets only
-        if(!$user->can('manage-ticket'))
+        if(!$user->can('manage-ticket') || ($filter_catered==="true" || $filter_catered===true))
             $tickets->where(function($query)use($user){
                 $query->orWhere('catered_by','=',$user->id);
                 $query->orWhere('state','=',State::PENDING);
             });
-
-
+        else {
+            if(!empty($filter_supports))
+            {
+                $tickets->where(function($query)use($user,$filter_supports){
+                    $query->orWhereIn('catered_by',$filter_supports);
+                    $query->orWhere('state','=',State::PENDING);
+                }); 
+            }
+        }
+        
+   
         $tickets->with('caterer');
-
+        
         $tickets->orderBy('state','asc')
         ->orderBy('updated_at','asc');
-        
-        
+
         return datatables($tickets)->rawColumns([
             'urgency','state','user_rating',
         ])->toJson();

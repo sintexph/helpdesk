@@ -327,3 +327,95 @@
     font-weight: 700;
     color: #26b821;
 }
+
+/*
+--------------------- CALENDAR ---------------------
+*/
+
+
+
+.vuecal__event {
+    cursor: pointer;
+    min-height: 70px;
+    margin-bottom: 2px;
+}
+
+.vuecal__event-title {
+    margin: 4px 0 8px;
+}
+
+.vuecal__event-time {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.vuecal__event-content {
+    font-style: italic;
+    padding: 10px;
+}
+
+
+.applied-approval.vuecal__event {
+    background-color: $bg_applied_approval;
+    border-bottom: 1px solid $border_applied_approval;
+
+}
+
+.approval-cancelled.vuecal__event {
+    background-color: $bg_approval_cancelled;
+    border-bottom: 1px solid $border_approval_cancelled;
+}
+
+
+.escalated.vuecal__event {
+    background-color: $bg_escalated;
+    border-bottom: 1px solid $border_escalated;
+}
+
+.processing.vuecal__event {
+    background-color: $bg_processing;
+    border-bottom: 1px solid $border_processing;
+}
+
+.pending.vuecal__event {
+    background-color: $bg_pending;
+    border-bottom: 1px solid $border_pending;
+}
+
+.catered.vuecal__event {
+    background-color: $bg_catered;
+    border-bottom: 1px solid $border_catered;
+}
+
+.solved.vuecal__event {
+    background-color: $bg_solved;
+    border-bottom: 1px solid $border_solved;
+}
+
+
+.completed.vuecal__event {
+    background-color: $bg_solved;
+    border-bottom: 1px solid $border_solved;
+}
+
+.closed.vuecal__event {
+    background-color: $bg_closed;
+    border-bottom: 1px solid $border_closed;
+}
+.hold.vuecal__event {
+    background-color: $bg_hold;
+    border-bottom: 1px solid $border_hold;
+}
+.cancelled.vuecal__event {
+    background-color: $bg_cancelled;
+}
+
+.task-list
+{
+min-height: 450px;
+max-height: 450px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}

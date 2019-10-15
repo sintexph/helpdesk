@@ -21,6 +21,7 @@
             return {
                 id: null,
                 project: new Project,
+                submitted: false,
             }
         },
         methods: {
@@ -51,6 +52,9 @@
                     vm.project.state = response.data.state;
                     vm.project.is_public = response.data.is_public;
 
+                    vm.project.attachments = response.data.attachments;
+
+
                     vm.hide_wait();
 
                 }).catch(error => {
@@ -59,30 +63,64 @@
             },
             update() {
                 var vm = this;
-                axios.patch('/projects/update/' + vm.id, {
-                    name: vm.project.name,
-                    description: vm.project.description,
-                    requested_by: vm.project.requested_by,
-                    start_date: vm.project.start_date,
-                    due_date: vm.project.due_date,
-                    followers: vm.project.followers,
-                    tags: vm.project.tags,
-                    state: vm.project.state,
-                    is_public :vm.project.is_public,
-                }).then(response => {
-                    vm.alert_success(response);
 
-                    if (!vm.project_id) {
-                        vm.id = null;
-                        vm.project = new Project;
-                        vm.$refs.modal.dismiss();
-                        vm.$emit('updated');
-                    } else {
-                        location.reload();
+
+                if (vm.submitted === false) {
+                    vm.submitted = true;
+                    vm.show_wait("Please wait while the system is saving the project.....");
+                    let form = new FormData();
+
+
+                    if (vm.project.attachments_input !== null) {
+                        for (var i = 0; i < vm.project.attachments_input.length; i++) {
+                            let file = vm.project.attachments_input[i];
+                            form.append('attachments_input[' + i + ']', file);
+                        }
                     }
-                }).catch(error => {
-                    vm.alert_failed(error);
-                });
+
+
+                    form.append('name', vm.project.name);
+                    form.append('description', vm.project.description);
+                    form.append('requested_by', vm.project.requested_by);
+                    form.append('start_date', vm.project.start_date);
+                    form.append('due_date', vm.project.due_date == null ? '' : vm.project.due_date);
+                    form.append('followers', vm.project.followers);
+                    form.append('tags', vm.project.tags);
+                    form.append('state', vm.project.state);
+                    form.append('is_public', vm.project.is_public == true ? "1" : "0");
+                    form.append('to_be_deleted_attachments', vm.project.to_be_deleted_attachments);
+
+
+
+                    form.append('_method', 'PATCH');
+
+                    axios.post('/projects/update/' + vm.id, form, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(response => {
+                        vm.alert_success(response);
+
+                        vm.submitted = false;
+                        if (!vm.project_id) {
+                            vm.id = null;
+                            vm.project = new Project;
+                            vm.$refs.modal.dismiss();
+                            vm.$emit('updated');
+                            vm.hide_wait();
+                        } else {
+                            location.reload();
+                        }
+                    }).catch(error => {
+                        vm.alert_failed(error);
+                        vm.hide_wait();
+                        vm.submitted = false;
+                    });
+
+
+                }
+
+
             },
         },
         mounted() {

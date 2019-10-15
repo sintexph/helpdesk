@@ -8,23 +8,23 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="label-control">Name</label>
+                        <label class="control-label">Name</label>
                         <input class="form-control  text-uppercase" v-model="account.name" required>
                     </div>
                     <div class="form-group">
-                        <label class="label-control">Id Number</label>
+                        <label class="control-label">Id Number</label>
                         <input type="text" class="form-control" v-model="account.id_number" required>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="label-control">Email</label>
+                                <label class="control-label">Email</label>
                                 <input type="email" class="form-control" v-model="account.email" required>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="label-control">Contact</label>
+                                <label class="control-label">Contact</label>
                                 <input type="text" class="form-control" v-model="account.contact" required>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="label-control">Factory</label>
+                                <label class="control-label">Factory</label>
                                 <select class="form-control" v-model="account.factory" required>
                                     <option value="">-- SELECT FACTORY --</option>
                                     <option v-for="(value,key) in factories" :key="'factory-'+key" :value="value.id">
@@ -42,26 +42,26 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="label-control">Position</label>
+                                <label class="control-label">Position</label>
                                 <input type="text" class="form-control" v-model="account.position" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="label-control">Username</label>
+                        <label class="control-label">Username</label>
                         <input type="text" class="form-control" v-model="account.username" required>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="label-control">Password</label>
+                                <label class="control-label">Password</label>
                                 <input type="password" class="form-control" v-model="account.password" required>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="label-control">Password Confirmation</label>
+                                <label class="control-label">Password Confirmation</label>
                                 <input type="password" class="form-control" v-model="account.password_confirmation"
                                     required>
                             </div>

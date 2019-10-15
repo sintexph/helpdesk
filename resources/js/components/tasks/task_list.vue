@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-solid">
-                
+
                 <div class="box-body form-inline">
 
                     <div class="form-group">
@@ -48,13 +48,18 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-th-list" aria-hidden="true"></i> Task List</h3>
                     <div class="box-tools pull-right">
+
+                        <button v-if="!project_id" type="button" class="btn btn-box-tool" @click.prevent="$refs.taskCalendar.show()">
+                            <i class="fa fa-calendar-o" aria-hidden="true"></i> Calendar
+                        </button>
+
                         <button type="button" class="btn btn-box-tool" @click.prevent="$refs.addTask.show()"><i
                                 class="fa fa-plus"></i> Add Task
-                        </button> 
+                        </button>
 
-                         <a :href="download_link" class="btn btn-box-tool" title="Downlad task list">
-                        <i class="fa fa-download" aria-hidden="true"></i> Download
-                    </a>
+                        <a :href="download_link" class="btn btn-box-tool" title="Downlad task list">
+                            <i class="fa fa-download" aria-hidden="true"></i> Download
+                        </a>
 
                     </div>
 
@@ -62,7 +67,7 @@
 
 
                 <div class="box-body">
-                   
+
                     <datatable :buttons="false" ref="datatable" :parameters="filters" :columns="columns"
                         url="/tasks/list">
                     </datatable>
@@ -74,6 +79,7 @@
             <edit-task ref="editTask"></edit-task>
             <view-task ref="viewTask"></view-task>
             <add-task :project_id="project_id" ref="addTask"></add-task>
+            <modal-task-calendar  v-if="!project_id" ref="taskCalendar"></modal-task-calendar>
         </div>
 
     </div>

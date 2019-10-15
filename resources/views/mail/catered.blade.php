@@ -3,7 +3,7 @@
 @slot('content')
 Hi {{ $ticket->sender_name }}
 <br><br>
-This is to inform you that <strong>{{ $ticket->caterer->name }}</strong> has catered your request.
+This is to inform you that <strong>{{ $ticket->caterer->name }}</strong> has catered your ticket.
 <br>
 <br>
 @include('mail.template.progress')

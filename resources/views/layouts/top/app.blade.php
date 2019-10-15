@@ -3,14 +3,14 @@
 
 
 @slot('page_title')
-@yield('title','Helpdesk Philippines')
+@yield('title','Information Technology Helpdesk')
 @endslot
 
 
 @auth
     @slot('skin',config('app.skin'))
 @elseauth
-    @slot('skin','skin-black')
+    @slot('skin','skin-red')
 @endauth
  
 
@@ -22,7 +22,7 @@
 @slot('nav_brand')
 <a href="/" class="navbar-brand">
     <img src="{{ asset('img/brand-icon.png') }}" class="brand-logo">
-    <b>Helpdesk</b> Philippines
+    <b>SCI Helpdesk</b> Philippines
 </a>
 @endslot
 

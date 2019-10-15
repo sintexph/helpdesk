@@ -9,7 +9,7 @@
                 <label class="control-label">Rating</label>
                 <div class="clearfix"></div>
                 <fieldset class="rating">
-                    <input type="radio" id="star5" v-model="rating" name="rating" value="5" /><label for="star5"
+                    <input type="radio" id="star5" v-model="rating" name="rating" value="5"/><label for="star5"
                         title="5 Star">5
                         stars</label>
                     <input type="radio" id="star4" v-model="rating" name="rating" value="4" /><label for="star4"
@@ -45,7 +45,7 @@
         data: function () {
             return {
                 submitted: false,
-                rating: null,
+                rating: 5,
                 feedback: null,
             }
         },

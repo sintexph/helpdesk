@@ -34,6 +34,8 @@ class CreateTasksTable extends Migration
             $table->integer('priority');
 
             $table->longText('remarks')->nullable();
+
+            $table->integer('order')->nullable();
             
             $table->timestamps();
 

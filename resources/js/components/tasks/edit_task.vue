@@ -108,7 +108,7 @@
                     vm.task.label = data.label;
                     vm.task.priority = data.priority;
                     vm.task.state = data.state;
-                    vm.task.remarks = data.remarks;
+                    vm.task.remarks = data.remarks===null?'':data.remarks;
                     vm.task.project_id = data.project_id;
                     vm.task.attachments = data.attachments;
                     vm.hide_wait();

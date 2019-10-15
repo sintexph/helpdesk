@@ -4,7 +4,7 @@
         <template slot="body">
             <div class="form-group">
                 <label class="control-label">Category</label>
-                <select2 class="form-group" v-model="category" :options="cat_options" style="width:100%;"></select2>
+                <select2 class="form-group" placeholder="Please select category" v-model="category" :options="cat_options" style="width:100%;"></select2>
                 <validation :errors="errors" field="category"></validation>
             </div>
             <div class="form-group clearfix">
@@ -34,7 +34,7 @@
             <modal name="modal-find-canned" :prevent="true" ref="findCanned">
                 <template slot="header">Canned Solution</template>
                 <template slot="body">
-                    <select2 class="form-group" v-model="canned_id" url="/utility/suggestions/canned-solutions"
+                    <select2 placeholder="Please select solution" class="form-group" v-model="canned_id" url="/utility/suggestions/canned-solutions"
                         style="width:100%;"></select2>
                 </template>
                 <template slot="footer">

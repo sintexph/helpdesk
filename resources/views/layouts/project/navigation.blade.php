@@ -16,6 +16,10 @@
                     <a href="{{ route('tasks') }}?view=table">List</a><span class="fa fa-th-list"
                         aria-hidden="true"></span>
                 </li>
+                <li>
+                    <a href="{{ route('tasks') }}?view=calendar">Calendar</a><span class="fa fa-calendar-o"
+                        aria-hidden="true"></span>
+                </li>
             </ul>
         </li>
 
@@ -25,9 +29,9 @@
                 {{ auth()->user()->name }}
             </a>
             <ul class="dropdown-menu">
-                <li><a href="/">Tickets</a><span class="glyphicon glyphicon-book pull-right"></span></li>
-                <li><a href="/">Manage</a><span class="glyphicon glyphicon-cog pull-right"></span></li>
-                <li><a href="/">Home</a><span class="glyphicon glyphicon-home pull-right"></span></li>
+                <li><a href="{{ route('user') }}">Tickets</a><span class="glyphicon glyphicon-book pull-right"></span></li>
+                <li><a href="{{ route('tickets') }}">Manage</a><span class="glyphicon glyphicon-cog pull-right"></span></li>
+                <li><a href="{{ route('home') }}">Home</a><span class="glyphicon glyphicon-home pull-right"></span></li>
                 <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign
                         Out</a><span class="glyphicon glyphicon-log-out pull-right"></span>
                     <form id="logout-form" action="{{ route('logout') }}" method="post" style="display: none;">

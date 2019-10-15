@@ -1,13 +1,14 @@
 <template>
     <div class="progress-group">
         <span class="progress-text">Task Progress</span>
-        <span class="progress-number"><b>{{ complete }}</b>/{{ total }}</span>
-        <div class="progress progress-sm active">
+        <span class="progress-number"><b>{{ Math.floor( percentage ) }}%</b> Completed</span>
+        <div class="progress progress-md active">
             <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
                 :aria-valuenow="percentage" aria-valuemin="0" aria-valuemax="100" :style="'width: '+percentage+'%'">
                 <span class="sr-only">{{ percentage }}% Complete</span>
             </div>
         </div>
+         <span class="progress-number"><b>{{ complete }}</b>/{{ total }}</span>
     </div>
 </template>
 <script>

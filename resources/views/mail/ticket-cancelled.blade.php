@@ -3,7 +3,7 @@
 @slot('content')
 Hi {{ $receiver_name }}
 <br><br>
-This is to inform you that <strong>{{ $ticket->cancelled_by }}</strong> has cancelled the request.<br>
+This is to inform you that <strong>{{ $ticket->cancelled_by }}</strong> has cancelled your ticket.<br>
 <br>
 <hr>
 

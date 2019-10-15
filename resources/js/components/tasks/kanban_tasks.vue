@@ -5,11 +5,16 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-th-large" aria-hidden="true"></i> Kanban Task</h3>
                     <div class="box-tools pull-right">
+                        <button v-if="!project_id" type="button" class="btn btn-box-tool"
+                            @click.prevent="$refs.taskCalendar.show()">
+                            <i class="fa fa-calendar-o" aria-hidden="true"></i> Calendar
+                        </button>
                         <button type="button" class="btn btn-box-tool" @click.prevent="$refs.addTask.show()"><i
                                 class="fa fa-plus"></i> Add Task
                         </button>
                     </div>
                 </div>
+                
                 <div class="box-body form-inline">
                     <div class="form-group">
                         <label class="control-label">Find</label>
@@ -22,7 +27,7 @@
                             </span>
                         </div>
                     </div>
-
+                    
                     <div class="form-group">
                         <label class="control-label">Filter Label</label>
                         <select class="form-control input-sm" v-model="filters.label">
@@ -32,20 +37,11 @@
                         </select>
                     </div>
 
-
                     <div class="pull-right" style="width:250px;">
                         <task-progress :project_id="project_id"></task-progress>
                     </div>
-
-
-
+                    
                 </div>
-
-
-
-
-
-
             </div>
         </div>
 
@@ -58,8 +54,7 @@
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
 
                 </div>
-                <div class="box-body bg-yellow">
-
+                <div class="box-body task-list bg-yellow">
                     <draggable style="min-height:250px;" @add="update_pending" v-model="datasource.pending_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
                         <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
@@ -77,10 +72,8 @@
                     <span class="label label-primary pull-right">{{ datasource.processing_tasks.length }}</span>
                     <i v-if="reloading.processing_tasks===true"
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
-
                 </div>
-                <div class="box-body bg-blue">
-
+                <div class="box-body task-list bg-blue">
                     <draggable style="min-height:250px;" @add="update_processing" v-model="datasource.processing_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
                         <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
@@ -99,8 +92,7 @@
                     <i v-if="reloading.completed_tasks===true"
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
                 </div>
-                <div class="box-body bg-green">
-
+                <div class="box-body task-list bg-green">
                     <draggable style="min-height:250px;" @add="update_completed" v-model="datasource.completed_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
                         <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
@@ -120,9 +112,7 @@
                     <i v-if="reloading.hold_tasks===true"
                         class="pull-right text-gray fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
                 </div>
-                <div class="box-body bg-gray">
-
-
+                <div class="box-body task-list bg-gray">
                     <draggable style="min-height:250px;" @add="update_hold" v-model="datasource.hold_tasks"
                         group="tasks" @start="drag=true" @end="drag=false">
                         <task-drag @edit="edit_task(value.id)" @view="view_task(value.id)"
@@ -137,6 +127,7 @@
             <edit-drag ref="editTask" @updated="load_tasks"></edit-drag>
             <view-task ref="viewTask"></view-task>
             <add-task :project_id="project_id" ref="addTask"></add-task>
+            <modal-task-calendar v-if="!project_id" ref="taskCalendar"></modal-task-calendar>
         </div>
     </div>
 </template>
@@ -188,6 +179,7 @@
                 this.$refs.editTask.show(id);
             },
             update_pending(data) {
+
                 this.updateState(State.PENDING, this.datasource.pending_tasks[data.newIndex].id);
             },
             update_processing(data) {

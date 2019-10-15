@@ -3,7 +3,7 @@
 @slot('content')
 Hi {{ $ticket->sender_name }}
 <br><br>
-This is to inform you that <strong>{{ $ticket->caterer->name }}</strong> has put your request on hold.
+This is to inform you that <strong>{{ $ticket->caterer->name }}</strong> has put your ticket on hold.
 <br>
 <br>
 @include('mail.template.progress')

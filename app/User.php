@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Helpers\UserRoleTrait;
 use App\Helpers\ReceiverUserTicketTrait;
 use App\Notifications\MailResetPasswordNotification;
+use App\Helpers\UserRole;
 
 class User extends Authenticatable
 {
@@ -38,6 +39,7 @@ class User extends Authenticatable
 
     protected $appends=[
         'photo',
+        'role_text',
     ];
 
     protected $casts=[
@@ -45,6 +47,11 @@ class User extends Authenticatable
     ];
 
 
+
+    public function getRoleTextAttribute()
+    {
+        return UserRole::role($this->role);
+    }
 
     public function getNameAttribute($value)
     {

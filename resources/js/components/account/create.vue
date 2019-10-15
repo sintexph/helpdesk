@@ -37,10 +37,11 @@
 
                         email: par.account.email,
                         name: par.account.name,
-                        factory: par.account.username,
-                        id_number: par.account.username,
+                        factory: par.account.factory,
+                        id_number: par.account.id_number,
                         position: par.account.position,
                         username: par.account.username,
+                        contact: par.account.contact,
                         password: par.account.password,
                         password_confirmation: par.account.password_confirmation,
                         active: par.account.active,
@@ -51,18 +52,7 @@
                         par.alert_success(response);
                         par.submitted = false;
                         par.$emit('created');
-
-
-                        par.account.email = '';
-                        par.account.name = '';
-                        par.account.position = '';
-                        par.account.username = '';
-                        par.account.password = '';
-                        par.account.password_confirmation = '';
-                        par.account.perm_administrator = false;
-
-                        par.account.perm_approver = false;
-                        par.account.perm_reviewer = false;
+                        par.account = new User;
 
 
                         par.$refs.modal.dismiss();

@@ -31,6 +31,8 @@ Vue.component('form-task', require('./components/tasks/form').default)
 Vue.component('add-task', require('./components/tasks/create').default)
 Vue.component('task-progress', require('./components/tasks/progress').default)
 Vue.component('task-list', require('./components/tasks/task_list').default)
+Vue.component('task-calendar', require('./components/tasks/calendar').default)
+Vue.component('modal-task-calendar', require('./components/tasks/modal_calendar').default)
 
 
 new Vue({

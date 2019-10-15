@@ -80,6 +80,24 @@
                         </div>
                     </div>
                 </div>
+
+                
+                @if($ticket->notes->count()!=0)
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Latest Notes</h3>
+                    </div>
+
+                    <div class="box-body">
+                        @foreach($ticket->notes()->orderBy('created_at','desc')->limit(3)->get() as $note)
+                        <blockquote>
+                            <p>{{ $note->content }}</p>
+                            <small>{{ $note->created_by }}</small>
+                        </blockquote>
+                        @endforeach
+                    </div>
+                @endif
+
+
                 <div class="box-header">
                     <h3 class="box-title">Ticket Content</h3>
                      <div class="pull-right">

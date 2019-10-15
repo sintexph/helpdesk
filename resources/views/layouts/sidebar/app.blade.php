@@ -4,7 +4,7 @@
 @yield('title','Sportscity Helpdesk Philippines')
 @endslot
 
-@slot('skin',config('app.skin'))
+@slot('skin','skin-green')
 
 @slot('nav_brand')
 <span class="logo-mini"><b>S</b>HP</span>

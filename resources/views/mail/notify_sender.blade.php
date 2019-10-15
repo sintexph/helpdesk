@@ -3,7 +3,7 @@
 @slot('content')
 Hi {{ $receiver }},
 <br><br>
-Your request has been successfully created and we are doing our best to cater your concern as soon as possible. Please keep the ticket below for further references and you can access the link below to view the status and you can also communicate further with our support staff with regards to your concern. 
+Your ticket has been successfully created and we are doing our best to cater your concern as soon as possible. Please keep this ticket number (<strong>#{{ ticket_number }}</strong>) for further references and you can access the link below to view the status and communicate with our support staff with regards to your concern. 
 <h2>{{ $ticket_number }}</h2>
 <a href="{{ route('user.view',[$ticket_number,$ticket_token]) }}">{{ route('user.view',[$ticket_number,$ticket_token]) }}</a>
 <hr>

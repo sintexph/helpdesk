@@ -16,8 +16,12 @@ Route::prefix('utility')->name('.utility')->group(function(){
 
         Route::name('.canned')->group(function(){
             Route::get('canned-solutions','UtilityController@canned_solutions')->name('.solutions');
-            
         });
+        
+        Route::get('supports', 'UtilityController@supports')->name('.supports');
+
+        
+
 
 
     });
@@ -27,14 +31,25 @@ Route::prefix('utility')->name('.utility')->group(function(){
     Route::post('factories','UtilityController@factories')->name('.factories');
     Route::post('categories','UtilityController@categories')->name('.categories');
     Route::post('get-users','UtilityController@get_users')->name('.get_users');
+    Route::post('get-users-non-sender','UtilityController@get_non_sender')->name('.get_non_sender');
     Route::post('get-auth-user','UtilityController@get_auth_user')->name('.get_auth_user');
     Route::post('applications','UtilityController@get_applications')->name('.application');
-    Route::post('unclosed_tickets','UtilityController@unclosed_tickets')->name('.unclosed_tickets');
+    Route::post('project-histories/{id}', 'UtilityController@project_histories')->name('.projects.histories');
 
-    Route::post('setting','UtilityController@setting')->name('.setting');
-    Route::post('canned-solution/{id}','UtilityController@canned_solution')->name('.solution');
-    Route::post('projects','UtilityController@projects')->name('.projects');
-    Route::post('current-date','UtilityController@current_date')->name('.current_date');
+    Route::middleware('auth')->group(function(){
+
+        Route::post('unclosed_tickets','UtilityController@unclosed_tickets')->name('.unclosed_tickets');
+        Route::post('setting','UtilityController@setting')->name('.setting');
+        Route::post('canned-solution/{id}','UtilityController@canned_solution')->name('.solution');
+        Route::post('projects','UtilityController@projects')->name('.projects');
+        Route::post('current-date','UtilityController@current_date')->name('.current_date');
+
+        Route::post('calendar/tasks','UtilityController@calendar_tasks')->name('.calendar.tasks');
+        Route::post('calendar/projects','UtilityController@calendar_projects')->name('.calendar.projects');
+        
+    });
+
+
 
 });
 
@@ -276,15 +291,24 @@ Route::middleware('maintain')->group(function(){
 
 Route::prefix('projects')->name('projects')->group(function(){
     
-    Route::get('', 'ProjectController@index');
-    Route::post('list', 'ProjectController@list')->name('.list');
-    Route::get('download', 'ProjectController@download')->name('.download');
-    Route::put('save', 'ProjectController@save')->name('.save');
-    Route::get('view/{id}', 'ProjectController@view')->name('.view');
-    Route::post('info/{id}', 'ProjectController@info')->name('.info');
-    Route::patch('update/{id}', 'ProjectController@update')->name('.update');
-    Route::delete('delete/{id}', 'ProjectController@delete')->name('.delete');
-    Route::put('save-task/{id}', 'ProjectController@save_task')->name('.save_task');
+    Route::middleware('auth')->group(function(){
+        Route::get('', 'ProjectController@index');
+        Route::post('list', 'ProjectController@list')->name('.list');
+        Route::get('download', 'ProjectController@download')->name('.download');
+        Route::put('save', 'ProjectController@save')->name('.save');
+        Route::get('view/{id}', 'ProjectController@view')->name('.view');
+        Route::post('info/{id}', 'ProjectController@info')->name('.info');
+        Route::patch('update/{id}', 'ProjectController@update')->name('.update');
+        Route::delete('delete/{id}', 'ProjectController@delete')->name('.delete');
+        Route::put('save-task/{id}', 'ProjectController@save_task')->name('.save_task');
+
+        Route::put('note/save/{id}', 'ProjectController@add_note')->name('.note.save');
+
+    });
+
+    
+    Route::get('public-view/{id}', 'ProjectController@public_view')->name('.public_view');
+
 });
 
 Route::prefix('tasks')->name('tasks')->group(function(){

@@ -26,7 +26,7 @@
 @stop
 @section('content')
 <div id="manage-ticket">
-    <ticket-list></ticket-list>
+    <ticket-list :role="{{ auth()->user()->role }}"></ticket-list>
 </div>
 @stop
 

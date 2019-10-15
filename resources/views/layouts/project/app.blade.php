@@ -1,17 +1,26 @@
 @sintexlayouttop
  
 
+ 
 
 @slot('page_title')
 @yield('title','Helpdesk Philippines')
 @endslot
 
 
-@auth
-    @slot('skin',config('app.skin'))
-@elseauth
-    @slot('skin','skin-black')
-@endauth
+@hasSection('header-title')
+    @slot('header_title')
+        @yield('header-title')
+    @endslot 
+@endif
+
+@hasSection('header-title-sm')
+    @slot('header_title_sm')
+        @yield('header-title-sm')
+    @endslot 
+@endif
+
+@slot('skin','skin-purple')
  
 
 
@@ -32,14 +41,6 @@
 
 @slot('content')
 @yield('content')
-
-
-@auth
-<div id="profile">
-<edit-profile></edit-profile>
-</div>
-@endauth
-
 @endslot
 
 
