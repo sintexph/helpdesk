@@ -94,7 +94,7 @@ trait TicketActionCondition
     /**
      * CAN UN HOLD THE TICKET IT WAS HOLD
      */
-    function condition_un_hold($id)
+    function condition_un_hold(Ticket $ticket)
     {
         abort_if($ticket->state!=State::HOLD,400,'Hold the ticket first before un-holding!');
     }
@@ -205,7 +205,25 @@ trait TicketActionCondition
         elseif($ticket->approved_at!==null)
             abort(400,'The ticket was already approved and could not be cancelled anymore!');   
     }
-    
+    /**
+     *  COULD NOT APPLY IF ALREADY APPLIED AND TICKET IS CANCELLED, SOLVED, OR CLOSED AND PENDING
+     */
+    function condition_resend_approval(Ticket $ticket)
+    {
+        if($ticket->state==State::PENDING)
+            abort(400,'Ticket must be catered first!');
+        elseif($ticket->state==State::SOLVED)
+            abort(400,'The ticket was already solved!');
+        elseif($ticket->state==State::CLOSED)
+            abort(400,'The ticket was already closed!');
+        elseif($ticket->state==State::CANCELLED)
+            abort(400,'The ticket was already cancelled!');
+        
+        if($ticket->approver_name===null)
+            abort(400,'Resend could not be executed since there has no approval applied!');
+        elseif($ticket->approved_at!==null)
+            abort(400,'The ticket was already approved and could not be resend anymore!');   
+    }
 
     /**
      * TICKET MUST BE PROCESSED BEFORE CAN SET ANY CUSTOM ACTION

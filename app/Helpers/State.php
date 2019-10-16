@@ -26,7 +26,7 @@ class State
     const UN_HOLD=18;
 
     const COMPLETED=19;
-
+    const RESEND_APPROVAL=20;
 
     public static function state($state_value) {
         

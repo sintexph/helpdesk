@@ -93,9 +93,22 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
+        # Set the previous url so it will redirect to after login
+        session()->flash('previousUrl',\URL::previous());
+
         $factories=Factory::all();
         $supports=User::where('role','<>',UserRole::SENDER)->where('active',true)->get();
         return view('auth.login',['factories'=>$factories,'supports'=>$supports]);
     }
-    
+
+ 
+    public function authenticated(Request $request, $user)
+    {
+        $url=session('previousUrl');
+
+        if(parse_url($url)!=parse_url(config('app.url')))
+            $url='/';
+        
+        return response()->json(['redirect'=>$url??'/']);
+    }
 }

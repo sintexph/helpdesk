@@ -296,8 +296,6 @@ class TicketActionController extends Controller
      * APPLY APPROVAL FOR THE TICKET
      * @param $request Holds the ticket control number to be added as reference
      * @param $idThe database id of the ticket
-     * 
-
      */
     public function apply_approval(Request $request,$id)
     {
@@ -328,6 +326,34 @@ class TicketActionController extends Controller
     }
     
 
+    /**
+     * APPLY APPROVAL FOR THE TICKET
+     * @param $request Holds the ticket control number to be added as reference
+     * @param $idThe database id of the ticket
+     */
+    public function resend_approval(Request $request,$id)
+    {
+        $ticket=Ticket::find($id);
+        abort_if($ticket==null,404,'Ticket could not be found'); 
+
+        # Apply condition
+        $this->condition_resend_approval($ticket);
+
+        try {
+
+            DB::beginTransaction();
+
+            TicketActionHelper::resend_approval($ticket,auth()->user());
+
+            DB::commit();
+            
+            return response()->json(['message'=>'Ticket approval has been successfully resend!']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(400,$th->getMessage());
+        }
+    }
+    
     /**
      * CANCEL APPROVAL FOR THE TICKET
      * @param $request Holds the ticket control number to be added as reference

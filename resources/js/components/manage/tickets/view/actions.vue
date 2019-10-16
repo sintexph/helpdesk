@@ -13,9 +13,9 @@
                         <span>Cater Ticket</span>
                     </a>
                 </li>
-                
+
                 <template v-if="can_update===true">
-                    
+
                     <li v-if="ticket.state === State.PROCESSING">
                         <a class="text-yellow" href="#" @click.prevent="custom_progress">
                             <i class="fa fa-cube" aria-hidden="true"></i>
@@ -66,26 +66,34 @@
                             <span>Add Reference Ticket</span>
                         </a>
                     </li>
-                    <li v-if="ticket.state!==State.PENDING  && ticket.state!== State.SOLVED && ticket.state !== State.APPLIED_APPROVAL">
+                    <li
+                        v-if="ticket.state!==State.PENDING  && ticket.state!== State.SOLVED && ticket.state !== State.APPLIED_APPROVAL">
                         <a href="#" @click.prevent="cancel_ticket">
                             <i aria-hidden="true" class="fa fa-undo"></i>
                             <span>Cancel Ticket</span>
                         </a>
                     </li>
                     <template v-if="ticket.state !== State.PENDING && ticket.state!==State.SOLVED">
-                        <li
-                            v-if="ticket.approver_name===null && ticket.approver_email===null">
+                        <li v-if="ticket.approver_name===null && ticket.approver_email===null">
                             <a href="#" @click.prevent="apply_approval">
                                 <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                                 <span>Initiate Approval</span>
                             </a>
                         </li>
-                        <li v-else-if="ticket.approved_at===null">
-                            <a class="text-red" href="#" @click.prevent="cancel_approval">
-                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                <span>Cancel Approval</span>
-                            </a>
-                        </li>
+                        <template v-else-if="ticket.approved_at===null">
+                            <li>
+                                <a class="text-grey" href="#" @click.prevent="resend_approval">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                    <span>Resend Approval</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-red" href="#" @click.prevent="cancel_approval">
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                    <span>Cancel Approval</span>
+                                </a>
+                            </li>
+                        </template>
                     </template>
                 </template>
             </ul>
@@ -143,6 +151,35 @@
                     this.$refs.customProgress.show();
                 }
             },
+
+
+
+
+            resend_approval() {
+
+                var par = this;
+                if (par.submitted === false) {
+                    if (confirm('Are you sure you want to resend the approval?') === true) {
+                        par.submitted = true;
+                        par.show_wait("Please wait while the system is processing your request.....");
+
+                        axios.post('/tickets/resend_approval/' + par.ticket.id).then(function (response) {
+                            par.hide_wait();
+                            par.alert_success(response);
+                            location.reload();
+                        }).catch(function (error) {
+                            par.hide_wait();
+                            par.submitted = false;
+                            par.alert_failed(error);
+                        });
+
+
+                    }
+                }
+
+            },
+
+
             cancel_approval() {
 
                 var par = this;

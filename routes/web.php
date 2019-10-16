@@ -159,6 +159,7 @@ Route::prefix('tickets')->name('tickets')->group(function(){
         Route::patch('escalate/{id}', 'Manage\TicketActionController@escalate')->name('.escalate');
         Route::put('add_reference/{id}', 'Manage\TicketActionController@add_reference')->name('.add_reference');
         Route::put('apply_approval/{id}', 'Manage\TicketActionController@apply_approval')->name('.apply_approval');
+        Route::post('resend_approval/{id}', 'Manage\TicketActionController@resend_approval')->name('.resend_approval');
         Route::delete('cancel_approval/{id}', 'Manage\TicketActionController@cancel_approval')->name('.cancel_approval');
         Route::patch('custom_progress/{id}', 'Manage\TicketActionController@custom_progress')->name('.custom_progress');
         

@@ -139,6 +139,16 @@ class TicketProgressHelper
         ]);
     }
 
+    public static function resend_approval(Ticket $ticket,$user_name)
+    {
+        $content=strtolower(ucwords($user_name)).' has resend the ticket for approval to '.$ticket->approver_name;
+
+        TicketStateProgress::create([
+            'content'=>$content,
+            'ticket_id'=>$ticket->id,
+            'state'=>State::RESEND_APPROVAL
+        ]);
+    }
     public static function approved(Ticket $ticket)
     {
         $content=strtolower(ucwords($ticket->approver_name)).' has approved the ticket';

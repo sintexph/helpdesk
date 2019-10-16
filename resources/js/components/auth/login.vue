@@ -60,7 +60,7 @@
                         password: vm.password,
                     }).then(function (response) {
                         setTimeout(function () {
-                            window.location = "/";
+                            window.location = response.data.redirect;
                         }, 3000);
                     }).catch(error => {
                         vm.hide_wait();

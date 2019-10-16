@@ -1,10 +1,7 @@
 <template>
 
     <div>
-        <div class="form-group">
-            <label class="control-label">Carbon Copies <small><i>(optional)</i></small></label>
-            <input-tag v-model="ticket.sender_carbon_copies"></input-tag>
-        </div>
+
 
         <div class="row">
             <div class="col-sm-6">
@@ -22,6 +19,12 @@
                 </div>
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="control-label text-grey">Carbon Copies <small><i>(optional)</i></small></label>
+            <input-tag v-model="ticket.sender_carbon_copies"></input-tag>
+        </div>
+
         <div class="form-group">
             <label class="control-label">Title <i><small class="text-red">*</small></i></label>
             <input type="text" class="form-control" v-model="ticket.title" :maxlength="maxLength" required>

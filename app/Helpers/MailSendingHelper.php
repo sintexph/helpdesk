@@ -131,7 +131,7 @@ class MailSendingHelper
      */
     public static function apply_approval(Ticket $ticket)
     {
-        static::send($ticket->approver_email,new ForApprovalMailable($ticket),$ticket->sender_carbon_copies);
+        static::send($ticket->approver_email,new ForApprovalMailable($ticket));
     }
 
     /**

@@ -183,6 +183,17 @@ class TicketActionHelper
 
         return $ticket;
     }
+
+    public static function resend_approval(Ticket $ticket,User $user)
+    {
+        # Send Approval
+        MailSendingHelper::apply_approval($ticket);
+        # Save ticket progress history
+        TicketProgressHelper::resend_approval($ticket,$user->name);
+
+        return $ticket;
+    }
+
     public static function cancel_approval(Ticket $ticket,User $user)
     {
         $ticket->state=State::PROCESSING;
