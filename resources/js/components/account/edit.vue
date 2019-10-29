@@ -21,14 +21,14 @@
         data: function () {
             return {
                 id: '',
-                account:new User,
+                account: new User,
                 submitted: false,
             }
         },
         methods: {
             show: function (id) {
                 this.id = id;
-                this.account=new User;
+                this.account = new User;
                 this.fetch();
                 this.$refs.modal.show();
 
@@ -38,11 +38,12 @@
 
                 if (par.submitted === false) {
                     par.submitted = true;
+                    par.show_wait("Please wait while the system is processing your request....");
                     axios.patch('/accounts/update/' + par.id, {
 
                         email: par.account.email,
                         name: par.account.name,
-                        
+
                         id_number: par.account.id_number,
                         factory: par.account.factory,
                         role: par.account.role,
@@ -56,11 +57,13 @@
 
                     }).then(function (response) {
                         par.alert_success(response);
+                        par.hide_wait();
                         par.submitted = false;
                         par.$emit('updated');
                         par.$refs.modal.dismiss();
                     }).catch(function (error) {
                         par.submitted = false;
+                        par.hide_wait();
                         par.alert_failed(error);
                     });
                 }

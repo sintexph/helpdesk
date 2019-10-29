@@ -13,30 +13,30 @@ Route::prefix('utility')->name('.utility')->group(function(){
         //Route::get('sender_name', 'UtilityController@suggestion_sender_name')->name('.sender_name');
         //Route::get('sender_email', 'UtilityController@suggestion_sender_email')->name('.sender_email');
         
-
         Route::name('.canned')->group(function(){
             Route::get('canned-solutions','UtilityController@canned_solutions')->name('.solutions');
         });
         
         Route::get('supports', 'UtilityController@supports')->name('.supports');
-
-        
-
-
-
+        Route::post('employee', 'UtilityController@pams_employee')->name('.employee');
     });
 
 
     Route::get('find-user','UtilityController@find_user')->name('.find_user'); 
+    
     Route::post('factories','UtilityController@factories')->name('.factories');
     Route::post('categories','UtilityController@categories')->name('.categories');
     Route::post('get-users','UtilityController@get_users')->name('.get_users');
     Route::post('get-users-non-sender','UtilityController@get_non_sender')->name('.get_non_sender');
     Route::post('get-auth-user','UtilityController@get_auth_user')->name('.get_auth_user');
     Route::post('applications','UtilityController@get_applications')->name('.application');
+
     Route::post('project-histories/{id}', 'UtilityController@project_histories')->name('.projects.histories');
+    
 
     Route::middleware('auth')->group(function(){
+
+        Route::post('ticket-progress/{id}','UtilityController@ticket_progress')->name('.ticket_progress');
 
         Route::post('unclosed_tickets','UtilityController@unclosed_tickets')->name('.unclosed_tickets');
         Route::post('setting','UtilityController@setting')->name('.setting');
@@ -107,9 +107,10 @@ Route::prefix('user')->name('user')->group(function(){
 
 
 
-    Route::middleware('sender-ticket')->group(function(){
+    Route::get('view/{id}', 'SenderController@view')->name('.view');
 
-        Route::get('view/{id}', 'SenderController@view')->name('.view');
+    Route::middleware('sender-ticket')->group(function(){
+        
         Route::patch('close/{id}', 'SenderController@close')->name('.close');
         Route::patch('cancel/{id}', 'SenderController@cancel')->name('.cancel');
         Route::patch('open/{id}', 'SenderController@open')->name('.open');
@@ -162,7 +163,8 @@ Route::prefix('tickets')->name('tickets')->group(function(){
         Route::post('resend_approval/{id}', 'Manage\TicketActionController@resend_approval')->name('.resend_approval');
         Route::delete('cancel_approval/{id}', 'Manage\TicketActionController@cancel_approval')->name('.cancel_approval');
         Route::patch('custom_progress/{id}', 'Manage\TicketActionController@custom_progress')->name('.custom_progress');
-        
+        Route::post('modify-carbon-copies/{id}', 'Manage\TicketActionController@modify_carbon_copies')->name('.modify_carbon_copies');
+
     });
 
     

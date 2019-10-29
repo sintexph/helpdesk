@@ -13,6 +13,8 @@ use App\Project;
 use App\Task;
 use App\Helpers\UserRole;
 use App\ProjectHistory;
+use App\Ticket;
+use App\Helpers\DataSourceHelper;
 
 class UtilityController extends Controller
 {
@@ -29,6 +31,16 @@ class UtilityController extends Controller
             'email'=>'kevin.loquencio@sportscity.com.ph'
         ];
         return json_encode($result);
+    }
+
+    public function ticket_progress($id)
+    {
+        $ticket=Ticket::find($id);
+        abort_if($ticket==null,404,'Ticket could not be found!');
+        
+        $state_progress=$ticket->state_progress()->orderBy('created_at','desc')->orderBy('id','desc')->get();
+        
+        return \json_encode($state_progress);
     }
 
     public function categories()
@@ -120,6 +132,15 @@ class UtilityController extends Controller
         ->makeHidden('role_text');
 
         return json_encode(['results'=>$users]);
+    }
+
+    /**
+     * GET EMPLOYEE FROM PAMS
+     */
+    public function pams_employee(Request $request)
+    {
+        $employee=DataSourceHelper::find_employee($request['id_number']);
+        return \json_encode($employee);
     }
 
     /**

@@ -188,8 +188,13 @@ class TicketActionHelper
     {
         # Send Approval
         MailSendingHelper::apply_approval($ticket);
-        # Save ticket progress history
-        TicketProgressHelper::resend_approval($ticket,$user->name);
+        
+        # Add note for resending the approval
+        TicketNote::create([
+            'content'=>'Resend notification to '.strtolower(ucwords($ticket->approver_name)).' for ticket approval.',
+            'created_by'=>$user->name,
+            'ticket_id'=>$ticket->id,
+        ]);
 
         return $ticket;
     }
@@ -261,6 +266,45 @@ class TicketActionHelper
         return $ticket;
     }
 
+    /**
+     * @param $ticket Ticket to modify
+     * @param $user Who will modify
+     * @param $cc The carbon copies to update
+     */
+    public static function modify_carbon_copies(Ticket $ticket,User $user,Array $cc)
+    {
+        $cc=array_filter($cc);
+        $old = $ticket->sender_carbon_copies;
+        
+        $added_emails = array_filter(array_diff($cc, $old)); // Get the added emails and strip out the empty values
+        $removed_emails = array_filter(array_diff($old, $cc)); // Get the remove emails and strip out the empty values
+
+        # Add note for modifying the carbon copies
+        if(!empty($removed_emails))
+        {
+            $content='Removed carbon copy '.implode(", ",$removed_emails);
+            TicketNote::create([
+                'content'=>$content,
+                'created_by'=>$user->name,
+                'ticket_id'=>$ticket->id,
+            ]);
+        }
+ 
+        if(!empty($added_emails))
+        {
+            $content='Added carbon copy '.implode(", ",$added_emails);
+            TicketNote::create([
+                'content'=>$content,
+                'created_by'=>$user->name,
+                'ticket_id'=>$ticket->id,
+            ]);
+        }
+
+        $ticket->sender_carbon_copies=$cc;
+        $ticket->save();
+
+        return $ticket;
+    }
 
     /**
      * Save ticket in the database

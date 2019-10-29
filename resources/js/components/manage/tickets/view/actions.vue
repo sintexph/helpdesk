@@ -30,6 +30,15 @@
                         </a>
                     </li>
 
+                    
+                    <li v-if="ticket.state !== State.SOLVED && ticket.state !== State.PENDING">
+                        <a href="#" @click.prevent="$refs.modCarbonCopies.show()">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <span>Modify Carbon Copies</span>
+                        </a>
+                    </li>
+
+
                     <li v-if="ticket.state === State.CATERED">
                         <a href="#" @click.prevent="process_ticket">
                             <i class="fa fa-spinner" aria-hidden="true"></i>
@@ -103,6 +112,7 @@
             <add-reference-action :ticket_id="ticket.id" ref="addReferenceAction"></add-reference-action>
             <apply-approval :ticket_id="ticket.id" ref="applyApproval"></apply-approval>
             <custom-progress :ticket_id="ticket.id" ref="customProgress"></custom-progress>
+            <mod-cc :ticket_id="ticket.id" :cc="ticket.sender_carbon_copies" ref="modCarbonCopies"></mod-cc>
         </div>
     </div>
 </template>
@@ -114,6 +124,7 @@
     import applyApproval from './apply_approval';
     import addReferenceAction from './add_reference';
     import customProgress from './custom_progress';
+    import modCarbonCopies from './modify_cc';
 
     export default {
 
@@ -124,6 +135,7 @@
             'escalate-action': escalateAction,
             'add-reference-action': addReferenceAction,
             'apply-approval': applyApproval,
+            'mod-cc':modCarbonCopies,
         },
         props: {
             can_update: {

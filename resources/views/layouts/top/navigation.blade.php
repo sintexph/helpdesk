@@ -29,7 +29,7 @@
                 <li>
                     <a data-toggle="modal" href='#modal-edit-profile'>
                         Profile Settings
-                        </a>
+                    </a>
                     <span class="glyphicon glyphicon-cog pull-right"></span>
                 </li>
                 <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign

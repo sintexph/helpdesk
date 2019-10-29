@@ -54,6 +54,7 @@ class TicketController extends Controller
             'processing_at', 
             'solution', 
             'solved_at', 
+            'created_at',
             'closed_at', 
             'hold_at', 
             'un_hold_at', 
@@ -128,9 +129,6 @@ class TicketController extends Controller
     {
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found!');
-        
-        $state_progress=$ticket->state_progress()->orderBy('created_at','desc')->get();
-
-        return view('manage.tickets.view',['ticket'=>$ticket,'state_progress'=>$state_progress,]);
+        return view('manage.tickets.view',['ticket'=>$ticket]);
     }
 }

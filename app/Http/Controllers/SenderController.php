@@ -135,11 +135,9 @@ class SenderController extends Controller
     {
         $ticket=Ticket::find($id);
         abort_if($ticket==null,404,'Ticket could not be found on the system!');
-        $state_progress=$ticket->state_progress()->orderBy('created_at','desc')->get();
 
         return view('sender.view',[
-            'ticket'=>$ticket,
-            'state_progress'=>$state_progress,
+            'ticket'=>$ticket
         ]);
     }
 

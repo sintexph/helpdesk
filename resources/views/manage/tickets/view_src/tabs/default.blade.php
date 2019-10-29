@@ -11,7 +11,27 @@
         @endif
 
         <div class="box box-solid">
+
             <div class="box-body">
+
+
+                <div class="caterer">
+                    <div class="sintex-circle-image circular--landscape">
+                        <a class="venobox" href="{{ $ticket->sender->photo }}">
+                            <img src="{{ $ticket->sender->photo }}" alt="image alt" />
+                        </a>
+                    </div>
+                    <span class="caterer-name">{{ $ticket->sender->name }}</span>
+                    <span class="caterer-position">
+                        <a href="mailto:{{  $ticket->sender->email }}">
+                            {{ $ticket->sender->email }}&nbsp;&nbsp;&#9744;&nbsp;{{ $ticket->sender->contact }}
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="box-body">
+
+
                 <div class="table-responsive">
                     <table class="table no-border table-hover">
                         <tbody>
@@ -26,9 +46,15 @@
                                         <dt>Sender</dt>
                                         <dd>{{ $ticket->sender_name }}</dd>
                                         <dt>Email</dt>
-                                        <dd>{{ $ticket->sender_email }}</dd>
+                                        <dd>
+                                            <a href="mailto:{{ $ticket->sender_email }}">
+                                                {{ $ticket->sender_email }}
+                                            </a>
+                                        </dd>
                                         <dt>Date</dt>
                                         <dd>{{ $ticket->created_at }}</dd>
+
+
                                     </dl>
                                 </td>
                                 <td colspan="4">
@@ -61,16 +87,28 @@
                                         <dt>Carbon Copies</dt>
                                         <dd>
                                             @if(!empty($ticket->sender_carbon_copies))
-                                                @foreach($ticket->sender_carbon_copies as $cc)
-                                                <div class="label label-primary">{{ $cc }}</div>
-                                                @endforeach
+                                            <table>
+                                                <tbody>
+                                                    @foreach($ticket->sender_carbon_copies as $cc)
+                                                    <tr>
+                                                        <td>
+
+                                                            <a class="label label-primary" href="mailto:{{ $cc }}">
+                                                                {{ $cc }}
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                             @endif
                                         </dd>
-
-
                                     </dl>
                                 </td>
                             </tr>
+
+
+
                             <tr>
                                 <th>Catered</th>
                                 <th>Processing</th>
@@ -176,7 +214,6 @@
                 <span>No feedback</span>
                 @endif
             </div>
-
         </div>
 
         <div class="box box-solid">
@@ -234,7 +271,9 @@
                 <div class="caterer">
 
                     <div class="sintex-circle-image">
-                        <img src="{{ $ticket->caterer->photo }}" alt="User Image">
+                        <a class="venobox" href="{{ $ticket->caterer->photo }}">
+                            <img src="{{ $ticket->caterer->photo }}" alt="image alt" />
+                        </a>
                     </div>
 
                     <span class="caterer-name">{{ $ticket->caterer->name }}</span>
@@ -272,7 +311,7 @@
                 <h3 class="box-title">Progress</h3>
             </div>
             <div class="box-body">
-                <ticket-progress :progress_ticket="{{ json_encode($state_progress) }}"></ticket-progress>
+                <ticket-progress :ticket_id="{{ $ticket->id }}"></ticket-progress>
             </div>
         </div>
     </div>

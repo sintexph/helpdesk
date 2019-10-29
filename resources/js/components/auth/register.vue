@@ -6,6 +6,16 @@
         <div class="login-box-body">
             <form @submit.prevent="register" method="post">
                 <div class="form-group has-feedback">
+                    <label class="control-label">Status</label>
+                    <select class="form-control" v-model="status" required>
+                        <option value="">-- Select --</option>
+                        <option value="regular">Regular</option>
+                        <option value="probationary">Probationary</option>
+                    </select>
+                    <validation :errors="errors" field="regular"></validation>
+                </div>
+
+                <div class="form-group has-feedback">
                     <label class="control-label">ID Number</label>
                     <div class="input-group">
                         <input type="text" class="form-control text-uppercase" v-model="user.id_number" required>
@@ -13,7 +23,7 @@
                     </div>
                     <validation :errors="errors" field="id_number"></validation>
                 </div>
-                <div class="form-group has-feedback">
+                <div class="form-group has-feedback" v-if="status==='regular'">
                     <label class="control-label">Email Address</label>
                     <div class="input-group">
                         <input type="email" class="form-control" v-model="user.email" required>
@@ -39,10 +49,8 @@
                         <span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>
                     </div>
                 </div>
-
-                <p>Registration was made easy for you, just provide your <strong>company id number</strong> and email
-                    and let us take care the rest.</p>
-
+                <p>Please complete the required details above and if you haven't applied an email address, please choose the <strong>probationary status</strong>.</p> 
+                
                 <button class="btn btn-sm btn-success pull-right" type="submit">Register Account</button>
             </form>
             <div class="clearfix"></div>
@@ -113,6 +121,7 @@
                 user: new User,
                 errors: [],
                 continue_form: false,
+                status: '',
             }
         },
         mounted: function () {
@@ -158,6 +167,8 @@
                         name: vm.user.name,
                         factory: vm.user.factory,
                         position: vm.user.position,
+
+                        status: vm.status,
 
                     }).then(response => {
                         vm.hide_wait();

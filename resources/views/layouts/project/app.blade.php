@@ -49,12 +49,15 @@
 <link rel="stylesheet" href="http://cdn.sportscity.com.ph/loading-modal/css/jquery.loadingModal.min.css">
 <link rel="stylesheet" href="http://cdn.sportscity.com.ph/css/logo.css">
 <link rel="stylesheet" href="{{ asset('css/ticket.css') }}">
+<link rel="stylesheet" href="http://cdn.sportscity.com.ph/venobox/venobox.css">
 @yield('top_script')
 @endslot
 
 @slot('end_script')
 <script src="http://cdn.sportscity.com.ph/circle-image/image.js"></script>
 <script src="http://cdn.sportscity.com.ph/loading-modal/js/jquery.loadingModal.js"></script>
+<script src="http://cdn.sportscity.com.ph/venobox/venobox.min.js"></script>
+<script src="{{ asset('js/image-viewer.js') }}"></script>
 @yield('bottom_script')
 
 @endslot

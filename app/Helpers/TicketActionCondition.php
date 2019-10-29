@@ -144,7 +144,21 @@ trait TicketActionCondition
         abort_if($escalate_to->id==$ticket->catered_by,400,'You mus select different support staff!');
             
     }
-    
+    /**
+     *  CANNOT 
+     *      CANCELLED
+     *      SOLVED
+     *      CLOSED
+     *      TICKET IS NOT CATERED
+     */
+    function condition_modify_carbon_copies(Ticket $ticket)
+    {
+        if($ticket->state==State::PENDING)
+            abort(400,'Ticket must be catered first before updating the carbon copies!');
+
+        $this->general_condition($ticket);
+            
+    }
     /**
      *  Could not add reference if ticket is cancelled, solved, or closed and pending
      */

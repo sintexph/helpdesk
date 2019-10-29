@@ -22,13 +22,14 @@
                     @foreach($ticket_conversations as $conversation)
                     <tr>
 
-                        <td><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
-                        <td class="mailbox-name"><a href="{{ route('inbox.view',$conversation->id) }}"
-                                target="_blank">{{ $conversation->control_number }}</a></td>
-                        <td class="mailbox-subject"><b>{{ $conversation->title }}</b> - {{ $conversation->sender_name }}
+                        <td class="fit"><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
+                        <td class="mailbox-name fit"><a href="{{ route('inbox.view',$conversation->id) }}"
+                                target="_blank"># {{ $conversation->control_number }}</a></td>
+                        <td class="mailbox-subject"><b>{{ $conversation->title }}</b>
+                        <div class="text-primary"><small>{{ $conversation->sender_name }}</small></div>
                         </td>
                         <td class="mailbox-attachment"></td>
-                        <td class="mailbox-date">{{ $conversation->created_at }}</td>
+                        <td class="mailbox-date fit">{{ $conversation->created_at }}</td>
                     </tr>
                     @endforeach
                 </tbody>

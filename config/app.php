@@ -3,6 +3,7 @@
 return [
 
     'skin' => env('APP_SKIN', 'skin-blue'),
+    'domain' => env('APP_DOMAIN', 'domain.local'),
 
     /*
     |--------------------------------------------------------------------------

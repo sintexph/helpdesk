@@ -7,6 +7,7 @@
         <div class="form-group">
             <label class="control-label">Id Number</label>
             <input type="text" class="form-control" v-model="account.id_number" required>
+             <label class="control-label"><a href="#" @click.prevent="load_employee()">Load Data</a></label>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -40,8 +41,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="form-group">
             <label class="control-label">Username</label>
             <input type="text" class="form-control" v-model="account.username" required>
@@ -90,6 +89,7 @@
             return {
                 account: new User,
                 factories: [],
+                submitted: false,
             }
         },
         watch: {
@@ -107,7 +107,26 @@
             }
         },
         methods: {
+            load_employee() {
+                let par = this;
+                if (par.submitted == false) {
+                    par.show_wait("Please wait while the system is processing your request....");
+                    axios.post('/utility/suggestions/employee', {
+                        id_number: par.account.id_number
+                    }).then(response => {
+                        par.hide_wait(); 
+                        if (response.data) {
+                            var employee = response.data[0];
+                           
+                            par.account.name = employee.full_name;
+                            par.account.factory = employee.factory;
+                            par.account.position = employee.position;
+                        }
 
+                    });
+                }
+
+            },
             get_factories() {
                 var par = this;
                 axios.post('/utility/factories').then(response => {

@@ -3,9 +3,9 @@
 
         <div class="post" v-for="(value,key) in conversations" :key="key">
             <div class="user-block">
-                <img class="img-circle img-bordered-sm"
-                    onerror="this.src='http://cdn.sportscity.com.ph/images/fallback.png'" :src="value.creator.photo"
-                    alt="user image">
+                <a class="venobox" :href="value.creator.photo">
+                    <img class="img-circle img-bordered-sm" :src="value.creator.photo" alt="User Image" />
+                </a>
                 <span class="username">{{ value.creator.name }}
                 </span>
                 <span class="description">{{ value.time_ago }}</span>

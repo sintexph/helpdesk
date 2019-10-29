@@ -37,13 +37,14 @@
                 </div>
                 <div class="form-inline" v-if="role != ROLE.SENDER && role != ROLE.SUPPORT">
                     <div class="form-group">
-                        <label><input type="checkbox" @change="filter_list" v-model="filters.catered"> Catered Tickets</label>
+                        <label><input type="checkbox" @change="filter_list" v-model="filters.catered"> Catered
+                            Tickets</label>
                     </div>
                 </div>
                 <div class="form-group" v-show="filters.catered===false">
                     <label class="control-label">Support</label>
-                    <select2 @changed="filter_list" :multiple="true" placeholder="Search..." style="width:100%;" v-model="filters.supports"
-                        url="/utility/suggestions/supports">
+                    <select2 @changed="filter_list" :multiple="true" placeholder="Search..." style="width:100%;"
+                        v-model="filters.supports" url="/utility/suggestions/supports">
                     </select2>
                 </div>
             </div>
@@ -97,7 +98,7 @@
                     find: '',
                     state: '',
                     catered: false,
-                    supports:[],
+                    supports: [],
                 },
                 find: '',
                 columns: [{
@@ -157,17 +158,18 @@
                             if (data !== null) {
                                 return `
                                     <div class="caterer">
-                        
-                                            <div class="sintex-circle-image">
-                                                    <img src="` + row.caterer.photo + `" alt="User Image">
-                                                </div>
+                                        <div class="sintex-circle-image">
+                                            <a class="venobox" href="` + row.caterer.photo + `">
+                                                <img src="` + row.caterer.photo + `" alt="User Image" />
+                                            </a>
+                                        </div>
 
-                                    <span title="Catered By" class="caterer-name">` +
-                                    row.caterer.name +
-                                    `</span>
-                                    <span title="Caterer's Email" class="caterer-position">` +
-                                    row.caterer.email +
-                                    `</span>
+                                        <span title="Catered By" class="caterer-name">` +
+                                        row.caterer.name +
+                                        `</span>
+                                        <span title="Caterer's Email" class="caterer-position">` +
+                                        row.caterer.email +
+                                        `</span>
                                     </div>
                             
                             `;
@@ -224,7 +226,7 @@
 
                 display += ` </div>`;
 
-                display += `<div title="Created At" class="detail">` + row.created_date + `</div>`;
+                display += `<div title="Created At" class="detail">` + row.time_ago + `</div>`;
 
                 return display;
             }

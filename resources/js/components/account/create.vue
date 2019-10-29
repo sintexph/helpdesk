@@ -33,6 +33,7 @@
 
                 if (par.submitted === false) {
                     par.submitted = true;
+                    par.show_wait("Please wait while the system is processing your request....");
                     axios.put('/accounts/save', {
 
                         email: par.account.email,
@@ -50,6 +51,7 @@
 
                     }).then(function (response) {
                         par.alert_success(response);
+                        par.hide_wait();
                         par.submitted = false;
                         par.$emit('created');
                         par.account = new User;
@@ -58,6 +60,7 @@
                         par.$refs.modal.dismiss();
                     }).catch(function (error) {
                         par.submitted = false;
+                        par.hide_wait();
                         par.alert_failed(error);
                     });
                 }

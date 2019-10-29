@@ -9,8 +9,8 @@
                 <input-file :multiple="true" v-model="attachments"></input-file>
             </div>
             <div class="pull-right">
-                <button type="submit" class="btn btn-primary btn-sm">
-                    <i class="fa fa-inbox" aria-hidden="true"></i>
+                <button type="submit" class="btn btn-default btn-sm">
+                    <i class="fa fa-inbox text-yellow" aria-hidden="true"></i>
                     Send Message
                 </button>
             </div>

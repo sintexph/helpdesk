@@ -259,6 +259,41 @@ class TicketActionController extends Controller
         }
     }
 
+    /**
+     * ESCALATE TO OTHER SUPPORT STAFF
+     * @param $request HOLDS THE USER ID OF THE STAFF TO BE ESCALATED
+     * @param $idTHE DATABASE ID OF THE TICKET
+     * 
+     * ANYONE CAN ESCALATE THE TICKET NOT LIMITED TO THE CATERER
+     */
+    public function modify_carbon_copies(Request $request,$id)
+    {
+        $this->validate($request,[
+            'sender_carbon_copies'=>'nullable',
+        ]);
+        $ticket=Ticket::find($id);
+        abort_if($ticket==null,404,'Ticket could not be found!');
+
+     
+        # Apply condition
+        $this->condition_modify_carbon_copies($ticket);
+
+        try {
+            
+                DB::beginTransaction();
+
+                $carbon_copies=explode(',',$request['sender_carbon_copies']); 
+                TicketActionHelper::modify_carbon_copies($ticket,auth()->user(),$carbon_copies);
+
+                DB::commit();
+
+            return response()->json(['message'=>'Carbon copies has been successfully updated!']);
+            
+        }catch (\Throwable $th) {
+            DB::rollBack();
+            abort(400,$th->getMessage());
+        }
+    }
 
     /**
      * ADD REFERENCE TICKET TO THE TICKET

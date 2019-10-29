@@ -9,17 +9,19 @@
 
                     <div class="caterer">
                         <div class="sintex-circle-image">
-                            <img :src="auth_user.photo" alt="User Image">
+                            <a class="venobox" :href="auth_user.photo">
+                                <img :src="auth_user.photo" alt="User Image" />
+                            </a>
                         </div>
                         <span class="caterer-name">{{ auth_user.name }}</span>
-                      <span class="caterer-position"><a :title="auth_user.email"
+                        <span class="caterer-position"><a :title="auth_user.email"
                                 :href="'mailto:'+auth_user.email">{{ auth_user.email }}</a></span>
-                    </div> 
+                    </div>
                 </div>
                 <div class="box-body no-padding">
-                 
+
                     <ul class="nav nav-pills nav-stacked tab-default">
-                      
+
                         <router-link tag="li" to="/" exact>
                             <a><i class="fa fa-ticket"></i> Tickets</a>
                         </router-link>

@@ -80,7 +80,11 @@ class Ticket extends Model
         'created_date'
     ];
     
-    
+    public function sender()
+    {
+        return $this->belongsTo('App\User','sender_email','email');
+    }
+
     public function getCreatedDateAttribute()
     {
         $date=new \Carbon\Carbon($this->created_at);

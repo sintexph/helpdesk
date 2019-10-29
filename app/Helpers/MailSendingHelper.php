@@ -27,13 +27,18 @@ class MailSendingHelper
 {
     private static function send($to,$mailable,$cc=null)
     {
+        # Remove empty emails from array values
+        if(!empty($cc))
+            $cc=array_filter($cc);
+        
         if(!empty($cc))
         {
             \Mail::to($to)
             ->cc($cc)
             ->queue($mailable);
         }
-        else {
+        else 
+        {
             \Mail::to($to)
             ->queue($mailable);
         }

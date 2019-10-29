@@ -25,10 +25,13 @@ class RegisterController extends Controller
     {
         $validation=[
             'id_number' =>'required|string|unique:users,id_number',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'continue'=>['nullable','boolean'],
+            'status'=>['required','string'],
         ];
+
+        if($request['status']=='regular')
+            $validation['email']=['required', 'string', 'email', 'max:255', 'unique:users,email'];
 
         if($request['continue']==true)
         {
@@ -64,9 +67,10 @@ class RegisterController extends Controller
                 $factory=$source_employee->factory;
                 $position=$source_employee->position;
                 $name=$source_employee->full_name;
+                
+                if($request['status']!='regular')
+                    $email=strtolower(str_replace(" ","",$source_employee->first_name.'.'.$source_employee->last_name)).'@'.config('app.domain');
             }
-
-            
             
             DB::beginTransaction();
 
@@ -74,13 +78,13 @@ class RegisterController extends Controller
             $user=new User;
  
             $user->username=$id_number;
-            $user->id_number=$id_number;
+            $user->id_number=strtoupper($id_number);
             $user->factory=$factory;
             $user->position=$position;
             $user->name=$name;
             $user->email=$email;
             $user->password=\Hash::make($password);
-            $user->created_by='Registered';
+            $user->created_by='Registration';
             $user->save();
             
 

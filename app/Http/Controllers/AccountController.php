@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\User;
-
+use App\Ticket;
+use DB;
 
 class AccountController extends Controller
 {
@@ -86,7 +87,7 @@ class AccountController extends Controller
         $user->username=$request['username'];
         $user->created_by=auth()->user()->name;
                     
-        $user->id_number=$request['id_number'];
+        $user->id_number=strtoupper($request['id_number']);
         $user->factory=$request['factory'];
         $user->contact=$request['contact'];
         $user->role=$request['role'];
@@ -128,27 +129,40 @@ class AccountController extends Controller
         abort_if($account==null,404,'Account could not be found!');
 
         
-        $account->name=strtoupper($request['name']);
-        $account->email=$request['email'];
-        $account->position=$request['position'];
-        $account->username=$request['username'];
-        $account->updated_by=auth()->user()->name;
-        $account->active=$request['active'];
+        try {
+            DB::beginTransaction();
 
-        $account->id_number=$request['id_number'];
-        $account->factory=$request['factory'];
-        $account->role=$request['role'];
-        $account->contact=$request['contact'];
+            $account->name=strtoupper($request['name']);
+            $account->email=$request['email'];
+            $account->position=$request['position'];
+            $account->username=$request['username'];
+            $account->updated_by=auth()->user()->name;
+            $account->active=$request['active'];
 
-        
-        if(!empty($request['password']))
-            if(\Hash::needsRehash($request['password']))
-                $account->password=bcrypt($request['password']);
+            $account->id_number=strtoupper($request['id_number']);
+            $account->factory=$request['factory'];
+            $account->role=$request['role'];
+            $account->contact=$request['contact'];
 
-        $account->save();
-        
+            
+            if(!empty($request['password']))
+                if(\Hash::needsRehash($request['password']))
+                    $account->password=bcrypt($request['password']);
 
-        return response()->json(['message'=>'Account has been successfully updated!']);
+            if($account->isDirty('email'))
+                Ticket::where('sender_email',$account->getOriginal('email'))
+                ->update(['sender_email'=>$account->email]);
+
+            $account->save();
+            DB::commit();
+            
+
+            return response()->json(['message'=>'Account has been successfully updated!']);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(442,$th->getMessage());
+        }
     }
     public function delete($id)
     {

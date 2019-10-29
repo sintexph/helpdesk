@@ -16,12 +16,24 @@
 <script>
     export default {
         props: {
-            progress_ticket: {
-                required: true,
-                defualt() {
-                    return [];
-                }
+            ticket_id: [String, Number],
+        },
+        data()
+        {
+            return {
+                progress_ticket:[]
             }
+        },
+        methods: {
+            load_data() {
+                let vm = this;
+                axios.post('/utility/ticket-progress/' + vm.ticket_id).then(response => {
+                    vm.progress_ticket = response.data;
+                });
+            }
+        },
+        mounted() {
+            this.load_data();
         }
     }
 

@@ -4,8 +4,8 @@
             <h3 class="box-title">Inbox</h3>
             <div class="box-tools pull-right">
                 <div class="has-feedback">
-                    <input type="text" @keydown.enter="filter_list" v-model="filters.find" class="form-control input-sm"
-                        placeholder="Search Ticket">
+                    <input type="text" name="search" id="search" @keydown.enter="filter_list" v-model="filters.find" class="form-control input-sm"
+                        placeholder="Search Ticket" autocomplete="off">
                     <span class="glyphicon glyphicon-search form-control-feedback"></span>
                 </div>
             </div>
@@ -134,10 +134,12 @@
                             if (data !== null) {
                                 return `
                                     <div class="caterer">
+                                    <div class="sintex-circle-image">
                         
-                                            <div class="sintex-circle-image">
-                                                    <img src="` + row.caterer.photo + `" alt="User Image">
-                                                </div>
+                                            <a class="venobox" href="` + row.caterer.photo + `">
+                                                <img src="` + row.caterer.photo + `" alt="User Image" />
+                                            </a>
+                                            </div>
 
                                     <span class="caterer-name">` +
                                     row.caterer.name +
