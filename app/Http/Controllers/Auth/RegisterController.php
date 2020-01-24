@@ -31,7 +31,14 @@ class RegisterController extends Controller
         ];
 
         if($request['status']=='regular')
-            $validation['email']=['required', 'string', 'email', 'max:255', 'unique:users,email'];
+        {
+            $validation['email']=['required', 'string', 'email', 'max:255', 'unique:users,email',function($attribute, $value, $fail){
+                if (substr($value, strpos($value, "@") + 1)!==config('app.domain')) {
+                    $fail('Email address given is invalid.');
+                } 
+            }];
+        }
+            
 
         if($request['continue']==true)
         {
@@ -71,7 +78,9 @@ class RegisterController extends Controller
                 if($request['status']!='regular')
                     $email=strtolower(str_replace(" ","",$source_employee->first_name.'.'.$source_employee->last_name)).'@'.config('app.domain');
             }
-            
+            else
+                $email=\strtolower(str_replace(" ","",$name)).'@'.config('app.domain'); # Formulate dummy email if cannot find in PAMS
+
             DB::beginTransaction();
 
             # Save the user details to the database

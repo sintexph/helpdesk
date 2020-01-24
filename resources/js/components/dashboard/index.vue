@@ -8,7 +8,7 @@
                     </span>
                     <div class="info-box-content">
                         <span class="info-box-text">Users</span>
-                        <span class="info-box-number">90<small>%</small></span>
+                        <span class="info-box-number" v-text="statistics.users"></span>
                     </div>
                 </div>
             </div>
@@ -19,8 +19,8 @@
                         <i class="fa fa-ticket" aria-hidden="true"></i>
                     </span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Tickets</span>
-                        <span class="info-box-number">90<small>%</small></span>
+                        <span class="info-box-text">Total Tickets</span>
+                        <span class="info-box-number" v-text="statistics.tickets">90</span>
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                     </span>
                     <div class="info-box-content">
                         <span class="info-box-text">Pending Tickets</span>
-                        <span class="info-box-number">90<small>%</small></span>
+                        <span class="info-box-number" v-text="statistics.pending_tickets">90</span>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     </span>
                     <div class="info-box-content">
                         <span class="info-box-text">Closed Tickets</span>
-                        <span class="info-box-number">90<small>%</small></span>
+                        <span class="info-box-number" v-text="statistics.closed_tickets">90</span>
                     </div>
                 </div>
             </div>
@@ -89,8 +89,26 @@
         },
         data() {
             return {
-
+                statistics: {
+                    users: 0,
+                    tickets: 0,
+                    pending_tickets: 0,
+                    closed_tickets: 0,
+                }
             }
+        },
+        methods:{
+            load_statistics()
+            {
+                let vm=this;
+                axios.post('/dashboard/statistics').then(response=>{
+                    vm.statistics=response.data;
+                });
+            }
+        },
+        mounted()
+        {
+            this.load_statistics();
         }
     }
 

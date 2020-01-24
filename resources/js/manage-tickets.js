@@ -5,7 +5,7 @@ import "./general.js"
 window.UserRole = require('./src/UserRole').default;
 Vue.mixin(UserRole);
 
-Vue.mixin(httpAlert);
+Vue.mixin(toastHelper);Vue.mixin(httpAlert);
 import TicketList from './components/manage/tickets/list.vue';
 import Conversations from './components/ticket/conversations.vue';
 import TicketActions from './components/manage/tickets/view/actions.vue';
@@ -18,6 +18,7 @@ Vue.component('ticket-conversations', Conversations);
 Vue.component('ticket-actions', TicketActions);
 Vue.component('ticket-notes',TicketNotes);
 Vue.component('ticket-form', TicketForm);
+Vue.component('countdown',require('./components/countdown').default);
 
 new Vue({
     el: '#manage-ticket'

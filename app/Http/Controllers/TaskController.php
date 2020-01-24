@@ -232,7 +232,8 @@ class TaskController extends Controller
             ->orWhere('assigned_to',auth()->user()->id);
         }); 
 
-        $tasks->orderBy('state','asc');
+        if(empty($request->order))
+            $tasks->orderBy('updated_at','desc');
 
         $tasks->with([
             'project'=>function($query){

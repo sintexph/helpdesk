@@ -1,12 +1,11 @@
 <template>
-    <modal :prevent="true" name="edit-category" ref="modal" >
+    <modal :prevent="true" name="edit-category" ref="modal">
         <template slot="header">Update Category</template>
         <template slot="body">
-      <div class="form-group">
+            <div class="form-group">
                 <label class="control-label">Category</label>
                 <input type="text" v-model="name" class="form-control">
             </div>
-
         </template>
         <template slot="footer">
             <button type="button" class="btn btn-warning btn-sm" @click.prevent="update">Update Category</button>
@@ -41,7 +40,7 @@
                 }).then(response => {
                     vm.alert_success(response);
                     vm.id = null;
-                    vm.name='';
+                    vm.name = '';
                     vm.$refs.modal.dismiss();
                     vm.$emit('updated');
                 }).catch(error => {

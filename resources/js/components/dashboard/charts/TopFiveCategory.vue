@@ -5,18 +5,23 @@
 
     export default {
         extends: Pie,
-        data() {
-            return {
-                chartData: {
-                    labels: [
-                        'PMS Account Request',
-                        'Domain Account',
-                        'Hardware Concern',
-                        'System Application',
-                        'Email Database',
-                    ],
+
+        mounted() {
+            let vm = this;
+
+            axios.post('/dashboard/category_request').then(response => {
+
+                var data = [];
+                var labels = [];
+
+                response.data.forEach(element => {
+                    labels.push(element.Category)
+                    data.push(element.Number);
+                });
+                let chartData = {
+                    labels:labels,
                     datasets: [{
-                        data: [12, 19, 3, 5, 2],
+                        data: data,
                         backgroundColor: [
                             'rgba(54, 69, 59, 1)',
                             'rgba(81, 87, 81, 1)',
@@ -24,13 +29,9 @@
                             'rgba(245, 249, 233, 1)',
                             'rgba(194, 193, 165, 1)',
                         ],
-
-
                     }],
-
-
-                },
-                options: {
+                };
+                let options = {
                     title: {
                         display: true,
                         text: 'Weekly Top 5 Request'
@@ -44,11 +45,11 @@
                     animation: {
                         animateScale: true
                     },
-                }
-            }
-        },
-        mounted() {
-            this.renderChart(this.chartData, this.options)
+                };
+
+                vm.renderChart(chartData, options);
+
+            });
         }
     }
 

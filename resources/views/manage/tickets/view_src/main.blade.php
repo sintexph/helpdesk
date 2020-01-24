@@ -15,8 +15,10 @@
                 @endif
             </a>
         </li>
-        
-        </li> 
+
+        <li class="{{ app('request')->input('view')=='metrics'?'active':'' }}">
+            <a href="?view=metrics">Metrics</a>
+        </li>
     </ul>
 </div>
 
@@ -27,9 +29,10 @@
 @case('convo')
 @include('manage.tickets.view_src.tabs.conversation')
 @break
-@case(2)
-
+@case('metrics')
+@include('manage.tickets.view_src.tabs.metrics')
 @break
+
 
 @default
 @include('manage.tickets.view_src.tabs.default')

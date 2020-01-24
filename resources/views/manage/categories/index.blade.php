@@ -4,11 +4,6 @@
 @section('menu-2','active')
 @section('menu-2-3','active')
 
-@section('breadcrumbs')
-<li><a href="/">Home</a></li>
-<li class="active">Manage Document</li>
-@stop
-
 @section('top_script')
 <link rel="stylesheet" href="http://cdn.sportscity.com.ph/datatables/datatables.min.css">
 <link rel="stylesheet" href="http://cdn.sportscity.com.ph/AdminLTE-2.4.5/bower_components/select2/dist/css/select2.min.css">

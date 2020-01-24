@@ -64,11 +64,10 @@
                 filters: {
                     find: '',
                     role: '',
-                    active:'',
+                    active: '',
                 },
                 submitted: false,
-                columns: [
-                    {
+                columns: [{
                         label: 'Name',
                         name: 'name',
                         data: 'name',
@@ -119,6 +118,26 @@
                         className: 'nowrap',
 
                     },
+
+                    {
+                        label: 'Shift',
+                        className: 'nowrap',
+                        render(data, meta, row) {
+                            if (row.shift_start !== null && row.shift_end !== null)
+                                return row.shift_start + ' - ' + row.shift_end;
+                            else
+                                return ``;
+                        }
+                    },
+
+                    {
+                        label: 'break time',
+                        name: 'break_time',
+                        data: 'break_time',
+                        className: 'nowrap',
+
+                    },
+
                     {
                         label: 'Active',
                         name: 'active',

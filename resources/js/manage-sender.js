@@ -2,7 +2,7 @@ import "@sintexph/vue-lib"
 import "./general.js"
 import "./src/custom_request/import";
 
-Vue.mixin(httpAlert);
+Vue.mixin(toastHelper);Vue.mixin(httpAlert);
 Vue.mixin(require('./mixins/application_converter').default);
 
 

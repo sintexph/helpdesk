@@ -7,7 +7,7 @@
         <div class="form-group">
             <label class="control-label">Id Number</label>
             <input type="text" class="form-control" v-model="account.id_number" required>
-             <label class="control-label"><a href="#" @click.prevent="load_employee()">Load Data</a></label>
+            <label class="control-label"><a href="#" @click.prevent="load_employee()">Load Data</a></label>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -62,6 +62,28 @@
         </div>
 
 
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label">Shift Start (24 HOUR)</label>
+                    <select2 :options="shift" style="width:100%" v-model="account.shift_start"></select2>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label">Shift End (24 HOUR)</label>
+                    <select2 :options="shift" style="width:100%" v-model="account.shift_end"></select2>
+                </div>
+            </div>
+             <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label">Break Time (Hour)</label>
+                    <input type="number" v-model="account.break_time" class="form-control">
+                </div>
+            </div>
+
+        </div>
+
         <div class="form-group">
             <label class="control-label">Role</label>
             <select class="form-control" v-model="account.role" required>
@@ -90,6 +112,10 @@
                 account: new User,
                 factories: [],
                 submitted: false,
+                shift: [{
+                    text: 'NONE',
+                    id: '',
+                }],
             }
         },
         watch: {
@@ -114,10 +140,10 @@
                     axios.post('/utility/suggestions/employee', {
                         id_number: par.account.id_number
                     }).then(response => {
-                        par.hide_wait(); 
+                        par.hide_wait();
                         if (response.data) {
                             var employee = response.data[0];
-                           
+
                             par.account.name = employee.full_name;
                             par.account.factory = employee.factory;
                             par.account.position = employee.position;
@@ -141,6 +167,13 @@
         },
         mounted() {
             this.get_factories();
+            for (let i = 1; i <=24; i++) {
+                console.log(i);
+                this.shift.push({
+                    text: i,
+                    id: i,
+                });
+            }
         }
 
 

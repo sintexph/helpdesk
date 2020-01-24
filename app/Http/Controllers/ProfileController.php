@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Ticket;
 
 class ProfileController extends Controller
 {
@@ -51,7 +52,11 @@ class ProfileController extends Controller
         $user->factory=$request['factory'];
         $user->contact=$request['contact'];
 
-        
+
+        if($user->isDirty('email'))
+            Ticket::where('sender_email',$user->getOriginal('email'))
+                ->update(['sender_email'=>$user->email]);
+
         if(!empty($request['password']))
             if(\Hash::needsRehash($request['password']))
                 $user->password=bcrypt($request['password']);

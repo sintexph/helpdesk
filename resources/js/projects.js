@@ -17,7 +17,7 @@ import {
     Urgency
 } from "./src/Urgency";
 window.Urgency = Urgency;
-Vue.mixin(httpAlert);
+Vue.mixin(toastHelper);Vue.mixin(httpAlert);
 Vue.mixin(require('./mixins/task_state_selection').default);
 
 window.GlobalEvent = new Vue();

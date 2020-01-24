@@ -5,9 +5,10 @@
             <form ref="submitForm" @submit.prevent="submit">
                 <div class="form-group">
                     <label class="control-label">Sender</label>
-                    <input-autocomplete @selected="user_selected" anchor="name" url="/utility/find-user">
-                    </input-autocomplete>
-                    <validation :errors="validation_errors" field="sender_id_number"></validation>
+                    <select2 placeholder="Search..." style="width:100%;" v-model="sender"
+                        url="/utility/suggestions/find-user">
+                    </select2>
+                    <validation :errors="validation_errors" field="sender"></validation>
                 </div>
                 <ticket-form :validation="validation_errors" v-model="ticket"></ticket-form>
 
@@ -27,14 +28,12 @@
                 submitted: false,
                 ticket: new Ticket,
                 validation_errors: [],
-                sender_id_number: '',
+                sender: '',
             }
         },
 
         methods: {
-            user_selected(user) {
-                this.sender_id_number = user.id_number;
-            },
+
             show: function () {
                 this.$refs.modal.show();
             },
@@ -56,7 +55,7 @@
                             form.append('attachments[' + i + ']', file);
                         }
 
-                        form.append('sender_id_number', vm.sender_id_number);
+                        form.append('sender', vm.sender);
                         form.append('sender_carbon_copies', vm.ticket.sender_carbon_copies);
                         form.append('sender_internet_protocol_address', vm.ticket.sender_internet_protocol_address);
                         form.append('sender_phone', vm.ticket.sender_phone);

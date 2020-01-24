@@ -16,9 +16,10 @@ class Ticket extends Model
 
         'sender_name', 
         'sender_email', 
+        'sender_factory',
+
         'sender_carbon_copies', 
         'sender_internet_protocol_address', 
-        'sender_factory',
         'sender_phone', 
 
         'title', 
@@ -69,17 +70,19 @@ class Ticket extends Model
         'ht_processing'=>'integer',
         'ht_solved'=>'integer',
         'ht_closed'=>'integer',
+        'catered_at'=>'datetime',
     ];
 
     protected $appends=[
         'state_text',
+        'last_state',
         'content_preview',
         'plain_text_content',
         'urgency_text',
         'time_ago',
         'created_date'
     ];
-    
+
     public function sender()
     {
         return $this->belongsTo('App\User','sender_email','email');
@@ -136,7 +139,13 @@ class Ticket extends Model
     {
         return State::state($this->state);
     }
-    
+    public function getLastStateAttribute()
+    {
+        return $this->state_progress()
+        ->whereIn('state',State::standard_ticket_state())
+        ->orderBy('id','desc')->first()->state;
+    }
+
     public function getPlainTextContentAttribute()
     {
         return trim(preg_replace('/ +/', ' ', preg_replace('/[^A-Za-z0-9 ]/', ' ', urldecode(html_entity_decode(strip_tags($this->content))))));
@@ -148,44 +157,27 @@ class Ticket extends Model
     }
 
 
-
-    public function getHtCateredAttribute($value)
+    
+    public function targets()
     {
-        if($value===1)
-            return 'PASSED';
-        elseif($value===0)
-            return 'FAILED';
-        else
-            return '';
+        return $this->hasMany('App\TicketTarget','ticket_id');
     }
 
-    public function getHtProcessingAttribute($value)
-    {
-        if($value===1)
-            return 'PASSED';
-        elseif($value===0)
-            return 'FAILED';
-        else
-            return '';
-    }
 
-    public function getHtSolvedAttribute($value)
+    public function catered_metric()
     {
-        if($value===1)
-            return 'PASSED';
-        elseif($value===0)
-            return 'FAILED';
-        else
-            return '';
+        return $this->hasOne('App\TicketTarget','ticket_id')->where('target',State::CATERED);
     }
-
-    public function getHtClosedAttribute($value)
+    public function processing_metric()
     {
-        if($value===1)
-            return 'PASSED';
-        elseif($value===0)
-            return 'FAILED';
-        else
-            return '';
+        return $this->hasOne('App\TicketTarget','ticket_id')->where('target',State::PROCESSING);
+    }
+    public function solved_metric()
+    {
+        return $this->hasOne('App\TicketTarget','ticket_id')->where('target',State::SOLVED);
+    }
+    public function closed_metric()
+    {
+        return $this->hasOne('App\TicketTarget','ticket_id')->where('target',State::CLOSED);
     }
 }

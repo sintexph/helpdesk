@@ -11,13 +11,14 @@ class TicketStateProgress extends Model
 
     protected $appends=[
         'time_ago',
+        'state_text'
     ];
-    
-    public function getStateAttribute($value)
+
+    public function getStateTextAttribute()
     {
-        return State::state($value);
+        return State::state($this->state);
     }
-    
+
     public function getContentAttribute($value)
     {
         return ucfirst(strtolower($value));
@@ -28,5 +29,4 @@ class TicketStateProgress extends Model
         $date=new \Carbon\Carbon($this->created_at);
         return $date->diffForHumans(); 
     }
-
 }

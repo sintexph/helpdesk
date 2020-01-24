@@ -1,7 +1,7 @@
 import "@sintexph/vue-lib"
  import "./general.js"
 
-Vue.mixin(httpAlert);
+Vue.mixin(toastHelper);Vue.mixin(httpAlert);
 import TicketList from './components/my_tickets/list.vue';
 Vue.component('ticket-list', TicketList); 
 

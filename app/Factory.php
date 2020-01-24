@@ -11,4 +11,6 @@ class Factory extends Model
         'created_by',
         'updated_by',
     ];
+
+    
 }

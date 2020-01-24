@@ -215,7 +215,7 @@ class TicketActionController extends Controller
         # Apply condition
         $this->condition_open($ticket);
 
-        TicketActionHelper::open($ticket,$request['reason']);
+        TicketActionHelper::open($ticket,auth()->user(),$request['reason']);
             
             
 
@@ -260,11 +260,7 @@ class TicketActionController extends Controller
     }
 
     /**
-     * ESCALATE TO OTHER SUPPORT STAFF
-     * @param $request HOLDS THE USER ID OF THE STAFF TO BE ESCALATED
-     * @param $idTHE DATABASE ID OF THE TICKET
-     * 
-     * ANYONE CAN ESCALATE THE TICKET NOT LIMITED TO THE CATERER
+     * MODIFY CARBON COPIES
      */
     public function modify_carbon_copies(Request $request,$id)
     {
@@ -294,6 +290,44 @@ class TicketActionController extends Controller
             abort(400,$th->getMessage());
         }
     }
+
+    /**
+     * CHANGE SENDER
+     */
+    public function change_sender(Request $request,$id)
+    {
+        $this->validate($request,[
+            'sender'=>'required',
+        ]);
+
+        # Cannot change the sender if not admin
+        abort_if(auth()->user()->can('admin')==false,401,'You are unauthorized to process the action');
+
+        $ticket=Ticket::find($id);
+        abort_if($ticket==null,404,'Ticket could not be found!');
+
+        $sender=User::find($request->sender);
+        abort_if($sender==null,404,'Sender could not be found!');
+     
+        # Apply condition
+        abort_if($ticket->state==State::CLOSED,400,'The ticket was already closed and sender could not be changed anymore!');
+
+        try {
+            
+                DB::beginTransaction();
+ 
+                TicketActionHelper::change_sender($ticket,auth()->user(),$sender);
+
+                DB::commit();
+
+            return response()->json(['message'=>'Carbon copies has been successfully updated!']);
+            
+        }catch (\Throwable $th) {
+            DB::rollBack();
+            abort(400,$th->getMessage());
+        }
+    }
+
 
     /**
      * ADD REFERENCE TICKET TO THE TICKET
@@ -460,7 +494,7 @@ class TicketActionController extends Controller
     public function save(Request $request)
     {
         $this->validate($request,[
-            'sender_id_number'=>'required',
+            'sender'=>'required',
             'sender_internet_protocol_address'=>'required',
             'sender_phone'=>'required',
             'title'=>'required|max:50',
@@ -471,8 +505,8 @@ class TicketActionController extends Controller
         try {
             DB::beginTransaction(); 
 
-            $sender=User::where('id_number',$request['sender_id_number'])->first();
-            abort_if($sender==null,400,'Could not find the sender on the system '.$request['sender_id_number']);
+            $sender=User::find($request['sender']);
+            abort_if($sender==null,400,'Could not find the sender on the system '.$request['sender']);
 
             $attachments=$request['attachments'];
             $carbon_copies=explode(',',$request['sender_carbon_copies']); 
@@ -487,7 +521,8 @@ class TicketActionController extends Controller
                 $request['title'],
                 $request['content'],
                 $request['urgency'],
-                $attachments 
+                $attachments,
+                auth()->user()
             );
 
             DB::commit();     

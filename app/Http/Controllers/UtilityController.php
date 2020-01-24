@@ -71,6 +71,29 @@ class UtilityController extends Controller
         
         return json_encode($users);
     }
+
+
+    /**
+     * SELECT 2 SOURCE OF USERS = SENDER
+     */
+    public function select2_find_user(Request $request)
+    {
+        $q=$request['q'];
+
+        $users=User::select([
+            'id',
+            'name as text',
+        ])->where(function($condition)use($q){
+            $condition->orWhere('name','like','%'.$q.'%');
+        })
+        ->where('active',true)
+        ->where('role','=',UserRole::SENDER)->limit(10)->get()
+        ->makeHidden('photo')
+        ->makeHidden('role_text');
+
+        return json_encode(['results'=>$users]);
+    }
+    
     
     public function get_auth_user()
     {
@@ -116,7 +139,7 @@ class UtilityController extends Controller
      * LIST OF ALL SUPPORT STAFF ON THE SYSTEM
      * SELECT2 DATA SOURCE
      */
-    public function supports(Request $request)
+    public function select2_supports(Request $request)
     {
         $q=$request['q'];
 
@@ -132,6 +155,21 @@ class UtilityController extends Controller
         ->makeHidden('role_text');
 
         return json_encode(['results'=>$users]);
+    }
+
+    public function supports(Request $request)
+    {
+
+        $users=User::select([
+            'id',
+            'name as text',
+        ])
+        ->where('active',true)
+        ->where('role','<>',UserRole::SENDER)->get()
+        ->makeHidden('photo')
+        ->makeHidden('role_text');
+
+        return json_encode($users);
     }
 
     /**
@@ -230,5 +268,19 @@ class UtilityController extends Controller
         $histories=ProjectHistory::where('project_id',$project->id)->orderBy('created_at','desc')->get();
 
         return json_encode($histories);
+    }
+
+    /**
+     * SET THE COUNTDOWN FOR THE TICKET STATUS
+     */
+    public function countdown($id)
+    {
+        $ticket=Ticket::find($id);
+        abort_if($ticket==null,404,'Ticket could not be found!');
+
+        return json_encode([
+            'countdown_expired_at'=>\Carbon\Carbon::now()->addDays(2),
+            'countdown_message'=>'Countdown to fail processing',
+        ]);
     }
 }

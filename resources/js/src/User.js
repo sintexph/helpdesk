@@ -12,7 +12,38 @@ export class User {
         this._active = false;
         this._password = '';
         this._password_confirmation = '';
+        this._shift_start = '';
+        this._shift_end = '';
+        this._break_time = '';
     }
+
+
+    get break_time() {
+        return this._break_time;
+    }
+
+    set break_time(break_time) {
+        this._break_time = break_time;
+    }
+
+    get shift_end() {
+        return this._shift_end;
+    }
+
+    set shift_end(shift_end) {
+        this._shift_end = shift_end;
+    }
+
+
+    get shift_start() {
+        return this._shift_start;
+    }
+
+    set shift_start(shift_start) {
+        this._shift_start = shift_start;
+    }
+
+
 
 
     get password_confirmation() {

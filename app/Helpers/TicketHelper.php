@@ -46,31 +46,7 @@ class TicketHelper
         }
         return $ticket;
     }
-
-
-    /*
-    public static function ticket_number_state(Ticket $ticket)
-    {
-        $state=0;
-
-        if($ticket->cancelled_at!=null)
-            $state=State::CANCELLED;
-        elseif($ticket->hold_at!=null && $ticket->un_hold_at==null)
-            $state=State::HOLD;
-        elseif($ticket->closed_at!=null)
-            $state=State::CLOSED;
-        elseif($ticket->solved_at!=null)
-            $state=State::SOLVED;
-        elseif($ticket->processing_at!=null)
-            $state=State::PROCESSING;            
-        elseif($ticket->catered_at!=null)
-            $state=State::CATERED;
-        elseif($ticket->catered_at==null)
-            $state=State::PENDING;
  
-        return $state;
-    }
-    */
 
 
     public static function auto_close_tickets()

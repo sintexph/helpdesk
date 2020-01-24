@@ -133,9 +133,6 @@
 
 
             </div>
-            <div class="box-header">
-
-            </div>
             <div class="box-footer">
                 <div class="btn-group">
                     <a href="?view=kanban"
@@ -148,9 +145,6 @@
         </div>
     </div>
     <div class="col-sm-7">
-
         <histories ref="histories" project_id="{{ $project->id }}"></histories>
-
-
     </div>
-</div>
+</div> 

@@ -51,12 +51,9 @@ class ProjectController extends Controller
 
         if(!$request->order)
         {
-            $projects
-                ->orderByRaw(DB::raw("case when state=".State::HOLD." then 1 else 0 end"))
-                
-                ->orderByRaw(DB::raw("case when start_date is null then 1 else 0 end"))
-                ->orderBy('start_date','asc');
-                
+            $projects->orderByRaw(DB::raw("case when state=".State::HOLD." then 1 else 0 end"))
+                    ->orderByRaw(DB::raw("case when start_date is null then 1 else 0 end"))
+                    ->orderBy('start_date','asc');
         }
         
         $projects->with('creator');

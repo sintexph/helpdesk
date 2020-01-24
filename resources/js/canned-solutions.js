@@ -11,7 +11,7 @@ Vue.mixin({
     }
 })
 
-Vue.mixin(httpAlert);
+Vue.mixin(toastHelper);Vue.mixin(httpAlert);
 Vue.component('canned-solution-list', require('./components/manage/canned/solutions/list').default)
 
 new Vue({

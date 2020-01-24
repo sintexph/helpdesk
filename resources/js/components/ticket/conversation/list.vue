@@ -11,6 +11,20 @@
                 <span class="description">{{ value.time_ago }}</span>
             </div>
             <p v-html="value.content_html"></p>
+
+            <template v-if="value.attachments.length!==0">
+            <p><strong>Attachments</strong></p>
+            <table>
+                <tbody>
+                    <tr v-for="(attachment,attkey) in value.attachments" :key="attkey">
+                        <td style="padding-right:5px;">
+                            <a :href="attachment.file_upload.url" v-text="attachment.file_upload.file_name"></a>
+                        </td>
+                        <td style="padding-left:5px;" v-text="attachment.file_upload.file_size"></td>
+                    </tr>
+                </tbody>
+            </table>
+            </template>
         </div>
     </div>
     <h3 v-else class="text-gray text-center">Sorry!

@@ -4,6 +4,7 @@ namespace App\Helpers;
 use App\Ticket;
 use App\TicketStateProgress;
 use State;
+use App\User;
 
 class TicketProgressHelper 
 {
@@ -73,9 +74,9 @@ class TicketProgressHelper
     public static function closed(Ticket $ticket,$user_name,$auto_closed=false)
     {
         if($auto_closed===true)
-            $content=strtolower(ucwords($user_name)).' has closed the ticket';
-        else
             $content='System has has auto closed the ticket';
+        else
+            $content=strtolower(ucwords($user_name)).' has closed the ticket';
 
         TicketStateProgress::create([
             'content'=>$content,
@@ -112,6 +113,22 @@ class TicketProgressHelper
             'content'=>$content,
             'ticket_id'=>$ticket->id,
             'state'=>$state,
+        ]);
+    }
+
+    /**
+     * @param $ticket The ticket to be change
+     * @param $user Who will change the ticket
+     * @param $sender Sender to change
+     */
+    public static function change_sender(Ticket $ticket,User $user,User $sender)
+    {
+        $content=strtolower(ucwords($user->name)).' change the ticket sender '.$sender->name;
+        
+        TicketStateProgress::create([
+            'content'=>$content,
+            'ticket_id'=>$ticket->id,
+            'state'=>State::CHANGE_SENDER,
         ]);
     }
     public static function escalate(Ticket $ticket,$escalated_from,$escalated_to)

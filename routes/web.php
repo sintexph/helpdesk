@@ -2,6 +2,20 @@
 
 Auth::routes();
 
+Route::get('/test',function(){
+    //$tickets=App\Ticket::where('control_number','000000952')->get();
+    $tickets=App\Ticket::where('catered_by',4)->where('state',State::CLOSED)->get();
+     
+    foreach($tickets as $ticket)
+    {
+        $user=$ticket->caterer;
+        echo $ticket->control_number.'&nbsp;&nbsp;&nbsp;'.$ticket->created_at.'&nbsp;&nbsp;&nbsp;'.App\Test::cal(new \Carbon\Carbon($ticket->created_at),$user->shift_start,$user->shift_end,$user->break_time).'<br>';
+    }
+
+
+});
+
+
 Route::get('/','HomeController@index');
 
 Route::post('preview-generate','LinkPreviewController@get_preview')->name('preview.generate');
@@ -17,11 +31,15 @@ Route::prefix('utility')->name('.utility')->group(function(){
             Route::get('canned-solutions','UtilityController@canned_solutions')->name('.solutions');
         });
         
-        Route::get('supports', 'UtilityController@supports')->name('.supports');
+        Route::get('supports', 'UtilityController@select2_supports')->name('.supports');
         Route::post('employee', 'UtilityController@pams_employee')->name('.employee');
+
+        Route::get('find-user','UtilityController@select2_find_user')->name('.find_user'); 
+
     });
 
 
+    Route::post('supports', 'UtilityController@supports')->name('.supports');
     Route::get('find-user','UtilityController@find_user')->name('.find_user'); 
     
     Route::post('factories','UtilityController@factories')->name('.factories');
@@ -37,6 +55,7 @@ Route::prefix('utility')->name('.utility')->group(function(){
     Route::middleware('auth')->group(function(){
 
         Route::post('ticket-progress/{id}','UtilityController@ticket_progress')->name('.ticket_progress');
+        Route::post('ticket-countdown/{id}','UtilityController@countdown')->name('.countdown');
 
         Route::post('unclosed_tickets','UtilityController@unclosed_tickets')->name('.unclosed_tickets');
         Route::post('setting','UtilityController@setting')->name('.setting');
@@ -47,6 +66,7 @@ Route::prefix('utility')->name('.utility')->group(function(){
         Route::post('calendar/tasks','UtilityController@calendar_tasks')->name('.calendar.tasks');
         Route::post('calendar/projects','UtilityController@calendar_projects')->name('.calendar.projects');
         
+
     });
 
 
@@ -131,9 +151,10 @@ Route::prefix('inbox')->name('inbox')->group(function(){
 Route::prefix('dashboard')->name('dashboard')->group(function(){
     
     Route::get('', 'DashboardController@index');
-    
+    Route::post('statistics', 'DashboardController@statistics')->name('statistics');
     Route::post('staff_performance', 'DashboardController@staff_performance')->name('staff_performance');
     Route::post('rating_summary', 'DashboardController@rating_summary')->name('rating_summary');
+    Route::post('category_request', 'DashboardController@top_category_request')->name('top_category_request');
         
 });
 
@@ -164,6 +185,7 @@ Route::prefix('tickets')->name('tickets')->group(function(){
         Route::delete('cancel_approval/{id}', 'Manage\TicketActionController@cancel_approval')->name('.cancel_approval');
         Route::patch('custom_progress/{id}', 'Manage\TicketActionController@custom_progress')->name('.custom_progress');
         Route::post('modify-carbon-copies/{id}', 'Manage\TicketActionController@modify_carbon_copies')->name('.modify_carbon_copies');
+        Route::post('change-sender/{id}', 'Manage\TicketActionController@change_sender')->name('.change_sender');
 
     });
 
@@ -272,7 +294,15 @@ Route::middleware('maintain')->group(function(){
     Route::prefix('tickets')->name('.tickets')->group(function(){
     
         Route::get('','TicketReportController@index');
-        Route::post('list','ReportController@list')->name('.list'); 
+        Route::post('list','TicketReportController@list')->name('.list'); 
+
+        Route::post('users-efficiency','TicketReportController@users_efficiency')->name('.users_efficiency'); 
+        Route::post('rating-summary','TicketReportController@rating_summary')->name('.rating_summary'); 
+        Route::post('category-request','TicketReportController@category_request')->name('.category_request'); 
+        Route::post('efficiency-breakdown','TicketReportController@efficiency_breakdown')->name('.efficiency_breakdown'); 
+
+        
+
     
     });
 

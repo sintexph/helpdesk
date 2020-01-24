@@ -9,6 +9,7 @@ use App\Helpers\TicketProgressHelper;
 use App\Helpers\UploadHelper;
 use App\TicketAttachment;
 use App\TicketNote;
+use App\Helpers\Metrics;
 use State;
 
 class TicketActionHelper 
@@ -16,9 +17,15 @@ class TicketActionHelper
     public static function cater(Ticket $ticket,User $user,$processing)
     {
         $ticket->state=State::CATERED;
-        $ticket->catered_by=auth()->user()->id;
-        $ticket->catered_at=\Carbon\Carbon::now();
+        $ticket->catered_by=$user->id;
         $ticket->save();
+
+
+        $target=$ticket->targets()->where('target',State::CATERED)->first();
+        $target->completed_date=\Carbon\Carbon::now();
+        $target->assigned_to=$user->id;
+        $target->save();
+
         # Send email
         MailSender::cater_ticket($ticket);
         # Save ticket progress history
@@ -26,7 +33,6 @@ class TicketActionHelper
 
         if($processing===true)
             static::processing($ticket,$user,true);
-       
 
         return $ticket;
 
@@ -42,7 +48,13 @@ class TicketActionHelper
     public static function close(Ticket $ticket,$rating,$feedback,$auto_close=false)
     {
         $ticket->state=State::CLOSED;
-        $ticket->closed_at=\Carbon\Carbon::now();
+        $ticket->closed_at=\Carbon\Carbon::now(); # to be removed
+
+
+        $target=$ticket->targets()->where('target',State::CLOSED)->first();
+        $target->completed_date=\Carbon\Carbon::now();
+        $target->assigned_to=$ticket->catered_by;
+        $target->save();
         
         # Check if there is a rating then record
         if(!empty($rating))
@@ -64,16 +76,21 @@ class TicketActionHelper
 
         return $ticket;
     }
-    public static function open(Ticket $ticket,$reason)
+    public static function open(Ticket $ticket,User $user,$reason)
     {
         $ticket->state=State::PROCESSING;
-        $ticket->solved_at=null;
+        $ticket->solved_at=null; # to be removed
         $ticket->category=null;
         $ticket->solution=null;
         $ticket->save();
-        
+
+        $target=$ticket->targets()->where('target',State::SOLVED)->first();
+        $target->completed_date=null;
+        $target->assigned_to=null;
+        $target->save();
+
         # Save ticket progress history
-        TicketProgressHelper::opened($ticket,$ticket->sender_name,$reason);
+        TicketProgressHelper::opened($ticket,$user->name,$reason);
 
         return $ticket;
     }
@@ -110,10 +127,15 @@ class TicketActionHelper
     public static function solve(Ticket $ticket,User $user,$category,$solution,$message_to_sender=false,$message=null)
     {
         $ticket->state=State::SOLVED;
-        $ticket->solved_at=\Carbon\Carbon::now();
+        $ticket->solved_at=\Carbon\Carbon::now();  # to be removed
         $ticket->category=$category;
         $ticket->solution=$solution;
         $ticket->save();
+
+        $target=$ticket->targets()->where('target',State::SOLVED)->first();
+        $target->completed_date=\Carbon\Carbon::now();
+        $target->assigned_to=$user->id;
+        $target->save();
 
         # Send email
         MailSendingHelper::solve_ticket($ticket);
@@ -144,7 +166,11 @@ class TicketActionHelper
     }
     public static function un_hold(Ticket $ticket,User $user)
     {
-        $ticket->state=State::PROCESSING;
+        if(empty($ticket->processing_at))
+            $ticket->state=State::CATERED;
+        else
+            $ticket->state=State::PROCESSING;
+
         $ticket->un_hold_at=\Carbon\Carbon::now();
         $ticket->save();
 
@@ -156,8 +182,13 @@ class TicketActionHelper
     public static function processing(Ticket $ticket,User $user,$send_email=true)
     {
         $ticket->state=State::PROCESSING;
-        $ticket->processing_at=\Carbon\Carbon::now();
+        $ticket->processing_at=\Carbon\Carbon::now();  # to be removed
         $ticket->save();
+
+        $target=$ticket->targets()->where('target',State::PROCESSING)->first();
+        $target->completed_date=\Carbon\Carbon::now();
+        $target->assigned_to=$user->id;
+        $target->save();
 
         # Save ticket progress history
         TicketProgressHelper::processing($ticket,$user->name);
@@ -240,7 +271,7 @@ class TicketActionHelper
     }
     public static function approved(Ticket $ticket)
     {
-        $ticket->state=State::PROCESSING;
+        $ticket->state=$ticket->last_state;
         $ticket->approved_at=\Carbon\Carbon::now();
         $ticket->save();
     
@@ -306,6 +337,26 @@ class TicketActionHelper
         return $ticket;
     }
 
+
+    /**
+     * @param $ticket Ticket to modify
+     * @param $user Who will modify
+     * @param $cc The carbon copies to update
+     */
+    public static function change_sender(Ticket $ticket,User $user,User $sender)
+    {
+        $ticket->sender_name=$sender->name; 
+        $ticket->sender_email=$sender->email;
+        $ticket->sender_factory=$sender->factory;
+        $ticket->save();
+
+        # record progress
+        TicketProgressHelper::change_sender($ticket,$user,$sender);
+
+        return $ticket;
+    }
+
+
     /**
      * Save ticket in the database
      * @param $sender_name The name of the sender
@@ -329,7 +380,8 @@ class TicketActionHelper
         $title,
         $content,
         $urgency,
-        $attachments
+        $attachments,
+        User $creator
     )
     {
         $ticket=new Ticket;
@@ -383,7 +435,7 @@ class TicketActionHelper
 
 
         # Save ticket state progress history
-        TicketProgressHelper::created($ticket,$ticket->sender_name);
+        TicketProgressHelper::created($ticket,$creator->name);
 
         return $ticket;
     }

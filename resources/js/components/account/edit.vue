@@ -55,6 +55,11 @@
                         password_confirmation: par.account.password_confirmation,
                         active: par.account.active,
 
+                           shift_start: par.account.shift_start,
+                        shift_end: par.account.shift_end,
+                        break_time: par.account.break_time
+
+
                     }).then(function (response) {
                         par.alert_success(response);
                         par.hide_wait();
@@ -84,6 +89,11 @@
                     par.account.position = response.data.position;
                     par.account.username = response.data.username;
                     par.account.active = response.data.active;
+
+                    par.account.shift_start = response.data.shift_start;
+                    par.account.shift_end = response.data.shift_end;
+                    par.account.break_time=response.data.break_time;
+
                 });
             }
         }

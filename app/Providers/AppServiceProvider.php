@@ -32,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
     {
         FileUpload::observe(UploadObserver::class);
         User::observe(UserObserver::class);   
+        Ticket::observe(TicketObserver::class);
     }
 }

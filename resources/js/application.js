@@ -15,7 +15,7 @@ import "./src/custom_request/import";
 
 import appConvertMixin from './mixins/application_converter';
 Vue.mixin(appConvertMixin);
-Vue.mixin(httpAlert);
+Vue.mixin(toastHelper);Vue.mixin(httpAlert);
 
 // Import draggable component for items
 Vue.component('draggable', require('vuedraggable'));

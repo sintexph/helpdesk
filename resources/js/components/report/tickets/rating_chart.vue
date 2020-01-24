@@ -4,6 +4,17 @@
     } from 'vue-chartjs'
 
     export default {
+        props: {
+            date_from: {
+                required: true,
+            },
+            date_to: {
+                required: true,
+            },
+            support: {
+                required: true,
+            },
+        },
         extends: Bar,
         data() {
             return {
@@ -33,27 +44,17 @@
                         borderWidth: 1
                     }]
                 },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Rating Summary'
-                    },
 
-
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                stepSize: 60
-                            }
-                        }]
-                    }
-                }
             }
         },
         methods: {
             load_data() {
                 var vm = this;
-                axios.post('/dashboard/rating_summary').then(response => {
+                axios.post('/report/tickets/rating-summary', {
+                    from: vm.date_from,
+                    to: vm.date_to,
+                    support: vm.support,
+                }).then(response => {
                     var ratings = response.data;
                     vm.chartData.datasets[0].data = [
                         ratings.no,
@@ -63,26 +64,43 @@
                         ratings.four,
                         ratings.five,
                     ];
-                    vm.renderChart(vm.chartData, vm.options);
+
+                    let options = {
+                        title: {
+                            display: true,
+                            text: 'Overall User Rating'
+                        },
+
+
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 10
+                                }
+                            }]
+                        }
+                    };
+                    vm.renderChart(vm.chartData, options);
 
                 });
             }
         },
+        watch: {
+            date_from: function () {
+                this.load_data();
+            },
+            date_to: function () {
+                this.load_data();
+            },
+              support: function () {
+                this.load_data();
+            },
+        },
         mounted() {
 
             this.$nextTick(function () {
-
-                this.chartData.datasets[0].data = [
-                    10,
-                    100,
-                    0,
-                    1,
-                    20,
-                    300,
-                ];
-
-                  this.renderChart(this.chartData, this.options);
-
+                this.load_data();
             });
         }
     }

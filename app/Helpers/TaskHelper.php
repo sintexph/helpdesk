@@ -50,8 +50,8 @@ class TaskHelper
         $task->created_by=auth()->user()->id;
         $task->save();
 
-        # Save history
-        ProjectHistoryHelper::task_create($task,auth()->user());
+        if($task->project!=null)
+            ProjectHistoryHelper::task_create($task,auth()->user());# Save history
     
 
         return $task;
@@ -92,9 +92,10 @@ class TaskHelper
         else
             $task->project_id=null;
 
-        ProjectHistoryHelper::task_update($task,auth()->user());
-
         $task->save();
+
+        if($task->project!=null)
+            ProjectHistoryHelper::task_update($task,auth()->user()); # Save history
 
         return $task;
 

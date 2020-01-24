@@ -14,7 +14,7 @@
       <tbody>
           @foreach($ticket->state_progress()->orderBy('created_at','desc')->get() as $progress)
           <tr>
-              <td style="padding:5px;">{{ $progress->state }}</td>
+              <td style="padding:5px;">{{ $progress->state_text }}</td>
               <td style="padding:5px;">{!! nl2br($progress->content) !!}</td>
               <td style="padding:5px;">{{ $progress->created_at }}</td>
           </tr>

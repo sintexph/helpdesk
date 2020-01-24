@@ -26,7 +26,11 @@ class CreateUsersTable extends Migration
             $table->integer('role')->unsigned()->default(1)->comment('1=sender,2=support,3=moderator,4=administrator'); 
 
             $table->boolean('active')->default(true);
+
+            $table->integer('shift_start')->unsigned()->nullable();
+            $table->integer('shift_end')->unsigned()->nullable();
             
+            $table->double('break_time')->unsigned()->nullable()->comment('hourly based');
 
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

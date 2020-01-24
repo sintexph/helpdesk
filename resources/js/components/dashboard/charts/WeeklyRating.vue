@@ -9,8 +9,7 @@
             return {
                 chartData: {
                     labels: ['No Star', '1 Star', '2 Star', '3 Star', '4 Star', '5 Star'],
-                    datasets: [
-                        {
+                    datasets: [{
                         label: 'Rating',
                         data: [12, 19, 3, 5, 2, 3],
                         backgroundColor: [
@@ -32,50 +31,49 @@
                             'rgba(39, 135, 30,1)',
                         ],
                         borderWidth: 1
-                    }
-                    ]
+                    }]
                 },
-                options: {
-                     title: {
-                        display: true,
-                        text: 'Weekly Overall User Rating'
-                    },
 
-
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                 stepSize: 1
-                            }
-                        }]
-                    }
-                }
             }
         },
-        methods:{
-            load_data(){
-                var vm=this;
-                axios.post('/dashboard/rating_summary').then(response=>{
-                    var ratings=response.data; 
-                    vm.chartData.datasets[0].data=[
+        methods: {
+            load_data() {
+                var vm = this;
+                axios.post('/dashboard/rating_summary').then(response => {
+                    var ratings = response.data;
+                    vm.chartData.datasets[0].data = [
                         ratings.no,
                         ratings.one,
                         ratings.two,
                         ratings.three,
                         ratings.four,
                         ratings.five,
-                        
-                        
                     ];
-                    vm.renderChart(vm.chartData, vm.options);
+
+                    let options = {
+                        title: {
+                            display: true,
+                            text: 'Weekly Overall User Rating'
+                        },
+
+
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 10
+                                }
+                            }]
+                        }
+                    };
+                    vm.renderChart(vm.chartData, options);
 
                 });
             }
         },
         mounted() {
-            
-            this.$nextTick(function(){
+
+            this.$nextTick(function () {
                 this.load_data();
             });
         }

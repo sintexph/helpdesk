@@ -34,6 +34,11 @@ class User extends Authenticatable
         'role',
         'created_by',
         'updated_by',
+
+        'shift_start',
+        'shift_end',
+        'break_time',
+
         'active'
     ];
 
@@ -43,7 +48,10 @@ class User extends Authenticatable
     ];
 
     protected $casts=[
-        'active'=>'boolean'
+        'active'=>'boolean',
+        'shift_start'=>'integer',
+        'shift_end'=>'integer',
+        'break_time',
     ];
 
 

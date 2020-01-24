@@ -128,7 +128,7 @@
                     PROCESSING: true,
                     SOLVED: true,
                     CLOSED: true,
-                    HOLD: false,
+                    HOLD: true,
                     CANCELLED: false,
                 },
                 urgency: {

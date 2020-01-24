@@ -22,11 +22,27 @@ class State
     const PROCESSING_PURCHASE_ORDER=15;
     const DELIVERED=16;
     const READY_FOR_RELEASE=17;
-
+    
     const UN_HOLD=18;
-
     const COMPLETED=19;
 
+    const CHANGE_SENDER=20;
+
+    /**
+     * GET STANDARD TICKET STATE BASED ON TARGETS
+     */
+    public static function standard_ticket_state()
+    {
+        return [
+            static::PENDING,
+            static::CATERED,
+            static::PROCESSING,
+            static::SOLVED,
+            static::CLOSED,
+            static::HOLD,
+            static::CANCELLED,
+        ];
+    }
     public static function state($state_value) {
         
         $stateClass = new \ReflectionClass ( 'State' );

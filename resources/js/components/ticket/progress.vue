@@ -1,11 +1,11 @@
 <template>
     <div class="activity-list">
         <div class="activity-list-item" v-for="(value,key) in progress_ticket" :key="key">
-            <div :class="'activity-icon circle-'+value.state.toLowerCase().replace(' ','-')">
+            <div :class="'activity-icon circle-'+value.state_text.toLowerCase().replace(' ','-')">
                 <i class="fa fa-clock-o" aria-hidden="true"></i>
             </div>
             <div>
-                <strong>{{ value.state }}</strong><br>
+                <strong>{{ value.state_text }}</strong><br>
                 <span v-html="value.content"></span>
                 <br>
                 <span class="text-muted" :title="value.created_at"><small v-text="value.time_ago"></small></span>

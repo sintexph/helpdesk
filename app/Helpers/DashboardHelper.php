@@ -28,7 +28,14 @@ class DashboardHelper
     public static function rating_summary()
     {
         $date=static::first_end_date();
-        
         return StatisticsHelper::rating_summary(null,null,$date->from->format('Y-m-d'),$date->to->format('Y-m-d'));
+    }
+    /**
+     * Top 5 category request in a week
+     */
+    public static function top_category_request()
+    {
+        $date=static::first_end_date();
+        return StatisticsHelper::top_category_request(5,null,null,$date->from->format('Y-m-d'),$date->to->format('Y-m-d'));
     }
 }

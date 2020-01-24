@@ -64,7 +64,8 @@ class CreateApplicationController extends Controller
                             $app_name,
                             ApplicationHelper::generate_field_format($application,$app_name),
                             Urgency::NORMAL,
-                            null
+                            null,
+                            auth()->user()
                     )->control_number;
                 }
             }

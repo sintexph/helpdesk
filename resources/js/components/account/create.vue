@@ -46,7 +46,11 @@
                         password: par.account.password,
                         password_confirmation: par.account.password_confirmation,
                         active: par.account.active,
-                        role: par.account.role
+                        role: par.account.role,
+
+                        shift_start: par.account.shift_start,
+                        shift_end: par.account.shift_end,
+                        break_time: par.account.break_time
 
 
                     }).then(function (response) {

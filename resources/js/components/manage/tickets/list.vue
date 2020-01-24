@@ -15,11 +15,7 @@
                                 </button>
                             </span>
                         </div>
-
-
                     </div>
-
-
                     <div class="form-group">
                         <label class="control-label">State</label>
                         <select class="form-control input-sm" v-model="filters.state" @change="filter_list">

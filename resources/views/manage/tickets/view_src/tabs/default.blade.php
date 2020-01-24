@@ -119,27 +119,34 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <small>{{ $ticket->catered_at }}</small>
-                                    <br><span
-                                        class="ht-{{ strtolower($ticket->ht_catered) }}">{{ $ticket->ht_catered }}</span>
+                                    <small>{{ $ticket->catered_metric->completed_date }}</small>
+                                    <br>
+                                    <span class="ht-{{ strtolower($ticket->catered_metric->hit_target) }}">
+                                        {{$ticket->catered_metric->hit_target}}
+                                    </span>
                                 </td>
                                 <td>
-                                    <small>{{ $ticket->processing_at }}</small>
-                                    <br><span
-                                        class="ht-{{ strtolower($ticket->ht_processing) }}">{{ $ticket->ht_processing }}</span>
+                                    <small>{{ $ticket->processing_metric->completed_date }}</small>
+                                    <br>
+                                    <span class="ht-{{ strtolower($ticket->processing_metric->hit_target) }}">
+                                        {{$ticket->processing_metric->hit_target}}
+                                    </span>
 
                                 </td>
                                 <td>
-                                    <small>{{ $ticket->solved_at }}</small>
-                                    <br><span
-                                        class="ht-{{ strtolower($ticket->ht_solved) }}">{{ $ticket->ht_solved }}</span>
+                                    <small>{{ $ticket->solved_metric->completed_date }}</small>
+                                    <br>
+                                    <span class="ht-{{ strtolower($ticket->solved_metric->hit_target) }}">
+                                        {{$ticket->solved_metric->hit_target}}
+                                    </span>
 
                                 </td>
                                 <td>
-                                    <small>{{ $ticket->closed_at }}</small>
-                                    <br><span
-                                        class="ht-{{ strtolower($ticket->ht_closed) }}">{{ $ticket->ht_closed }}</span>
-
+                                    <small>{{ $ticket->closed_metric->completed_date }}</small>
+                                    <br>
+                                    <span class="ht-{{ strtolower($ticket->closed_metric->hit_target) }}">
+                                        {{$ticket->closed_metric->hit_target}}
+                                    </span>
                                 </td>
                                 <td>
                                     {{ $ticket->hold_at }}<br>{{ $ticket->un_hold_at }}
@@ -168,9 +175,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
-
             </div>
 
             @if($ticket->notes->count()!=0)
@@ -299,11 +303,10 @@
         </div>
         @endif
 
-
-
         @if($ticket->state!=State::CLOSED)
         <ticket-actions :can_update="{{ auth()->user()->can('update',$ticket)?'true':'false' }}"
-            :ticket="{{ $ticket }}"></ticket-actions>
+            :admin="{{ auth()->user()->can('administrator')?'true':'false' }}" :ticket="{{ $ticket }}">
+        </ticket-actions>
         @endif
 
         <div class="box box-solid">

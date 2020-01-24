@@ -163,7 +163,7 @@
                         name: 'id',
                         sortable: false,
                         label: 'ACTION',
-                        className: 'fit',
+                           className: 'fit',
                         render(data, meta, row) {
 
                             var btn_edit = `<a href="#" class="btn-edit" data-id="` + data +

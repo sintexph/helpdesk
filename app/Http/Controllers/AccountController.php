@@ -77,6 +77,9 @@ class AccountController extends Controller
             'role'=>'required',
             'active'=>'required',
 
+            'shift_start'=>'nullable|numeric',
+            'shift_end'=>'nullable|numeric',
+            'break_time'=>'nullable|numeric',
         ]);
 
         $user=new User;
@@ -91,6 +94,11 @@ class AccountController extends Controller
         $user->factory=$request['factory'];
         $user->contact=$request['contact'];
         $user->role=$request['role'];
+
+        $user->shift_start=$request['shift_start'];
+        $user->shift_end=$request['shift_end'];
+
+        $user->break_time=$request['break_time'];
 
         $user->active=$request['active']; 
         $user->save();
@@ -116,6 +124,10 @@ class AccountController extends Controller
             'contact'=>'required',
             'role'=>'required',
             'active'=>'required',
+
+            'shift_start'=>'nullable|numeric',
+            'shift_end'=>'nullable|numeric',
+            'break_time'=>'nullable|numeric',
 
         ];
 
@@ -144,7 +156,10 @@ class AccountController extends Controller
             $account->role=$request['role'];
             $account->contact=$request['contact'];
 
-            
+            $account->shift_start=$request['shift_start'];
+            $account->shift_end=$request['shift_end'];
+            $account->break_time=$request['break_time'];
+                
             if(!empty($request['password']))
                 if(\Hash::needsRehash($request['password']))
                     $account->password=bcrypt($request['password']);

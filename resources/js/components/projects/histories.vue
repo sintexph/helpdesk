@@ -78,7 +78,6 @@
     .timeline-container {
         max-height: 720px;
         overflow-y: auto;
-
     }
 
 </style>

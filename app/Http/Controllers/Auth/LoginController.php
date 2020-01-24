@@ -51,7 +51,6 @@ class LoginController extends Controller
             'username'=>'string',
             'password' => 'required|string',
         ]);
-        
 
         $user=\App\User::where(function($condition)use($request){
             $condition->orWhere('email',$request['username'])
@@ -61,9 +60,11 @@ class LoginController extends Controller
 
         if($user==null)
             return response()->json(['errors'=>['username'=>[trans('auth.failed')]]],422);
-        
+
+        if($user->active==false)
+            return response()->json(['errors'=>['username'=>['Account was deactivated please contact our support staff via phone numbers indicated on their profile.']]],422);
+
         $request['username']=$user->username;
-        
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and

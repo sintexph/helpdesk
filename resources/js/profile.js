@@ -6,7 +6,7 @@ import {
 from "./src/User";
 window.User = User;
 
-Vue.mixin(httpAlert);
+Vue.mixin(toastHelper);Vue.mixin(httpAlert);
 Vue.component('edit-profile', require('./components/profile/edit').default);
 
 new Vue({

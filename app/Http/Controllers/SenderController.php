@@ -240,7 +240,8 @@ class SenderController extends Controller
                 $request['title'],
                 $request['content'],
                 $request['urgency'],
-                $attachments 
+                $attachments,
+                $user
             );
 
             DB::commit();     
@@ -310,7 +311,8 @@ class SenderController extends Controller
                             $app_name,
                             ApplicationHelper::generate_field_format($application,$user,$app_name),
                             Urgency::NORMAL,
-                            null
+                            null,
+                            $user
                     )->control_number;
                 }
             }
@@ -353,7 +355,7 @@ class SenderController extends Controller
             {
                 DB::beginTransaction();
                 
-                TicketActionHelper::open($ticket,$request['reason']);
+                TicketActionHelper::open($ticket,auth()->user(),$request['reason']);
 
                 DB::commit();
             }

@@ -1,7 +1,8 @@
 <template>
-    <div class="box box-solid">
-    
-        <div class="box-header">
+    <div>
+
+        <div class="box box-solid">
+            <div class="box-header">
                 <h3 class="box-title">Login Account</h3>
             </div>
             <div class="login-box-body">
@@ -29,18 +30,20 @@
                         </div>
                     </div>
                     <a href="#" @click.prevent="$router.push('/reset')">I forgot my password</a><br>
-                    <a href="#" @click.prevent="$router.push('/register')" class="text-center">Register a new membership</a>
+                    <a href="#" @click.prevent="$router.push('/register')" class="text-center">Register a new
+                        membership</a>
                 </form>
             </div>
-
+        </div>
+ 
     </div>
 </template>
 <script>
     export default {
-        
+
         data() {
             return {
-               
+
                 username: '',
                 password: '',
                 remember: '',
@@ -58,7 +61,7 @@
                     axios.post('/login', {
                         username: vm.username,
                         password: vm.password,
-                    }).then(function (response) {
+                    }).then(function (response) { 
                         setTimeout(function () {
                             window.location = response.data.redirect;
                         }, 3000);

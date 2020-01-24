@@ -54,7 +54,6 @@ trait TicketActionCondition
         $this->check_hold($ticket);
         
         abort_if($ticket->state==State::PENDING || $ticket->state==State::CATERED,400,'Please process the ticket first before updating it to solved!');
-
     }
 
     /**
@@ -159,6 +158,8 @@ trait TicketActionCondition
         $this->general_condition($ticket);
             
     }
+
+ 
     /**
      *  Could not add reference if ticket is cancelled, solved, or closed and pending
      */
